@@ -2,6 +2,7 @@ David Bedolla Portfolio - Full Project Manifest
 Updated: 2026-07-30
 
 .gitignore
+.gitattributes
 .nojekyll
 .openai/hosting.json
 404.html
