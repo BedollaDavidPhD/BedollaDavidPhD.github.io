@@ -14,19 +14,26 @@ siteNav?.querySelectorAll('a').forEach((link) => {
   });
 });
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.12 }
-);
+const revealElements = document.querySelectorAll('.reveal');
 
-document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+
+  revealElements.forEach((element) => observer.observe(element));
+} else {
+  revealElements.forEach((element) => element.classList.add('visible'));
+}
+
 document.getElementById('year').textContent = new Date().getFullYear();
 
 const videoGrid = document.getElementById('video-grid');
@@ -45,20 +52,46 @@ const renderVideo = (video) => {
   const frame = document.createElement('div');
   frame.className = 'video-frame';
 
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://www.youtube-nocookie.com/embed/${video.youtubeId}`;
-  iframe.title = video.title;
-  iframe.loading = 'lazy';
-  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-  iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-  iframe.allowFullscreen = true;
-  frame.appendChild(iframe);
+  const playButton = document.createElement('button');
+  playButton.className = 'video-load';
+  playButton.type = 'button';
+  playButton.setAttribute('aria-label', `Play video: ${video.title}`);
+
+  const thumbnail = document.createElement('img');
+  thumbnail.className = 'video-thumbnail';
+  thumbnail.src = `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`;
+  thumbnail.alt = '';
+  thumbnail.width = 480;
+  thumbnail.height = 360;
+  thumbnail.loading = 'lazy';
+  thumbnail.decoding = 'async';
+
+  const playIcon = makeTextElement('span', 'video-play-icon', '▶');
+  playIcon.setAttribute('aria-hidden', 'true');
+  const playLabel = makeTextElement('span', 'video-play-label', 'Play video');
+  playButton.append(thumbnail, playIcon, playLabel);
+  frame.appendChild(playButton);
+
+  playButton.addEventListener('click', () => {
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1`;
+    iframe.title = video.title;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.allowFullscreen = true;
+    frame.replaceChildren(iframe);
+  });
 
   const body = document.createElement('div');
   body.className = 'video-body';
   body.appendChild(makeTextElement('span', 'video-category', video.category || 'Robotics demo'));
   body.appendChild(makeTextElement('h4', '', video.title));
   body.appendChild(makeTextElement('p', '', video.description || 'Robotics engineering demonstration.'));
+  const youtubeLink = makeTextElement('a', 'video-link', 'Open on YouTube');
+  youtubeLink.href = `https://youtu.be/${video.youtubeId}`;
+  youtubeLink.target = '_blank';
+  youtubeLink.rel = 'noopener';
+  body.appendChild(youtubeLink);
 
   card.append(frame, body);
   return card;

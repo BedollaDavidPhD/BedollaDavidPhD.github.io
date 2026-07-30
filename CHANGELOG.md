@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 1.3 - GitHub Pages Performance
+
+- Reduced the profile image served to visitors from about 710 KB to about 69 KB
+- Reduced the served INIT Robots logo from about 37 KB to about 17 KB
+- Reduced the social preview image from about 1.57 MB to about 82 KB
+- Replaced the initial YouTube embed with a click-to-load preview
+- Added lazy loading for below-the-fold project imagery
+- Made revealed content remain readable when JavaScript is unavailable
+
 ## Version 1.2 - Industry Positioning and Video Portfolio
 
 - Kept “David Bedolla, PhD” on one responsive hero line

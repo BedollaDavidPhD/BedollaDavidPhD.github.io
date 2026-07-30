@@ -9,6 +9,15 @@ The project uses plain HTML, CSS, and JavaScript. It has no framework, package m
 
 The optional `tools/build_sites_preview.mjs` script packages the same static files for a private Sites preview; it does not change the GitHub Pages workflow.
 
+## Performance
+
+- The live page uses optimized WebP versions of the profile photo and INIT Robots logo.
+- The social card is a compact 1200 × 630 JPEG.
+- Project illustrations load only when visitors approach them.
+- YouTube is represented by a lightweight thumbnail and does not load its player until **Play video** is selected.
+- Source-quality image files remain in the repository for future editing but are not downloaded by website visitors.
+- Deployment packages include only files used by the live website.
+
 ## Deploy to GitHub Pages
 
 1. Extract the ZIP file.
@@ -38,6 +47,8 @@ Open `http://localhost:8000` in a browser.
 - `assets/css/styles.css`: responsive design
 - `assets/js/main.js`: navigation, animations, and footer year
 - `assets/images/`: profile placeholder and project illustrations
+- `assets/images/profile.webp`: optimized profile image used by the website
+- `assets/images/init-robots-logo.webp`: optimized INIT Robots logo used by the website
 - `assets/data/videos.json`: editable YouTube portfolio list
 - `documents/David_Bedolla_CV.pdf`: downloadable CV
 - `tools/create_cv_pdf.py`: editable CV PDF generation source

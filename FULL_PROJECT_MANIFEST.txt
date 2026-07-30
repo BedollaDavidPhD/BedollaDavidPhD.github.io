@@ -17,7 +17,9 @@ assets/images/dynamics-forge.svg
 assets/images/exoskeleton.svg
 assets/images/favicon.svg
 assets/images/init-robots-logo.png
+assets/images/init-robots-logo.webp
 assets/images/mobile-manipulator.svg
+assets/images/profile.webp
 assets/images/profile.jpg
 assets/images/profile-placeholder.svg
 assets/images/tooling.svg
@@ -28,6 +30,7 @@ docs/VIDEO_GUIDE.md
 documents/David_Bedolla_CV.pdf
 index.html
 public/og.png
+public/og.jpg
 robots.txt
 site.webmanifest
 sitemap.xml

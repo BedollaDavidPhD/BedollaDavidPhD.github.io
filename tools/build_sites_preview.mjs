@@ -11,22 +11,30 @@ await rm(dist, { recursive: true, force: true });
 await mkdir(client, { recursive: true });
 await mkdir(server, { recursive: true });
 
-const files = [
+const siteFiles = [
   "index.html",
   "404.html",
   "robots.txt",
   "sitemap.xml",
   "site.webmanifest",
+  "assets/css/styles.css",
+  "assets/data/videos.json",
+  "assets/js/main.js",
+  "assets/images/dynamics-forge.svg",
+  "assets/images/exoskeleton.svg",
+  "assets/images/favicon.svg",
+  "assets/images/init-robots-logo.webp",
+  "assets/images/mobile-manipulator.svg",
+  "assets/images/profile.webp",
+  "assets/images/tooling.svg",
+  "documents/David_Bedolla_CV.pdf",
+  "public/og.jpg",
 ];
 
-const directories = ["assets", "documents", "public"];
-
-for (const file of files) {
-  await cp(join(root, file), join(client, file));
-}
-
-for (const directory of directories) {
-  await cp(join(root, directory), join(client, directory), { recursive: true });
+for (const file of siteFiles) {
+  const destination = join(client, file);
+  await mkdir(dirname(destination), { recursive: true });
+  await cp(join(root, file), destination);
 }
 
 const worker = `const worker = {
