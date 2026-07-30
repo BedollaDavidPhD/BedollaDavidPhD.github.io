@@ -1,0 +1,17 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Local preview and generated files
+__pycache__/
+*.pyc
+portfolio_preview_*
+cv_render/
+dist/
+*.tar.gz
+David_Bedolla_Portfolio_Updated.zip

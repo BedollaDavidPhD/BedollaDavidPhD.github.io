@@ -1,0 +1,13 @@
+UPLOAD THE CONTENTS OF THIS FOLDER TO THE REPOSITORY ROOT
+
+Repository:
+https://github.com/BedollaDavidPhD/BedollaDavid.github.io
+
+Required repository-root file:
+index.html
+
+GitHub Pages configuration:
+Settings > Pages > Deploy from a branch > main > /(root)
+
+Expected public URL:
+https://BedollaDavidPhD.github.io/BedollaDavid.github.io/

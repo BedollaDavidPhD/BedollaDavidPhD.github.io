@@ -1,0 +1,9 @@
+{
+  "name": "David Bedolla Robotics Portfolio",
+  "short_name": "David Bedolla",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0b1220",
+  "icons": []
+}

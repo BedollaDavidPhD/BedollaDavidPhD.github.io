@@ -1,0 +1,34 @@
+David Bedolla Portfolio - Full Project Manifest
+Updated: 2026-07-30
+
+.gitignore
+.nojekyll
+.openai/hosting.json
+404.html
+CHANGELOG.md
+FULL_PROJECT_MANIFEST.txt
+LICENSE
+README.md
+UPLOAD_INSTRUCTIONS.txt
+assets/css/styles.css
+assets/data/videos.json
+assets/images/dynamics-forge.svg
+assets/images/exoskeleton.svg
+assets/images/favicon.svg
+assets/images/init-robots-logo.png
+assets/images/mobile-manipulator.svg
+assets/images/profile.jpg
+assets/images/profile-placeholder.svg
+assets/images/tooling.svg
+assets/js/main.js
+docs/CUSTOMIZATION.md
+docs/PROFILE_CONSISTENCY_REVIEW.md
+docs/VIDEO_GUIDE.md
+documents/David_Bedolla_CV.pdf
+index.html
+public/og.png
+robots.txt
+site.webmanifest
+sitemap.xml
+tools/create_cv_pdf.py
+tools/build_sites_preview.mjs
