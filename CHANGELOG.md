@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 1.4 - Full Quality and Theme Controls
+
+- Restored the original-quality profile photo, INIT Robots logo, and social card
+- Added a persistent light/dark theme button with system-preference detection
+- Added muted YouTube autoplay when videos enter the viewport and pause behavior when they leave
+- Applied the confirmed profile choices, including the Outlook email, ORCID, ÉTS naming, and PhD dates
+- Removed race-vehicle work from the website while preserving it in the longer CV
+
 ## Version 1.3 - GitHub Pages Performance
 
 - Reduced the profile image served to visitors from about 710 KB to about 69 KB

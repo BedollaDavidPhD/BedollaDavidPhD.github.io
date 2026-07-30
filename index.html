@@ -9,21 +9,31 @@
   <meta property="og:description" content="Real-time robotics software, control, simulation, and hardware deployment for mobile manipulation and rehabilitation robotics.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/">
-  <meta property="og:image" content="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/public/og.jpg">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image" content="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/public/og.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1732">
+  <meta property="og:image:height" content="908">
   <meta property="og:image:alt" content="David Bedolla, PhD - Robotics Software Engineer">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="David Bedolla, PhD | Robotics Software Engineer">
   <meta name="twitter:description" content="Real-time robotics software, control, simulation, and hardware deployment.">
-  <meta name="twitter:image" content="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/public/og.jpg">
+  <meta name="twitter:image" content="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/public/og.png">
   <link rel="canonical" href="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/">
   <meta name="theme-color" content="#0b1220">
+  <meta name="color-scheme" content="light dark">
   <title>David Bedolla, PhD | Robotics Software Engineer</title>
   <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="site.webmanifest">
-  <script>document.documentElement.classList.add('js')</script>
+  <script>
+    document.documentElement.classList.add('js');
+    try {
+      const savedTheme = localStorage.getItem('portfolio-theme');
+      const systemTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = savedTheme || systemTheme;
+    } catch {
+      document.documentElement.dataset.theme = 'light';
+    }
+  </script>
   <link rel="stylesheet" href="assets/css/styles.css">
   <script defer src="assets/js/main.js"></script>
 </head>
@@ -37,10 +47,6 @@
         <span class="brand-text">David Bedolla</span>
       </a>
 
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation">
-        <span></span><span></span><span></span>
-      </button>
-
       <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
         <a href="#about">About</a>
         <a href="#projects">Engineering work</a>
@@ -50,6 +56,16 @@
         <a href="#contact">Contact</a>
         <a class="nav-cta" href="documents/David_Bedolla_CV.pdf" target="_blank" rel="noopener">CV PDF</a>
       </nav>
+
+      <div class="header-controls">
+        <button class="theme-toggle" type="button" aria-label="Switch color theme" aria-pressed="false">
+          <span class="theme-icon" aria-hidden="true">☾</span>
+          <span class="theme-label">Dark</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -70,17 +86,18 @@
           <div class="social-row" aria-label="Professional links">
             <a href="https://github.com/BedollaDavidPhD" target="_blank" rel="noopener">GitHub</a>
             <a href="https://www.linkedin.com/in/-davidbedolla" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="mailto:david.bedolla-martinez.1@ens.etsmtl.ca">Email</a>
+            <a href="https://orcid.org/0000-0001-8552-6842" target="_blank" rel="noopener">ORCID</a>
+            <a href="mailto:davidbedollamartinez@outlook.es">Email</a>
           </div>
         </div>
 
         <div class="hero-visual reveal" aria-label="Robotics profile illustration">
           <div class="portrait-card">
-            <img class="profile-photo" src="assets/images/profile.webp" alt="David Bedolla in a robotics laboratory" width="768" height="1024" decoding="async" fetchpriority="high">
+            <img class="profile-photo" src="assets/images/profile.jpg" alt="David Bedolla in a robotics laboratory" width="1536" height="2048" decoding="async" fetchpriority="high">
             <div class="portrait-caption">
               <strong>Robotics Software Engineer</strong>
               <span class="employer-lockup">
-                <img class="init-logo" src="assets/images/init-robots-logo.webp" alt="INIT Robots logo" width="200" height="200" decoding="async">
+                <img class="init-logo" src="assets/images/init-robots-logo.png" alt="INIT Robots logo" width="200" height="200" decoding="async">
                 <span>Lab INIT Robots</span>
               </span>
             </div>
@@ -220,7 +237,7 @@
             <div class="timeline-date">2026-Present</div>
             <div>
               <h3>Associate Researcher</h3>
-              <p class="timeline-place">Lab INIT Robots, Montreal</p>
+              <p class="timeline-place">Lab INIT Robots, Montréal</p>
               <p>Delivering whole-body control and mobile-manipulation software for a Kinova Gen3 system, including ROS 2 and C++ integration, deterministic redundancy resolution, and safety-oriented commands.</p>
             </div>
           </article>
@@ -229,7 +246,7 @@
             <div class="timeline-date">2025</div>
             <div>
               <h3>Postdoctoral Researcher</h3>
-              <p class="timeline-place">École de technologie supérieure, Montreal</p>
+              <p class="timeline-place">ÉTS, Montréal</p>
               <p>Improved control latency and tracking, strengthened real-time scheduling, and delivered reusable symbolic dynamics and inverse-kinematics tools for multiple robotics collaborations.</p>
             </div>
           </article>
@@ -239,7 +256,7 @@
             <div>
               <h3>Research Professor</h3>
               <p class="timeline-place">Universidad Tecnológica de la Mixteca, Mexico</p>
-              <p>Developed and tested 7-DoF robot optimization, supported adaptive-gripper development, and led a multidisciplinary race-vehicle team through design, build, testing, and competition.</p>
+              <p>Developed and tested 7-DoF robot optimization and supported the mechanical design of a three-finger adaptive robotic gripper for activities of daily living.</p>
             </div>
           </article>
 
@@ -247,7 +264,7 @@
             <div class="timeline-date">2020-2023</div>
             <div>
               <h3>Research Assistant</h3>
-              <p class="timeline-place">École de technologie supérieure, Montreal</p>
+              <p class="timeline-place">ÉTS, Montréal</p>
               <p>Built hard real-time exoskeleton software, digital twins, predictive control, and sensor-driven motion pipelines integrating EMG, IMU, and depth-camera data.</p>
             </div>
           </article>
@@ -282,10 +299,10 @@
           </article>
 
           <article class="publication reveal">
-            <div class="pub-year">2024</div>
+            <div class="pub-year">2023</div>
             <div>
               <h3>Learning-Based Upper Limb Robotic Rehabilitation</h3>
-              <p>Doctoral dissertation, École de technologie supérieure.</p>
+              <p>Doctoral dissertation, ÉTS.</p>
               <span class="coming-soon">Repository link to be added</span>
             </div>
           </article>
@@ -329,7 +346,7 @@
           <p>I am open to robotics software engineering and applied R&amp;D opportunities involving real-time control, mobile manipulation, model-based algorithms, hardware integration, and human-robot interaction.</p>
         </div>
         <div class="contact-actions">
-          <a class="button primary" href="mailto:david.bedolla-martinez.1@ens.etsmtl.ca">Send email</a>
+          <a class="button primary" href="mailto:davidbedollamartinez@outlook.es">Send email</a>
           <a class="button secondary light" href="https://www.linkedin.com/in/-davidbedolla" target="_blank" rel="noopener">LinkedIn</a>
         </div>
       </div>

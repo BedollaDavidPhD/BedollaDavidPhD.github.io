@@ -2,27 +2,28 @@
 
 Complete static portfolio project for:
 
-- Repository: `https://github.com/BedollaDavidPhD/BedollaDavid.github.io`
-- GitHub Pages URL: `https://BedollaDavidPhD.github.io/BedollaDavid.github.io/`
+- Intended repository to create or recreate: `https://github.com/BedollaDavidPhD/BedollaDavid.github.io`
+- Intended GitHub Pages URL: `https://BedollaDavidPhD.github.io/BedollaDavid.github.io/`
+
+The local project folder is the current source of truth. The previous GitHub repository was deleted, so recreate it before following the deployment steps.
 
 The project uses plain HTML, CSS, and JavaScript. It has no framework, package manager, or build dependency.
 
 The optional `tools/build_sites_preview.mjs` script packages the same static files for a private Sites preview; it does not change the GitHub Pages workflow.
 
-## Performance
+## Presentation and behavior
 
-- The live page uses optimized WebP versions of the profile photo and INIT Robots logo.
-- The social card is a compact 1200 × 630 JPEG.
+- The live page uses the original-quality profile photo, INIT Robots logo, and social card.
+- Visitors can switch between a clear light theme and a high-contrast dark theme.
+- The theme follows the visitor’s system preference on first visit and remembers their choice.
 - Project illustrations load only when visitors approach them.
-- YouTube is represented by a lightweight thumbnail and does not load its player until **Play video** is selected.
-- Source-quality image files remain in the repository for future editing but are not downloaded by website visitors.
-- Deployment packages include only files used by the live website.
+- YouTube demonstrations start automatically, muted, when they enter the viewport and pause after leaving it.
 
 ## Deploy to GitHub Pages
 
-1. Extract the ZIP file.
-2. Open the extracted `BedollaDavid.github.io-full-project` folder.
-3. Upload all files and folders inside it to the root of the repository's `main` branch.
+1. Create or recreate the `BedollaDavid.github.io` repository under `BedollaDavidPhD`.
+2. Extract `David_Bedolla_GitHub_Pages_Full_Quality.zip`.
+3. Upload all extracted files and folders to the root of the repository's `main` branch.
 4. Confirm that `index.html` is at the repository root.
 5. Open **Settings > Pages** in GitHub.
 6. Choose **Deploy from a branch**.
@@ -47,8 +48,8 @@ Open `http://localhost:8000` in a browser.
 - `assets/css/styles.css`: responsive design
 - `assets/js/main.js`: navigation, animations, and footer year
 - `assets/images/`: profile placeholder and project illustrations
-- `assets/images/profile.webp`: optimized profile image used by the website
-- `assets/images/init-robots-logo.webp`: optimized INIT Robots logo used by the website
+- `assets/images/profile.jpg`: original-quality profile image used by the website
+- `assets/images/init-robots-logo.png`: original-quality INIT Robots logo used by the website
 - `assets/data/videos.json`: editable YouTube portfolio list
 - `documents/David_Bedolla_CV.pdf`: downloadable CV
 - `tools/create_cv_pdf.py`: editable CV PDF generation source

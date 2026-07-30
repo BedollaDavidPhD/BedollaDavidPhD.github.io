@@ -23,12 +23,12 @@ const siteFiles = [
   "assets/images/dynamics-forge.svg",
   "assets/images/exoskeleton.svg",
   "assets/images/favicon.svg",
-  "assets/images/init-robots-logo.webp",
+  "assets/images/init-robots-logo.png",
   "assets/images/mobile-manipulator.svg",
-  "assets/images/profile.webp",
+  "assets/images/profile.jpg",
   "assets/images/tooling.svg",
   "documents/David_Bedolla_CV.pdf",
-  "public/og.jpg",
+  "public/og.png",
 ];
 
 for (const file of siteFiles) {

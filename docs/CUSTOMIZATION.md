@@ -5,7 +5,7 @@
 Edit `index.html` and search for:
 
 - `David Bedolla`
-- `david.bedolla-martinez.1@ens.etsmtl.ca`
+- `davidbedollamartinez@outlook.es`
 - `https://github.com/BedollaDavidPhD`
 - `https://www.linkedin.com/in/-davidbedolla`
 

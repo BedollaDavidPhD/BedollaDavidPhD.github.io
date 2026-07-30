@@ -1,5 +1,31 @@
 const navToggle = document.querySelector('.nav-toggle');
 const siteNav = document.querySelector('.site-nav');
+const themeToggle = document.querySelector('.theme-toggle');
+const themeIcon = themeToggle?.querySelector('.theme-icon');
+const themeLabel = themeToggle?.querySelector('.theme-label');
+const themeColor = document.querySelector('meta[name="theme-color"]');
+
+const syncThemeControl = () => {
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  themeToggle?.setAttribute('aria-pressed', String(isDark));
+  themeToggle?.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} theme`);
+  if (themeIcon) themeIcon.textContent = isDark ? '☀' : '☾';
+  if (themeLabel) themeLabel.textContent = isDark ? 'Light' : 'Dark';
+  themeColor?.setAttribute('content', isDark ? '#08111f' : '#ffffff');
+};
+
+syncThemeControl();
+
+themeToggle?.addEventListener('click', () => {
+  const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = nextTheme;
+  try {
+    localStorage.setItem('portfolio-theme', nextTheme);
+  } catch {
+    // The theme still applies for this page view when storage is unavailable.
+  }
+  syncThemeControl();
+});
 
 navToggle?.addEventListener('click', () => {
   const isOpen = siteNav.classList.toggle('open');
@@ -52,10 +78,8 @@ const renderVideo = (video) => {
   const frame = document.createElement('div');
   frame.className = 'video-frame';
 
-  const playButton = document.createElement('button');
-  playButton.className = 'video-load';
-  playButton.type = 'button';
-  playButton.setAttribute('aria-label', `Play video: ${video.title}`);
+  const preview = document.createElement('div');
+  preview.className = 'video-preview';
 
   const thumbnail = document.createElement('img');
   thumbnail.className = 'video-thumbnail';
@@ -66,21 +90,54 @@ const renderVideo = (video) => {
   thumbnail.loading = 'lazy';
   thumbnail.decoding = 'async';
 
-  const playIcon = makeTextElement('span', 'video-play-icon', '▶');
-  playIcon.setAttribute('aria-hidden', 'true');
-  const playLabel = makeTextElement('span', 'video-play-label', 'Play video');
-  playButton.append(thumbnail, playIcon, playLabel);
-  frame.appendChild(playButton);
+  const mutedIcon = makeTextElement('span', 'video-muted-icon', '🔇');
+  mutedIcon.setAttribute('aria-hidden', 'true');
+  const autoplayLabel = makeTextElement('span', 'video-autoplay-label', 'Autoplays muted');
+  preview.append(thumbnail, mutedIcon, autoplayLabel);
+  frame.appendChild(preview);
 
-  playButton.addEventListener('click', () => {
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1`;
-    iframe.title = video.title;
-    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-    iframe.allowFullscreen = true;
-    frame.replaceChildren(iframe);
-  });
+  let iframe;
+  let shouldPlay = false;
+  const mountPlayer = () => {
+    if (iframe) return;
+    const player = document.createElement('iframe');
+    player.src = `https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&enablejsapi=1&loop=1&playlist=${video.youtubeId}`;
+    player.title = video.title;
+    player.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    player.referrerPolicy = 'strict-origin-when-cross-origin';
+    player.allowFullscreen = true;
+    player.addEventListener('load', () => {
+      sendPlayerCommand(shouldPlay ? 'playVideo' : 'pauseVideo');
+    });
+    frame.replaceChildren(player);
+    return player;
+  };
+
+  const sendPlayerCommand = (command) => {
+    iframe?.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func: command, args: [] }),
+      '*'
+    );
+  };
+
+  if ('IntersectionObserver' in window) {
+    const playbackObserver = new IntersectionObserver(
+      ([entry]) => {
+        shouldPlay = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          iframe = mountPlayer() || iframe;
+          sendPlayerCommand('playVideo');
+        } else {
+          sendPlayerCommand('pauseVideo');
+        }
+      },
+      { threshold: 0.45 }
+    );
+    playbackObserver.observe(frame);
+  } else {
+    shouldPlay = true;
+    iframe = mountPlayer();
+  }
 
   const body = document.createElement('div');
   body.className = 'video-body';

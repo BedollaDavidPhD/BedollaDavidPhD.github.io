@@ -62,22 +62,23 @@ story.append(Paragraph('David Bedolla, PhD', styles['Name']))
 story.append(Paragraph('Robotics Software Engineer | Real-Time Control | Motion | Hardware Deployment', styles['Role']))
 story.append(Paragraph(
     'Montréal, QC, Canada &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="mailto:david.bedolla-martinez.1@ens.etsmtl.ca" color="#536174">david.bedolla-martinez.1@ens.etsmtl.ca</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="https://www.linkedin.com/in/-davidbedolla" color="#536174">linkedin.com/in/-davidbedolla</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="https://github.com/BedollaDavidPhD" color="#536174">github.com/BedollaDavidPhD</a>', styles['Contact']))
+    '<a href="mailto:davidbedollamartinez@outlook.es" color="#536174">davidbedollamartinez@outlook.es</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+    '<a href="https://www.linkedin.com/in/-davidbedolla" color="#536174">linkedin.com/in/-davidbedolla</a><br/>'
+    '<a href="https://github.com/BedollaDavidPhD" color="#536174">github.com/BedollaDavidPhD</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+    '<a href="https://orcid.org/0000-0001-8552-6842" color="#536174">orcid.org/0000-0001-8552-6842</a>', styles['Contact']))
 
 story += section('Profile')
 story.append(Paragraph(
     'Robotics software engineer with applied R&amp;D experience in real-time control, robot dynamics, high-degree-of-freedom systems, and hardware deployment. Experience includes ROS 2 and C++ control systems, redundancy resolution, inverse kinematics, rehabilitation exoskeleton controllers, symbolic modeling, and sensor-based motion generation using IMU, EMG, and depth-camera data. Work connects software architecture, dynamic modeling, motion control, hardware integration, and physical validation for assistive robotics and mobile manipulation.', styles['BodySmall']))
 
 story += section('Professional Experience')
-story.append(job('2026-Present', 'Associate Researcher', 'Lab INIT Robots, Montreal', [
+story.append(job('2026-Present', 'Associate Researcher', 'Lab INIT Robots, Montréal', [
     'Deployed a 400 Hz whole-body control system for a 10-DoF mobile manipulator with joystick-based commands.',
     'Implemented Kinova Gen3 redundancy resolution with approximately 3 microseconds runtime on an Intel i7 processor.',
     'Integrated the method into a real-time ROS 2 and C++ pipeline using Pinocchio.',
     'Improved Cartesian tracking with a super-twisting controller and safety-oriented command logic.'
 ]))
-story.append(job('2025', 'Postdoctoral Researcher', 'École de technologie supérieure, Montreal', [
+story.append(job('2025', 'Postdoctoral Researcher', 'ÉTS, Montréal', [
     'Reduced lower-limb robot control latency by 30 times, enabling torque-based control and lower tracking error.',
     'Improved ROS and Python real-time scheduling for autonomous vehicle control, reducing steering oscillations.',
     'Developed symbolic dynamics and inverse-kinematics GUI tools for rapid robot modeling and validation.',
@@ -88,7 +89,7 @@ story.append(job('2024', 'Research Professor', 'Universidad Tecnológica de la M
     'Supported the mechanical design of a three-finger adaptive robotic gripper for activities of daily living.',
     'Led a national student race-vehicle project through design, construction, testing, and competition.'
 ]))
-story.append(job('2020-2023', 'Research Assistant', 'École de technologie supérieure, Montreal', [
+story.append(job('2020-2023', 'Research Assistant', 'ÉTS, Montréal', [
     'Deployed learning-based inverse kinematics for a 7-DoF rehabilitation exoskeleton in approximately 43 microseconds.',
     'Developed a 1 to 4 kHz hard real-time motion-control stack and a robust predictive controller.',
     'Built LabVIEW and Simscape digital twins and integrated EMG, IMU, and depth-camera sensing.',
@@ -105,7 +106,7 @@ story.append(job('2017-2018', 'Professor', 'Tecnológico Nacional de México, Me
 
 story += section('Education')
 edu = [
-    ['2020-2023', '<b>PhD in Robotics</b><br/>Learning-Based Upper-Limb Robotic Rehabilitation, École de technologie supérieure, Montreal'],
+    ['2020-2023', '<b>PhD in Robotics</b><br/>Learning-Based Upper-Limb Robotic Rehabilitation, ÉTS, Montréal'],
     ['2014-2016', '<b>M.Sc. in Robotics</b><br/>Hardware-in-the-Loop Simulation of a Robotic Manipulator, Universidad Tecnológica de la Mixteca'],
     ['2009-2014', '<b>B.Eng. in Mechatronics</b><br/>Universidad Tecnológica de la Mixteca, CENEVAL EGEL Outstanding distinction']
 ]
@@ -117,7 +118,7 @@ story += section('Selected Publications')
 pubs = [
     '<b>Bedolla-Martínez, D.</b>, Kali, Y., Saad, M., Ochoa-Luna, C., and Rahman, M. H. (2023). <i>Learning human inverse kinematics solutions for redundant robotic upper-limb rehabilitation.</i> Engineering Applications of Artificial Intelligence, 126, 106966. DOI: 10.1016/j.engappai.2023.106966.',
     '<b>Bedolla-Martínez, D.</b>, Kali, Y., Saad, M., Ochoa-Luna, C., and Rahman, M. H. (2023). <i>Robust MPC with Integral Super-Twisting for Trajectory Tracking of an Exoskeleton Robot Arm.</i> IEEE PEDS. DOI: 10.1109/PEDS57185.2023.10246735.',
-    '<b>Bedolla-Martínez, D.</b> (2024). <i>Learning-Based Upper Limb Robotic Rehabilitation.</i> Doctoral dissertation, École de technologie supérieure.'
+    '<b>Bedolla-Martínez, D.</b> (2023). <i>Learning-Based Upper Limb Robotic Rehabilitation.</i> Doctoral dissertation, ÉTS.'
 ]
 for p in pubs:
     story.append(Paragraph('• ' + p, styles['Pub']))

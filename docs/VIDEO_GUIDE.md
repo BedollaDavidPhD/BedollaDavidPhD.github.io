@@ -6,6 +6,8 @@ The video gallery in the **Research and engineering work** section is controlled
 
 You do not need to edit `index.html`.
 
+Videos use YouTube and start automatically with sound disabled when their cards enter the screen. They pause after leaving the screen. Visitors can use the YouTube controls to enable sound.
+
 ## Add another YouTube video
 
 1. Open `assets/data/videos.json`.

@@ -1,13 +1,12 @@
 UPLOAD THE CONTENTS OF THIS FOLDER TO THE REPOSITORY ROOT
 
-For the smallest GitHub Pages upload, use:
-David_Bedolla_GitHub_Pages_Lightweight.zip
+For the current full-quality GitHub Pages upload, use:
+David_Bedolla_GitHub_Pages_Full_Quality.zip
 
-That package contains the live website, editable video list, CV, and guides,
-but excludes source-quality images and private-preview files that visitors do
-not need.
+That package contains the live website, original-quality images, editable
+video list, CV, and guides, while excluding private-preview files.
 
-Repository:
+Repository to create or recreate:
 https://github.com/BedollaDavidPhD/BedollaDavid.github.io
 
 Required repository-root file:
