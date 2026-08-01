@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.26 - Controlled-Variable Plot Legends
+
+- Replaced generic primary and secondary plot legends with the controlled variables shown by each simulator
+- Added matching English, Spanish, and French labels for joint angles, arm angle, altitude, yaw, and roll
+
 ## Version 2.25 - Unified Articulated Rotor Dynamics
 
 - Moved Drone4, Copter1, and Copter2 onto the Featherstone articulated-body simulation path already used by Drone6 and TaxiDrone
