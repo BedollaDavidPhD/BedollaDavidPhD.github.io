@@ -1,5 +1,5 @@
 David Bedolla Portfolio - Full Project Manifest
-Updated: 2026-07-31
+Updated: 2026-08-01
 
 .gitignore
 .gitattributes
@@ -12,6 +12,7 @@ LICENSE
 README.md
 UPLOAD_INSTRUCTIONS.txt
 assets/css/styles.css
+assets/data/i18n.json
 assets/data/dynamics-forge-demos.json
 assets/data/project-media.json
 assets/data/videos.example.json
@@ -26,6 +27,7 @@ assets/images/profile-placeholder.svg
 assets/images/tooling.svg
 assets/js/dynamics-forge-demos.js
 assets/js/dynamics-forge-worker.js
+assets/js/i18n.js
 assets/js/main.js
 assets/models/dynamics-forge/MotorPropCCW.STL
 assets/models/dynamics-forge/MotorPropCW.STL

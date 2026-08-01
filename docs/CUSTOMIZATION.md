@@ -23,29 +23,37 @@ To replace a project illustration with an embedded YouTube video, paste its URL 
 
 The Dynamics Forge Web Demos use `assets/data/dynamics-forge-demos.json` for their labels, controls, camera views, and CAD references. See `docs/DYNAMICS_FORGE_DEMOS.md` before changing a model or its worker-side equations.
 
-## 4. Experience
+## 4. Languages
+
+The header language menu supports English, Spanish, and French. The English website text is the source text; its reviewed Spanish and French equivalents are stored in `assets/data/i18n.json`.
+
+When changing visible English copy in `index.html` or simulator labels in `assets/data/dynamics-forge-demos.json`, add the exact source text and both translations to that catalogue. Keep official publication titles, product names, software names, and technical abbreviations in their published form.
+
+The selected language is stored only in the visitor's browser through `localStorage`.
+
+## 5. Experience
 
 Each role is an `<article class="timeline-item">` inside the `#experience` section.
 
-## 5. Publications
+## 6. Publications
 
 Each publication is an `<article class="publication">` inside the `#publications` section. Verify every DOI before publishing.
 
-## 6. Skills
+## 7. Skills
 
 Skill categories are `<article class="skill-card">` elements inside the `#skills` section.
 
-## 7. Colors and layout
+## 8. Colors and layout
 
 Edit CSS variables near the beginning of `assets/css/styles.css` to change the visual theme.
 
-## 8. CV
+## 9. CV
 
 Replace `documents/David_Bedolla_CV.pdf` with your latest CV while keeping the same filename, or update all CV links in `index.html`.
 
 The source generator is available at `tools/create_cv_pdf.py`.
 
-## 9. Public repository
+## 10. Public repository
 
 The GitHub Pages repository is:
 
@@ -53,6 +61,6 @@ The GitHub Pages repository is:
 
 Its public website URL is `https://bedolladavidphd.github.io/`. Keep the canonical URL in `index.html`, `robots.txt`, `sitemap.xml`, and `404.html` aligned with that root address.
 
-## 10. Profile consistency
+## 11. Profile consistency
 
 Review `docs/PROFILE_CONSISTENCY_REVIEW.md` before changing titles, dates, account links, or degree formatting. It lists the differences found between the website and CV sources.

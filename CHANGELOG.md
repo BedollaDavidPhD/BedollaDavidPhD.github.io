@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 2.19 - Trilingual Engineering Portfolio
+
+- Added a persistent English, Spanish, and French language selector to the site header
+- Added reviewed engineering translations for the portfolio, experience, education, skills, contact content, accessibility labels, and interactive simulator
+- Kept official publication titles, software names, product names, abbreviations, and units in their authoritative form
+- Added the translation catalogue and runtime to the GitHub Pages and Sites builds
+
 ## Version 2.18 - Portfolio Link in CV
 
 - Added the live GitHub Pages portfolio as a clickable contact link in the CV PDF

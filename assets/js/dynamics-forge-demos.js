@@ -1,6 +1,7 @@
 (() => {
   const root = document.getElementById("dynamics-forge-demos");
   if (!root) return;
+  const tr = (source) => window.PortfolioI18n?.t(source) || source;
 
   const ui = {
     canvas: document.getElementById("forge-canvas"),
@@ -514,7 +515,7 @@
     const system = state.systems[state.activeIndex];
     if (!system || !state.result) {
       context.fillStyle = css("--forge-muted") || "#9fb0c6"; context.font = "600 15px system-ui"; context.textAlign = "center";
-      context.fillText(state.running ? "Running simulation…" : "Choose a system to begin", width / 2, height / 2);
+      context.fillText(tr(state.running ? "Running simulation…" : "Choose a system to begin"), width / 2, height / 2);
       return;
     }
     const scene = sceneFor(system, state.result, sampleIndex());
@@ -573,8 +574,8 @@
     if (hasSecondary) { drawSeries(secondaryDesired, secondaryReferenceColor, true, secondaryYAt); drawSeries(secondaryActual, secondaryColor, false, secondaryYAt); }
     const cursorX = pad.x + (state.playback / system.duration) * (width - 2 * pad.x);
     context.strokeStyle = css("--forge-plot-cursor") || "rgba(255,255,255,.65)"; context.beginPath(); context.moveTo(cursorX, pad.top); context.lineTo(cursorX, height - pad.bottom); context.stroke();
-    context.fillStyle = primaryColor; context.font = "600 10px system-ui"; context.textAlign = "left"; context.fillText("primary", 12, height - 5);
-    if (hasSecondary) { context.fillStyle = secondaryColor; context.fillText("secondary", 58, height - 5); }
+    context.fillStyle = primaryColor; context.font = "600 10px system-ui"; context.textAlign = "left"; context.fillText(tr("primary"), 12, height - 5);
+    if (hasSecondary) { context.fillStyle = secondaryColor; context.fillText(tr("secondary"), 58, height - 5); }
   }
 
   function renderAll() { render(); renderPlot(); }
@@ -808,6 +809,7 @@
 
   const resizeObserver = new ResizeObserver(renderAll); resizeObserver.observe(ui.canvas); if (ui.plot) resizeObserver.observe(ui.plot);
   new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  document.addEventListener("portfolio-language-change", renderAll);
   new IntersectionObserver((entries) => { state.visible = entries[0]?.isIntersecting ?? false; if (!state.visible) stopAnimation(); else if (state.result && !state.userPaused) setPlaying(true); }, { rootMargin: "300px 0px", threshold: 0.04 }).observe(root);
 
   setPlaybackEnabled(false); renderAll(); initialize();
