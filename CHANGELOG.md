@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.24 - One-Line CV Contact Header
+
+- Arranged My page, LinkedIn, email, and Montréal location on one line in the CV header
+- Preserved clickable portfolio, LinkedIn, and email links
+
 ## Version 2.23 - CV Contact Links
 
 - Replaced the displayed portfolio URL in the CV with a natural "My page" hyperlink

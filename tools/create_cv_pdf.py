@@ -62,10 +62,10 @@ story = []
 story.append(Paragraph('David Bedolla, PhD', styles['Name']))
 story.append(Paragraph('Robotics Software Engineer | Real-Time Control | Motion | Hardware Deployment', styles['Role']))
 story.append(Paragraph(
-    'Montréal, QC, Canada &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="mailto:davidbedollamartinez@outlook.es" color="#536174">davidbedollamartinez@outlook.es</a><br/>'
+    '<a href="https://bedolladavidphd.github.io/" color="#536174">My page</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
     '<a href="https://www.linkedin.com/in/-davidbedolla" color="#536174">LinkedIn</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="https://bedolladavidphd.github.io/" color="#536174">My page</a>', styles['Contact']))
+    '<a href="mailto:davidbedollamartinez@outlook.es" color="#536174">davidbedollamartinez@outlook.es</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+    'Montréal, QC, Canada', styles['Contact']))
 
 story += section('Profile')
 story.append(Paragraph(
