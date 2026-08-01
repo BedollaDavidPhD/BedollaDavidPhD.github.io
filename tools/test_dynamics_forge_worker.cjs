@@ -201,8 +201,30 @@ assert.match(indexSource, /class="hero-name notranslate" translate="no">David Be
 for (const language of ["es", "fr"]) {
   for (const [sourceText, translatedText] of Object.entries(translations.translations[language])) {
     for (const term of ["PhD", "R&D", "CAD", "IMU", "IMUs", "EMG", "PID", "DAQ", "FPGA", "stack"]) {
-      if (sourceText.includes(term)) assert(translatedText.includes(term), `${language} must preserve ${term} in: ${sourceText}`);
+      const preservesTerm = term === "stack"
+        ? translatedText.toLowerCase().includes(term)
+        : translatedText.includes(term);
+      if (sourceText.includes(term)) assert(preservesTerm, `${language} must preserve ${term} in: ${sourceText}`);
     }
+  }
+}
+const naturalEngineeringCopy = {
+  es: {
+    "P gain scales the current tracking error. Increasing it strengthens immediate correction; excessive values can excite oscillation.": "La ganancia P escala el error de seguimiento actual. Aumentarla refuerza la corrección inmediata; valores excesivos pueden excitar oscilaciones.",
+    "D gain acts on velocity or error rate to add damping. Excessive values can amplify encoder and estimator noise.": "La ganancia D actúa sobre la velocidad o la tasa de cambio del error para añadir amortiguamiento. Valores excesivos pueden amplificar el ruido del codificador y del estimador.",
+    "Joint 1 position loop": "Lazo de posición de la articulación 1",
+    "Tools used across the robotics stack": "Herramientas utilizadas en todo el stack de robótica",
+  },
+  fr: {
+    "P gain scales the current tracking error. Increasing it strengthens immediate correction; excessive values can excite oscillation.": "Le gain P multiplie l'erreur de suivi instantanée. L'augmenter renforce la correction immédiate; des valeurs excessives peuvent exciter des oscillations.",
+    "D gain acts on velocity or error rate to add damping. Excessive values can amplify encoder and estimator noise.": "Le gain D agit sur la vitesse ou la dérivée de l'erreur pour ajouter de l'amortissement. Des valeurs excessives peuvent amplifier le bruit de l'encodeur et de l'estimateur.",
+    "Joint 1 position loop": "Boucle de position de l'articulation 1",
+    "Tools used across the robotics stack": "Outils utilisés dans l'ensemble du stack robotique",
+  },
+};
+for (const [language, copy] of Object.entries(naturalEngineeringCopy)) {
+  for (const [sourceText, expectedText] of Object.entries(copy)) {
+    assert.equal(translations.translations[language][sourceText], expectedText, `${language} must use natural engineering terminology for: ${sourceText}`);
   }
 }
 assert(indexSource.indexOf('id="forge-run"') < indexSource.indexOf('class="forge-gains-heading"'), "Run simulation must appear above the gain fields");

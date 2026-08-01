@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 2.31 - Natural Engineering Translations
+
+- Corrected the simulator, gain guidance, experience, skills, and contact copy in Spanish and French
+- Translated ordinary control-engineering language such as position response, tracking error, damping, controller, effort, yaw, roll, and pitch
+- Retained `stack` and `R&D` in English, together with standard technical acronyms such as PID, CAD, IMU, EMG, DAQ, and FPGA
+
 ## Version 2.30 - Curated Translation Protection
 
 - Disabled browser-level machine translation so the portfolio uses only its curated English, Spanish, and French copy
@@ -13,7 +19,7 @@
 - Documented the 10-second simulation conditions, numerical integration, controller rates, rotor physics, actuator limits, sensing, estimation, and allocation at the top of the simulator
 - Added a red XYZ target point to the 3D view for Drone 6, Drone 8, and TaxiDrone
 - Moved Run simulation above the gain fields and placed viewer layers and RMS/effort results below the graphs
-- Removed job-search wording from the contact section and preserved common English engineering terms in the Spanish and French copy
+- Removed job-search wording from the contact section and preserved standard acronyms plus the terms `stack` and `R&D` in the Spanish and French copy
 
 ## Version 2.28 - Eight-System Simulator
 

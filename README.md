@@ -15,7 +15,7 @@ The optional `tools/build_sites_preview.mjs` script packages the same static fil
 
 - The live page uses the original-quality profile photo, INIT Robots logo, and social card.
 - Visitors can switch between a clear light theme and a high-contrast dark theme.
-- Browser-level machine translation is disabled because the site provides curated English, Spanish, and French copy; names, credentials, acronyms, and common engineering terms remain stable across languages.
+- Browser-level machine translation is disabled because the site provides curated English, Spanish, and French copy; names, credentials, standard acronyms, `stack`, and `R&D` remain stable while ordinary engineering language is translated naturally.
 - The theme follows the visitor’s system preference on first visit and remembers their choice.
 - Project illustrations load only when visitors approach them.
 - A project illustration can be replaced with a YouTube embed by pasting its URL into `assets/data/project-media.json`.
