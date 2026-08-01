@@ -34,10 +34,10 @@
       document.documentElement.dataset.theme = 'light';
     }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260801-level4-1">
-  <script defer src="assets/js/i18n.js?v=20260801-plot-labels1"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260801-position-plots1">
+  <script defer src="assets/js/i18n.js?v=20260801-position-plots1"></script>
   <script defer src="assets/js/main.js?v=20260801-trilingual1"></script>
-  <script defer src="assets/js/dynamics-forge-demos.js?v=20260801-plot-labels1"></script>
+  <script defer src="assets/js/dynamics-forge-demos.js?v=20260801-position-plots1"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -276,7 +276,7 @@
 
         </div>
 
-        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260801-plot-labels1">
+        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260801-position-plots1">
           <div class="forge-heading">
             <div>
               <p class="eyebrow">Interactive simulator</p>
@@ -319,6 +319,10 @@
 
               <div class="forge-plot-wrap">
                 <canvas id="forge-plot" aria-label="Reference and simulated response plot"></canvas>
+              </div>
+
+              <div id="forge-position-plot-wrap" class="forge-plot-wrap" hidden>
+                <canvas id="forge-position-plot" aria-label="X and Y position targets and simulated responses versus time"></canvas>
               </div>
 
               <div class="forge-timeline-row">

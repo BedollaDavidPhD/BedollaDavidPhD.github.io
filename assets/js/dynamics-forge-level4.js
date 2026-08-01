@@ -637,8 +637,9 @@
       initialQ[2] = initialPosition[0];
       super(model, parameters, initialQ);
       this.initialPosition = initialPosition.slice();
-      const pInitial = Number(parameters.positionIntegralInitial) || 0;
-      const aInitial = Number(parameters.attitudeIntegralInitial) || 0;
+      this.integralMax = Math.max(0, Number(parameters.integralMax) || 0);
+      const pInitial = clamp(Number(parameters.positionIntegralInitial) || 0, -this.integralMax, this.integralMax);
+      const aInitial = clamp(Number(parameters.attitudeIntegralInitial) || 0, -this.integralMax, this.integralMax);
       this.integrals = {
         z: new TrapezoidalIntegral(pInitial), x: new TrapezoidalIntegral(pInitial), y: new TrapezoidalIntegral(pInitial),
         roll: new TrapezoidalIntegral(aInitial), pitch: new TrapezoidalIntegral(aInitial), yaw: new TrapezoidalIntegral(aInitial),
@@ -648,7 +649,7 @@
 
     references(time) {
       const position = time < 0.75 ? this.initialPosition : [this.parameters.targetX, this.parameters.targetY, this.parameters.targetZ];
-      const attitude = time < 1 ? [0, 0, 0] : [this.parameters.targetRoll, this.parameters.targetPitch, this.parameters.targetYaw].map(deg2rad);
+      const attitude = time < 1 ? [0, 0, 0] : [0, 0, deg2rad(this.parameters.targetYaw)];
       return { position, attitude };
     }
 
@@ -656,7 +657,7 @@
       const kp = group === "position" ? this.parameters.positionKp : this.parameters.attitudeKp;
       const kd = group === "position" ? this.parameters.positionKd : this.parameters.attitudeKd;
       const ki = group === "position" ? this.parameters.positionKi : this.parameters.attitudeKi;
-      const integral = this.integrals[axis].update(ki * positionError, CONTROLLER_DT, 1);
+      const integral = this.integrals[axis].update(ki * positionError, CONTROLLER_DT, this.integralMax);
       return kp * positionError + kd * velocityError + integral;
     }
 

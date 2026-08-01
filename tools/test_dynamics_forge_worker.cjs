@@ -18,12 +18,22 @@ for (const system of catalogue.systems) {
     assert.ok(system.secondaryPlotLabel.trim(), `${system.id} secondary plot label cannot be empty`);
     plotLabels.add(system.secondaryPlotLabel);
   }
+  if (system.positionPlot) {
+    assert.equal(system.positionPlot.xStateIndex, 0, `${system.id} X plot must use the X position state`);
+    assert.equal(system.positionPlot.yStateIndex, 1, `${system.id} Y plot must use the Y position state`);
+    assert.equal(system.positionPlot.xTargetKey, "targetX", `${system.id} X plot must use the X target`);
+    assert.equal(system.positionPlot.yTargetKey, "targetY", `${system.id} Y plot must use the Y target`);
+    plotLabels.add(system.positionPlot.xLabel);
+    plotLabels.add(system.positionPlot.yLabel);
+  }
 }
+plotLabels.add("Dashed = target");
 for (const language of ["es", "fr"]) {
   for (const label of plotLabels) assert.ok(translations.translations[language][label], `${language} needs ${label}`);
 }
 assert.match(demoRenderer, /system\.primaryPlotLabel/);
 assert.match(demoRenderer, /system\.secondaryPlotLabel/);
+assert.match(demoRenderer, /function renderPositionPlot/);
 assert.doesNotMatch(demoRenderer, /tr\("primary"\)/);
 assert.doesNotMatch(demoRenderer, /tr\("secondary"\)/);
 const messages = [];
@@ -95,18 +105,23 @@ function peakAbsolute(result, stateIndex) {
 }
 
 for (const systemId of ["drone6", "taxi_drone"]) {
+  const system = catalogue.systems.find((entry) => entry.id === systemId);
+  assert(system.positionPlot, `${systemId} needs the combined X/Y position plot`);
+  assert.equal(system.controls.some((control) => control.key === "targetRoll" || control.key === "targetPitch"), false, `${systemId} must not expose roll or pitch targets`);
+  const controlKeys = system.controls.map((control) => control.key);
+  assert.deepEqual(controlKeys.slice(0, 6), ["positionKp", "positionKi", "positionKd", "attitudeKp", "attitudeKi", "attitudeKd"], `${systemId} gains must appear first`);
+  assert.deepEqual(controlKeys.slice(-4), ["targetX", "targetY", "targetZ", "targetYaw"], `${systemId} targets must stay grouped at the end`);
+  assert.equal(defaultsFor(systemId).integralMax, 1, `${systemId} needs the editable anti-windup maximum`);
   const result = simulate(systemId, {
-    targetX: 0,
-    targetY: 0,
+    targetX: 0.8,
+    targetY: 0.6,
     targetZ: 1,
-    targetRoll: 8,
-    targetPitch: 8,
     targetYaw: 0,
   });
-  assert(peakAbsolute(result, 0) > 0.05, `${systemId} pitch did not produce X motion`);
-  assert(peakAbsolute(result, 1) > 0.05, `${systemId} roll did not produce Y motion`);
-  assert(peakAbsolute(result, 6) > 0.02, `${systemId} did not track roll`);
-  assert(peakAbsolute(result, 7) > 0.02, `${systemId} did not track pitch`);
+  assert(peakAbsolute(result, 0) > 0.05, `${systemId} did not track the X target`);
+  assert(peakAbsolute(result, 1) > 0.05, `${systemId} did not track the Y target`);
+  assert(peakAbsolute(result, 6) > 0.01, `${systemId} did not generate roll for Y tracking`);
+  assert(peakAbsolute(result, 7) > 0.01, `${systemId} did not generate pitch for X tracking`);
 }
 
 for (const system of catalogue.systems) {
@@ -123,6 +138,8 @@ for (const systemId of ["copter1", "copter2", "drone4"]) {
 const level4Source = fs.readFileSync(path.join(workerRoot, "dynamics-forge-level4.js"), "utf8");
 assert.equal(level4Source.includes("allocationScale"), false, "Rotor allocation must not be normalized by rotor count");
 assert.equal(level4Source.includes("collectiveScale"), false, "Collective effort must not be normalized by rotor count");
+assert.doesNotMatch(level4Source, /this\.parameters\.targetRoll|this\.parameters\.targetPitch/, "Drone6 and TaxiDrone must hold the independent roll and pitch targets at zero");
+assert.match(level4Source, /this\.integralMax/, "Drone6 and TaxiDrone must apply the editable anti-windup maximum");
 
 const drone4Defaults = defaultsFor("drone4");
 assert.match(requestError("drone4", { ...drone4Defaults, zKp: Number.NaN }, 10), /finite number/i);

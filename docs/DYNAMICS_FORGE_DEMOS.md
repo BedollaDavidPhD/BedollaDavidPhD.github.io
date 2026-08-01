@@ -6,10 +6,12 @@ The **Research and engineering work** section contains six interactive systems i
 - Copter1 arm-angle control
 - Copter2 cascaded yaw-to-roll control
 - Drone4 altitude and yaw control
-- Drone6 full XYZ and roll/pitch/yaw control
-- TaxiDrone full XYZ and roll/pitch/yaw control across 18 rotors
+- Drone6 XYZ position and yaw control with internal roll/pitch stabilization
+- TaxiDrone XYZ position and yaw control across 18 rotors with internal roll/pitch stabilization
 
 Each demo calculates a new result when a controller value or target changes. After completion, the main action becomes **Replay**. Replay does not repeat the numerical integration and is unlimited. Two new manual recalculations are available per rolling minute; automatic default runs when changing systems do not consume that allowance.
+
+Drone6 and TaxiDrone show altitude/yaw in the first time-history graph and X/Y position in a second graph. The X and Y responses share one axis with their dashed target traces. Their independent roll and pitch targets are fixed at zero and omitted from the interface; the outer position loop still generates the transient attitude needed for lateral motion.
 
 ## Visualization
 
@@ -23,7 +25,7 @@ Copter1 and Copter2 use configured cubic trajectories. Copter1 follows `[0, 0.5,
 
 ## Architecture
 
-- `assets/data/dynamics-forge-demos.json` defines systems, editable gains and targets, integral initial values, bounds, camera views, and CAD references.
+- `assets/data/dynamics-forge-demos.json` defines systems, editable gains and targets, integral initial and anti-windup values, bounds, camera views, and CAD references.
 - `assets/js/dynamics-forge-level4.js` contains the static-browser articulated plants, model tables, Featherstone forward dynamics, rotor forces, motor pipeline, encoder quantization, and state estimator.
 - `assets/js/dynamics-forge-worker.js` integrates the selected nonlinear plant and controller equations away from the main UI thread.
 - `assets/js/dynamics-forge-demos.js` manages Run/Replay state, rate allowance, controls, STL loading, Canvas rendering, playback, views, and plots.
@@ -82,6 +84,7 @@ Open `http://localhost:8000`, select every system, change at least one gain and 
 
 - the action changes from Replay to Run simulation after editing;
 - both manual recalculations complete before the rolling limit appears;
+- Drone6 and TaxiDrone keep gains first, group all targets last, and show both X/Y responses and targets in the second graph;
 - Replay remains available without consuming a recalculation;
 - CAD, frame, COM layers, and all four camera views reset correctly;
 - light and dark themes remain readable.

@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 2.27 - XY Position Response Plot
+
+- Added a second time-history graph for Drone6 and TaxiDrone combining X and Y responses with their target traces
+- Fixed the independent roll and pitch targets at zero and removed their controls from the interface
+- Preserved physically coupled lateral tracking by letting the position controller generate the required roll and pitch motion internally
+- Reordered compact controller fields with gains first, integrator settings next, and targets together at the end; added an editable `I max` anti-windup limit
+- Updated simulator titles, engineering descriptions, accessibility text, and plot legends in English, Spanish, and French
+
 ## Version 2.26 - Controlled-Variable Plot Legends
 
 - Replaced generic primary and secondary plot legends with the controlled variables shown by each simulator

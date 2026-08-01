@@ -6,6 +6,8 @@
   const ui = {
     canvas: document.getElementById("forge-canvas"),
     plot: document.getElementById("forge-plot"),
+    positionPlot: document.getElementById("forge-position-plot"),
+    positionPlotWrap: document.getElementById("forge-position-plot-wrap"),
     tabs: document.getElementById("forge-demo-tabs"),
     title: document.getElementById("forge-demo-title"),
     category: document.getElementById("forge-demo-category"),
@@ -60,6 +62,8 @@
     parametersDirty: false,
     manualRunTimestamps: [],
     rateLimitTimer: null,
+    pendingParameters: null,
+    appliedParameters: null,
   };
 
   const primitives = new Map();
@@ -580,7 +584,70 @@
     }
   }
 
-  function renderAll() { render(); renderPlot(); }
+  function renderPositionPlot() {
+    if (!ui.positionPlot || !ui.positionPlotWrap) return;
+    const system = state.systems[state.activeIndex];
+    const config = system?.positionPlot;
+    ui.positionPlotWrap.hidden = !config;
+    if (!config) return;
+
+    const { context, width, height } = prepareCanvas(ui.positionPlot);
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = css("--forge-plot") || "rgba(4, 10, 20, .72)"; context.fillRect(0, 0, width, height);
+    if (!state.result || !state.appliedParameters) return;
+
+    const xActual = [];
+    const yActual = [];
+    const xTarget = [];
+    const yTarget = [];
+    const targetX = Number(state.appliedParameters[config.xTargetKey]);
+    const targetY = Number(state.appliedParameters[config.yTargetKey]);
+    const targetDelay = Number(config.targetDelay) || 0;
+    const initialX = Number(config.initialX) || 0;
+    const initialY = Number(config.initialY) || 0;
+    for (let index = 0; index < state.result.time.length; index += 1) {
+      xActual.push(state.result.states[index * system.stateStride + config.xStateIndex]);
+      yActual.push(state.result.states[index * system.stateStride + config.yStateIndex]);
+      const targetActive = state.result.time[index] >= targetDelay;
+      xTarget.push(targetActive ? targetX : initialX);
+      yTarget.push(targetActive ? targetY : initialY);
+    }
+
+    let minimum = Math.min(...xActual, ...yActual, ...xTarget, ...yTarget);
+    let maximum = Math.max(...xActual, ...yActual, ...xTarget, ...yTarget);
+    if (maximum - minimum < 0.1) { minimum -= 0.05; maximum += 0.05; }
+    const margin = Math.max(0.05, (maximum - minimum) * 0.08);
+    minimum -= margin; maximum += margin;
+    const pad = { x: 12, top: 10, bottom: 18 };
+    const xAt = (index) => pad.x + (index / Math.max(1, xActual.length - 1)) * (width - 2 * pad.x);
+    const yAt = (value) => pad.top + ((maximum - value) / (maximum - minimum)) * (height - pad.top - pad.bottom);
+    context.strokeStyle = css("--forge-plot-grid") || "rgba(148,163,184,.2)"; context.lineWidth = 1;
+    for (let line = 0; line <= 3; line += 1) { const y = pad.top + (line / 3) * (height - pad.top - pad.bottom); context.beginPath(); context.moveTo(pad.x, y); context.lineTo(width - pad.x, y); context.stroke(); }
+    const drawSeries = (values, color, dashed = false) => {
+      context.strokeStyle = color; context.lineWidth = 1.8; context.setLineDash(dashed ? [5, 4] : []); context.beginPath();
+      values.forEach((value, index) => { const x = xAt(index); const y = yAt(value); if (index === 0) context.moveTo(x, y); else context.lineTo(x, y); }); context.stroke(); context.setLineDash([]);
+    };
+    const xColor = css("--forge-plot-primary") || "#38bdf8";
+    const xTargetColor = css("--forge-plot-primary-reference") || "#a5b4fc";
+    const yColor = css("--forge-plot-secondary") || "#4ade80";
+    const yTargetColor = css("--forge-plot-secondary-reference") || "#fdba74";
+    drawSeries(xTarget, xTargetColor, true); drawSeries(xActual, xColor);
+    drawSeries(yTarget, yTargetColor, true); drawSeries(yActual, yColor);
+    const cursorX = pad.x + (state.playback / system.duration) * (width - 2 * pad.x);
+    context.strokeStyle = css("--forge-plot-cursor") || "rgba(255,255,255,.65)"; context.beginPath(); context.moveTo(cursorX, pad.top); context.lineTo(cursorX, height - pad.bottom); context.stroke();
+    const xLabel = tr(config.xLabel || "X position");
+    const yLabel = tr(config.yLabel || "Y position");
+    context.font = "600 10px system-ui"; context.textAlign = "left"; context.fillStyle = xColor; context.fillText(xLabel, 12, height - 5);
+    const yLabelX = 12 + context.measureText(xLabel).width + 18;
+    context.fillStyle = yColor; context.fillText(yLabel, yLabelX, height - 5);
+    const targetLabel = tr("Dashed = target");
+    const targetLabelWidth = context.measureText(targetLabel).width;
+    if (width - targetLabelWidth - 12 > yLabelX + context.measureText(yLabel).width + 14) {
+      context.fillStyle = css("--forge-muted") || "#9fb0c6"; context.fillText(targetLabel, width - targetLabelWidth - 12, height - 5);
+    }
+  }
+
+  function renderAll() { render(); renderPlot(); renderPositionPlot(); }
 
   function resetCamera() {
     const camera = state.systems[state.activeIndex]?.camera || { yaw: -0.7, pitch: 0.4, zoom: 0.9 };
@@ -759,6 +826,7 @@
     if (!state.parametersDirty && state.result) { replaySimulation(); return; }
     if (countAgainstLimit && !manualRunAllowed()) return;
     stopAnimation(); state.playing = false; state.running = true; state.result = null; state.playback = 0; state.trail = [];
+    state.pendingParameters = readParameters();
     const requestId = ++state.requestId;
     setControlsDisabled(true); setPlaybackEnabled(false);
     resetVisualization();
@@ -766,13 +834,13 @@
     ui.run.textContent = "Running…";
     ui.rms.textContent = "—"; ui.secondaryRms.textContent = "—"; ui.peak.textContent = "—";
     updatePlaybackUi(); renderAll();
-    state.worker.postMessage({ requestId, systemId: system.id, parameters: readParameters(), duration: system.duration });
+    state.worker.postMessage({ requestId, systemId: system.id, parameters: state.pendingParameters, duration: system.duration });
   }
 
   function selectSystem(index) {
     const system = state.systems[index];
     if (!system) return;
-    state.activeIndex = index; state.result = null; state.playback = 0; state.trail = []; state.running = false; state.parametersDirty = true;
+    state.activeIndex = index; state.result = null; state.playback = 0; state.trail = []; state.running = false; state.parametersDirty = true; state.pendingParameters = null; state.appliedParameters = null;
     stopAnimation(); state.playing = false;
     ui.category.textContent = system.category; ui.title.textContent = system.title; ui.description.textContent = system.description; ui.controller.textContent = system.controller;
     ui.rmsLabel.textContent = system.primaryMetricLabel || "Primary RMS";
@@ -804,14 +872,14 @@
       const payload = await response.json();
       if (!Array.isArray(payload.systems) || payload.systems.length === 0) throw new Error("No systems configured");
       state.systems = [...payload.systems].sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER));
-      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260801-level4-all1");
+      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260801-position-plots1");
       state.worker.addEventListener("message", (event) => {
         const result = event.data;
         if (result.requestId !== state.requestId || result.systemId !== state.systems[state.activeIndex]?.id) return;
         state.running = false; setControlsDisabled(false);
-        if (result.error) { state.parametersDirty = true; ui.run.textContent = "Run simulation"; ui.status.textContent = `Simulation error: ${result.error}`; root.classList.add("forge-load-error"); renderAll(); return; }
-        if (!validSimulationResult(result)) { state.parametersDirty = true; ui.run.textContent = "Run simulation"; ui.status.textContent = "Simulation error: a non-finite result was rejected for numerical safety."; root.classList.add("forge-load-error"); renderAll(); return; }
-        state.result = result; state.playback = 0; state.parametersDirty = false; buildTrail(); resetVisualization(); setPlaybackEnabled(true);
+        if (result.error) { state.pendingParameters = null; state.parametersDirty = true; ui.run.textContent = "Run simulation"; ui.status.textContent = `Simulation error: ${result.error}`; root.classList.add("forge-load-error"); renderAll(); return; }
+        if (!validSimulationResult(result)) { state.pendingParameters = null; state.parametersDirty = true; ui.run.textContent = "Run simulation"; ui.status.textContent = "Simulation error: a non-finite result was rejected for numerical safety."; root.classList.add("forge-load-error"); renderAll(); return; }
+        state.result = result; state.appliedParameters = state.pendingParameters; state.pendingParameters = null; state.playback = 0; state.parametersDirty = false; buildTrail(); resetVisualization(); setPlaybackEnabled(true);
         ui.rms.textContent = `${result.metrics.rmsError.toFixed(3)} ${result.metrics.metricUnit}`;
         if (Number.isFinite(result.metrics.secondaryRms)) ui.secondaryRms.textContent = `${result.metrics.secondaryRms.toFixed(3)} ${result.metrics.secondaryUnit}`;
         ui.peak.textContent = `${result.metrics.peakEffort.toFixed(2)} ${result.metrics.effortUnit}`;
@@ -846,7 +914,7 @@
   ui.canvas.addEventListener("wheel", (event) => { if (!state.result) return; event.preventDefault(); state.camera.zoom = clamp(state.camera.zoom * Math.exp(-event.deltaY * 0.001), 0.25, 4); render(); }, { passive: false });
   ui.canvas.addEventListener("keydown", (event) => { if (!state.result) return; if (event.code === "Space") { event.preventDefault(); setPlaying(!state.playing, true); } if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); state.playback = clamp(state.playback + (event.key === "ArrowRight" ? 0.25 : -0.25), 0, state.systems[state.activeIndex].duration); updatePlaybackUi(); renderAll(); } });
 
-  const resizeObserver = new ResizeObserver(renderAll); resizeObserver.observe(ui.canvas); if (ui.plot) resizeObserver.observe(ui.plot);
+  const resizeObserver = new ResizeObserver(renderAll); resizeObserver.observe(ui.canvas); if (ui.plot) resizeObserver.observe(ui.plot); if (ui.positionPlot) resizeObserver.observe(ui.positionPlot);
   new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   document.addEventListener("portfolio-language-change", renderAll);
   new IntersectionObserver((entries) => { state.visible = entries[0]?.isIntersecting ?? false; if (!state.visible) stopAnimation(); else if (state.result && !state.userPaused) setPlaying(true); }, { rootMargin: "300px 0px", threshold: 0.04 }).observe(root);
