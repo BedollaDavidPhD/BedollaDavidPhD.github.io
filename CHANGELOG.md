@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 2.30 - Curated Translation Protection
+
+- Disabled browser-level machine translation so the portfolio uses only its curated English, Spanish, and French copy
+- Marked David Bedolla, PhD as non-translatable to prevent the credential from being expanded or truncated by automatic translators
+- Preserved PhD, R&D, CAD, PID, IMU/IMUs, EMG, DAQ, FPGA, and stack terminology across the curated translations
+
 ## Version 2.29 - Engineering Control Interface
 
 - Replaced generic gain tooltips with loop-specific P, I, and D guidance for every robot while keeping the visible gain names compact

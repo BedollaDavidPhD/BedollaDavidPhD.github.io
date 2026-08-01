@@ -195,6 +195,16 @@ for (const language of ["es", "fr"]) {
   ]) assert.ok(translations.translations[language][text], `${language} needs ${text}`);
 }
 assert.doesNotMatch(indexSource, /Dynamics Forge Web Demos|inspect CAD geometry|directly in the portfolio|I am open to/i);
+assert.match(indexSource, /<html[^>]*translate="no"[^>]*class="notranslate"/i, "The curated portfolio must opt out of browser machine translation");
+assert.match(indexSource, /<meta name="google" content="notranslate">/i, "Google translation must defer to the curated language selector");
+assert.match(indexSource, /class="hero-name notranslate" translate="no">David Bedolla, <span>PhD<\/span>/, "The visible name and PhD credential must be protected from automatic translation");
+for (const language of ["es", "fr"]) {
+  for (const [sourceText, translatedText] of Object.entries(translations.translations[language])) {
+    for (const term of ["PhD", "R&D", "CAD", "IMU", "IMUs", "EMG", "PID", "DAQ", "FPGA", "stack"]) {
+      if (sourceText.includes(term)) assert(translatedText.includes(term), `${language} must preserve ${term} in: ${sourceText}`);
+    }
+  }
+}
 assert(indexSource.indexOf('id="forge-run"') < indexSource.indexOf('class="forge-gains-heading"'), "Run simulation must appear above the gain fields");
 assert(indexSource.indexOf('class="forge-results"') < indexSource.indexOf('class="forge-layer-controls"'), "Results must appear before viewer layers below the graphs");
 assert(indexSource.indexOf('id="forge-position-plot-wrap"') < indexSource.indexOf('class="forge-results"'), "Results must follow the graphs");
