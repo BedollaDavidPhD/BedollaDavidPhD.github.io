@@ -34,10 +34,10 @@
       document.documentElement.dataset.theme = 'light';
     }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260801-eight-systems1">
-  <script defer src="assets/js/i18n.js?v=20260801-eight-systems1"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260801-control-ui1">
+  <script defer src="assets/js/i18n.js?v=20260801-control-ui1"></script>
   <script defer src="assets/js/main.js?v=20260801-trilingual1"></script>
-  <script defer src="assets/js/dynamics-forge-demos.js?v=20260801-eight-systems1"></script>
+  <script defer src="assets/js/dynamics-forge-demos.js?v=20260801-control-ui1"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -276,13 +276,13 @@
 
         </div>
 
-        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260801-eight-systems1">
+        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260801-control-ui1">
           <div class="forge-heading">
             <div>
               <p class="eyebrow">Interactive simulator</p>
-              <h3>Dynamics Forge Web Demos</h3>
+              <h3>Dynamics Forge</h3>
             </div>
-            <p>Tune manipulators and aerial systems, inspect CAD geometry, and compare position and orientation control directly in the portfolio.</p>
+            <p>Each 10 s run uses Featherstone articulated-body dynamics with RK4 at 1 kHz and a 250 Hz controller. Rotor plants also include thrust and drag, motor delay and limits, encoder quantization, state estimation, and direct allocation. Default gains are starting values—not optimized settings; tune them and compare tracking and effort.</p>
           </div>
 
           <div class="forge-layout">
@@ -325,6 +325,21 @@
                 <canvas id="forge-position-plot" aria-label="X and Y position targets and simulated responses versus time"></canvas>
               </div>
 
+              <div class="forge-results" aria-label="Simulation results">
+                <div><span id="forge-rms-label">Primary RMS</span><strong id="forge-rms">—</strong></div>
+                <div id="forge-secondary-result"><span id="forge-secondary-rms-label">Secondary RMS</span><strong id="forge-secondary-rms">—</strong></div>
+                <div><span>Peak effort</span><strong id="forge-peak">—</strong></div>
+              </div>
+
+              <fieldset class="forge-layer-controls">
+                <legend>Viewer layers</legend>
+                <label><input id="forge-show-cad" type="checkbox" checked> CAD</label>
+                <label><input id="forge-show-links" type="checkbox" checked> Links</label>
+                <label><input id="forge-show-frames" type="checkbox" checked> Frames</label>
+                <label><input id="forge-show-numbers" type="checkbox" checked> Labels</label>
+                <label><input id="forge-show-com" type="checkbox" checked> COM</label>
+              </fieldset>
+
               <div class="forge-timeline-row">
                 <input id="forge-timeline" type="range" min="0" max="1000" value="0" disabled aria-label="Simulation playback position">
                 <output id="forge-time" for="forge-timeline">0.00 / 0.00 s</output>
@@ -341,27 +356,12 @@
                 <p class="forge-controller-line">Controller <strong id="forge-controller-name">—</strong></p>
               </div>
 
-              <fieldset class="forge-layer-controls">
-                <legend>Viewer layers</legend>
-                <label><input id="forge-show-cad" type="checkbox" checked> CAD</label>
-                <label><input id="forge-show-links" type="checkbox" checked> Links</label>
-                <label><input id="forge-show-frames" type="checkbox" checked> Frames</label>
-                <label><input id="forge-show-numbers" type="checkbox" checked> Labels</label>
-                <label><input id="forge-show-com" type="checkbox" checked> COM</label>
-              </fieldset>
-
+              <button id="forge-run" class="forge-run" type="button">Run simulation</button>
               <div class="forge-gains-heading">
                 <h5>Controller parameters</h5>
                 <button id="forge-reset-gains" type="button">Reset</button>
               </div>
               <div id="forge-gain-grid" class="forge-gain-grid"></div>
-              <button id="forge-run" class="forge-run" type="button">Run simulation</button>
-
-              <div class="forge-results" aria-label="Simulation results">
-                <div><span id="forge-rms-label">Primary RMS</span><strong id="forge-rms">—</strong></div>
-                <div id="forge-secondary-result"><span id="forge-secondary-rms-label">Secondary RMS</span><strong id="forge-secondary-rms">—</strong></div>
-                <div><span>Peak effort</span><strong id="forge-peak">—</strong></div>
-              </div>
             </div>
           </div>
 
@@ -589,7 +589,7 @@
         <div>
           <p class="eyebrow">Contact</p>
           <h2>Let us build reliable robot motion from models to real hardware.</h2>
-          <p>I am open to robotics software engineering and applied R&amp;D opportunities involving real-time control, mobile manipulation, model-based algorithms, hardware integration, and human-robot interaction.</p>
+          <p>Professional work in robotics software engineering and applied R&amp;D, focused on real-time control, mobile manipulation, model-based algorithms, hardware integration, and human-robot interaction.</p>
         </div>
         <div class="contact-actions">
           <a class="button primary" href="mailto:davidbedollamartinez@outlook.es">Send email</a>

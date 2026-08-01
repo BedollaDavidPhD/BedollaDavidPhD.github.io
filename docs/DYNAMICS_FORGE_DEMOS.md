@@ -1,4 +1,4 @@
-# Dynamics Forge Web Demos
+# Dynamics Forge
 
 The **Research and engineering work** section contains eight interactive systems in this order:
 
@@ -13,6 +13,8 @@ The **Research and engineering work** section contains eight interactive systems
 
 Each demo calculates a new result when a controller value or target changes. After completion, the main action becomes **Replay**. Replay does not repeat the numerical integration and is unlimited. Two new manual recalculations are available per rolling minute; automatic default runs when changing systems do not consume that allowance.
 
+The visible gain names stay compact. Every P, I, and D information icon identifies the affected control loop and describes its action and principal tuning risk. The default values are starting points rather than optimized gains. **Run simulation** appears above the parameter grid; response metrics and viewer layers appear below the graphs.
+
 Drone6, Drone8, and TaxiDrone show altitude/yaw in the first time-history graph and X/Y position in a second graph. The X and Y responses share one axis with their dashed target traces. Their independent roll and pitch targets are fixed at zero and omitted from the interface; the outer position loop still generates the transient attitude needed for lateral motion.
 
 ## Visualization
@@ -20,6 +22,8 @@ Drone6, Drone8, and TaxiDrone show altitude/yaw in the first time-history graph 
 CAD, links, coordinate frames, frame labels, and center-of-mass markers are independent layers. Yellow `COM` markers use the configured local mass locations; massless rotor frames do not receive a marker. The view selector provides full 3D, top, front, and side views. Every new calculation and replay resets the camera, pan, zoom, plot scale, trail, and configured model limits before visualization begins.
 
 Rotor frame transforms remain animated independently of the CAD layer. Hiding CAD on Copter1, Copter3, Drone4, Drone6, Drone8, or TaxiDrone therefore leaves the rotating rotor X/Y axes visible while the body and hub frames retain their own motion.
+
+Drone6, Drone8, and TaxiDrone display the applied XYZ reference as a red point in the 3D view. The marker follows the parameter set used for the current numerical result rather than unapplied input edits.
 
 The arm, Copter2, and Copter3 frame trees use the modified-DH convention; they are not imported from URDF. Revolute coordinates therefore rotate about each modified-DH frame's local Z axis. Copter2 uses yaw, roll, left-rotor, and right-rotor states; Copter3 adds its pitch joint and associated fixed link.
 

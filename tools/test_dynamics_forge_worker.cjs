@@ -8,9 +8,14 @@ const workerRoot = path.join(projectRoot, "assets", "js");
 const catalogue = JSON.parse(fs.readFileSync(path.join(projectRoot, "assets", "data", "dynamics-forge-demos.json"), "utf8"));
 const translations = JSON.parse(fs.readFileSync(path.join(projectRoot, "assets", "data", "i18n.json"), "utf8"));
 const demoRenderer = fs.readFileSync(path.join(workerRoot, "dynamics-forge-demos.js"), "utf8");
+const indexSource = fs.readFileSync(path.join(projectRoot, "index.html"), "utf8");
 const orderedSystems = [...catalogue.systems].sort((a, b) => a.order - b.order);
 assert.deepEqual(orderedSystems.map((system) => system.id), ["two_link", "copter1", "copter2", "copter3", "drone4", "drone6", "drone8", "taxi_drone"]);
 assert.deepEqual(orderedSystems.map((system) => system.shortTitle), ["Arm", "Copter 1", "Copter 2", "Copter 3", "Drone 4", "Drone 6", "Drone 8", "TaxiDrone"]);
+for (const system of orderedSystems) {
+  assert.match(system.description, /Modify/i, `${system.id} description must invite gain tuning`);
+  assert.doesNotMatch(system.description, /not independently|targets stay at zero|configured directions|instead of being independent/i, `${system.id} description contains conversational implementation metadata`);
+}
 const plotLabels = new Set();
 for (const system of catalogue.systems) {
   assert.equal(typeof system.primaryPlotLabel, "string", `${system.id} needs a primary plot label`);
@@ -161,12 +166,37 @@ const gainKey = (key) => (
   || /^k[pid]\d*$/i.test(key)
   || /IntegralGain$/i.test(key)
 );
+let gainCount = 0;
 for (const system of catalogue.systems) {
   for (const control of system.controls) {
+    if (gainKey(control.key)) {
+      gainCount += 1;
+      assert(control.label.length <= 10, `Gain label ${control.label} should remain compact`);
+    }
     if (/Target|Initial|Limit|Weight|Amplitude|Minimum|Maximum/i.test(control.label)) {
       assert.equal(gainKey(control.key), false, `Non-gain control ${control.key} would receive an information icon`);
     }
   }
 }
+assert.equal(gainCount, 46, "Every configured gain must receive loop-specific help");
+assert.match(demoRenderer, /function gainLoop/);
+assert.match(demoRenderer, /P gain scales the current tracking error/);
+assert.match(demoRenderer, /I gain accumulates tracking error/);
+assert.match(demoRenderer, /D gain acts on velocity or error rate/);
+assert.match(demoRenderer, /function drawTargetPoint/);
+assert.match(demoRenderer, /state\.appliedParameters\.targetX/);
+for (const language of ["es", "fr"]) {
+  for (const text of [
+    "Joint 1 position loop",
+    "Shared XYZ position loop (collective thrust and attitude-reference generation)",
+    "P gain scales the current tracking error. Increasing it strengthens immediate correction; excessive values can excite oscillation.",
+    "I gain accumulates tracking error to reject steady-state offset. Excessive values can cause windup and slow oscillation.",
+    "D gain acts on velocity or error rate to add damping. Excessive values can amplify encoder and estimator noise.",
+  ]) assert.ok(translations.translations[language][text], `${language} needs ${text}`);
+}
+assert.doesNotMatch(indexSource, /Dynamics Forge Web Demos|inspect CAD geometry|directly in the portfolio|I am open to/i);
+assert(indexSource.indexOf('id="forge-run"') < indexSource.indexOf('class="forge-gains-heading"'), "Run simulation must appear above the gain fields");
+assert(indexSource.indexOf('class="forge-results"') < indexSource.indexOf('class="forge-layer-controls"'), "Results must appear before viewer layers below the graphs");
+assert(indexSource.indexOf('id="forge-position-plot-wrap"') < indexSource.indexOf('class="forge-results"'), "Results must follow the graphs");
 
 console.log("Dynamics Forge worker checks passed.");

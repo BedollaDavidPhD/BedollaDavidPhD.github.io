@@ -21,7 +21,7 @@ Project illustrations are stored in `assets/images/`.
 
 To replace a project illustration with an embedded YouTube video, paste its URL into `assets/data/project-media.json`. Leave the URL blank to keep the illustration. See `docs/VIDEO_GUIDE.md` for the exact format.
 
-The Dynamics Forge Web Demos use `assets/data/dynamics-forge-demos.json` for their labels, controls, camera views, and CAD references. See `docs/DYNAMICS_FORGE_DEMOS.md` before changing a model or its worker-side equations.
+The Dynamics Forge simulations use `assets/data/dynamics-forge-demos.json` for their labels, controls, camera views, and CAD references. See `docs/DYNAMICS_FORGE_DEMOS.md` before changing a model or its worker-side equations.
 
 ## 4. Languages
 

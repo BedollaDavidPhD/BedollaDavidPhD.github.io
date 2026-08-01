@@ -541,6 +541,31 @@
     }
   }
 
+  function drawTargetPoint(context, system, projection) {
+    if (!system.positionPlot || !state.appliedParameters) return;
+    const point = [
+      Number(state.appliedParameters.targetX),
+      Number(state.appliedParameters.targetY),
+      Number(state.appliedParameters.targetZ),
+    ];
+    if (!point.every(Number.isFinite)) return;
+    const screen = projection.project(point);
+    const color = css("--forge-target") || "#dc2626";
+    context.save();
+    context.fillStyle = color;
+    context.strokeStyle = css("--forge-canvas") || "#f7faff";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.arc(screen.x, screen.y, 5.5, 0, Math.PI * 2);
+    context.fill();
+    context.stroke();
+    context.fillStyle = color;
+    context.font = "800 10px system-ui";
+    context.textAlign = "left";
+    context.fillText(tr("XYZ target"), screen.x + 9, screen.y - 7);
+    context.restore();
+  }
+
   function drawTrail(context, projection) {
     if (state.trail.length < 2) return;
     context.strokeStyle = css("--forge-trail") || "rgba(56,189,248,.5)"; context.lineWidth = 1.5; context.setLineDash([5, 5]);
@@ -572,6 +597,7 @@
     drawLinks(context, scene, projection);
     drawFrames(context, scene, projection);
     drawCentersOfMass(context, scene, projection);
+    drawTargetPoint(context, system, projection);
   }
 
   function renderPlot() {
@@ -742,17 +768,35 @@
     ui.status.textContent = "Parameters changed — run the simulation to apply them.";
   }
 
-  function gainHelp(control) {
+  function gainLoop(system, control) {
+    const key = control.key;
+    if (system.id === "two_link") return /1$/.test(key) ? "Joint 1 position loop" : "Joint 2 position loop";
+    if (system.id === "drone4") return key.startsWith("z") ? "Altitude loop (collective rotor effort)" : "Yaw loop (differential rotor effort)";
+    if (system.id === "copter1") return "Arm-angle loop (single-rotor effort)";
+    if (system.id === "copter2") return key.startsWith("yaw") ? "Outer yaw loop (roll-reference generation)" : "Inner roll loop (differential rotor effort)";
+    if (system.id === "copter3") {
+      if (key.startsWith("pitch")) return "Pitch loop (collective rotor effort)";
+      if (key.startsWith("roll")) return "Roll-stabilization loop (differential rotor effort)";
+      return "Yaw loop (differential rotor effort)";
+    }
+    if (["drone6", "drone8", "taxi_drone"].includes(system.id)) {
+      return key.startsWith("position")
+        ? "Shared XYZ position loop (collective thrust and attitude-reference generation)"
+        : "Shared roll/pitch/yaw attitude loop (rotor mixing)";
+    }
+    return "Controller loop";
+  }
+
+  function gainHelp(control, system) {
+    let explanation = "";
     if (/(^|[A-Z0-9])Kp(?:\d+)?$/i.test(control.key) || /^kp\d*$/i.test(control.key)) {
-      return "Proportional gain: increases correction from the current tracking error.";
+      explanation = "P gain scales the current tracking error. Increasing it strengthens immediate correction; excessive values can excite oscillation.";
+    } else if (/(^|[A-Z0-9])Kd(?:\d+)?$/i.test(control.key) || /^kd\d*$/i.test(control.key)) {
+      explanation = "D gain acts on velocity or error rate to add damping. Excessive values can amplify encoder and estimator noise.";
+    } else if (/(^|[A-Z0-9])Ki(?:\d+)?$/i.test(control.key) || /^ki\d*$/i.test(control.key) || /IntegralGain$/i.test(control.key)) {
+      explanation = "I gain accumulates tracking error to reject steady-state offset. Excessive values can cause windup and slow oscillation.";
     }
-    if (/(^|[A-Z0-9])Kd(?:\d+)?$/i.test(control.key) || /^kd\d*$/i.test(control.key)) {
-      return "Derivative gain: adds damping from velocity or error-rate feedback.";
-    }
-    if (/(^|[A-Z0-9])Ki(?:\d+)?$/i.test(control.key) || /^ki\d*$/i.test(control.key) || /IntegralGain$/i.test(control.key)) {
-      return "Integral gain: removes persistent error by accumulating tracking error over time.";
-    }
-    return "";
+    return explanation ? { loop: gainLoop(system, control), explanation } : null;
   }
 
   function buildControls(system) {
@@ -761,12 +805,15 @@
       const controlWrap = document.createElement("div"); controlWrap.className = "forge-control";
       const headingRow = document.createElement("span"); headingRow.className = "forge-control-label";
       const heading = document.createElement("label"); heading.textContent = control.label;
-      const help = gainHelp(control);
+      const help = gainHelp(control, system);
       if (help) {
         const helpWrap = document.createElement("span"); helpWrap.className = "forge-gain-help";
         const helpButton = document.createElement("button"); helpButton.type = "button"; helpButton.className = "forge-info-button";
         helpButton.textContent = "i"; helpButton.setAttribute("aria-label", `About ${control.label}`); helpButton.setAttribute("aria-describedby", `forge-help-${system.id}-${control.key}`);
-        const tooltip = document.createElement("span"); tooltip.id = `forge-help-${system.id}-${control.key}`; tooltip.className = "forge-gain-tooltip"; tooltip.setAttribute("role", "tooltip"); tooltip.textContent = help;
+        const tooltip = document.createElement("span"); tooltip.id = `forge-help-${system.id}-${control.key}`; tooltip.className = "forge-gain-tooltip"; tooltip.setAttribute("role", "tooltip");
+        const loopText = document.createElement("span"); loopText.textContent = help.loop;
+        const explanationText = document.createElement("span"); explanationText.textContent = help.explanation;
+        tooltip.append(loopText, document.createTextNode(" — "), explanationText);
         helpButton.addEventListener("click", () => helpWrap.classList.toggle("is-open"));
         helpButton.addEventListener("blur", () => helpWrap.classList.remove("is-open"));
         helpButton.addEventListener("keydown", (event) => { if (event.key === "Escape") { helpWrap.classList.remove("is-open"); helpButton.blur(); } });

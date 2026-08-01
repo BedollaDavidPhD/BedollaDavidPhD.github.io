@@ -27,6 +27,7 @@
   --forge-passive: #64748b;
   --forge-joint-ring: #eaf2ff;
   --forge-com: #fbbf24;
+  --forge-target: #dc2626;
   --forge-muted: #64748b;
 }
 
@@ -471,7 +472,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 7px;
-  margin: 18px 0 0;
+  margin: 12px 0 0;
   padding: 12px;
   border: 1px solid #cbd5e1;
   border-radius: 11px;
@@ -516,14 +517,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
   z-index: 12;
   left: 50%;
   bottom: calc(100% + 7px);
-  width: min(220px, 58vw);
-  padding: 7px 8px;
+  width: min(300px, 78vw);
+  padding: 9px 10px;
   color: #edf6ff;
   background: #102033;
   border: 1px solid #35506e;
   border-radius: 7px;
   box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 600;
   line-height: 1.35;
   opacity: 0;
@@ -681,6 +682,7 @@ html[data-theme="dark"] {
   --forge-trail: rgba(56, 189, 248, 0.5);
   --forge-link: #60a5fa;
   --forge-passive: #8fa2ba;
+  --forge-target: #fb7185;
   --forge-muted: #9fb0c6;
 }
 html[data-theme="dark"] .section-dark { background: var(--navy); color: white; }

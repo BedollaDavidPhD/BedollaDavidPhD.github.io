@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 2.29 - Engineering Control Interface
+
+- Replaced generic gain tooltips with loop-specific P, I, and D guidance for every robot while keeping the visible gain names compact
+- Rewrote simulator descriptions around the controlled variables and gain tuning, without conversational implementation notes
+- Documented the 10-second simulation conditions, numerical integration, controller rates, rotor physics, actuator limits, sensing, estimation, and allocation at the top of the simulator
+- Added a red XYZ target point to the 3D view for Drone 6, Drone 8, and TaxiDrone
+- Moved Run simulation above the gain fields and placed viewer layers and RMS/effort results below the graphs
+- Removed job-search wording from the contact section and preserved common English engineering terms in the Spanish and French copy
+
 ## Version 2.28 - Eight-System Simulator
 
 - Added Copter 3 using its three-DoF yaw/pitch plant, roll stabilization, quintic reference trajectories, rotor forces, motor limits, encoder quantization, and state estimation
@@ -186,7 +195,7 @@
 - Changed the main action to Replay after a completed result and back to Run simulation only after a parameter changes
 - Allowed two new numerical recalculations per rolling minute while keeping Replay unlimited
 
-## Version 2.0 - Live Dynamics Forge Web Demos
+## Version 2.0 - Live Dynamics Forge Simulations
 
 - Replaced the replay-only viewer with three browser-side nonlinear simulations: manipulator, quadrotor, and cart-pole
 - Added editable PID and full-state feedback gains with rerun, reset, playback, and response plots
