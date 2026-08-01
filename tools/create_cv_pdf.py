@@ -23,6 +23,7 @@ styles.add(ParagraphStyle(name='JobTitle', parent=styles['BodyText'], fontName='
 styles.add(ParagraphStyle(name='Meta', parent=styles['BodyText'], fontSize=8.2, leading=10.5, textColor=BLUE, spaceAfter=3))
 styles.add(ParagraphStyle(name='BulletSmall', parent=styles['BodyText'], fontSize=8.4, leading=11.2, leftIndent=10, firstLineIndent=-7, bulletIndent=0, spaceAfter=2, textColor=colors.HexColor('#263244')))
 styles.add(ParagraphStyle(name='Pub', parent=styles['BodyText'], fontSize=8.2, leading=11, textColor=colors.HexColor('#263244'), spaceAfter=5))
+styles.add(ParagraphStyle(name='SkillCell', parent=styles['BodyText'], fontSize=8.1, leading=9.6, textColor=colors.HexColor('#263244'), spaceAfter=0))
 
 
 def section(title):
@@ -90,8 +91,9 @@ story.append(job('2024', 'Research Professor', 'Universidad Tecnológica de la M
     'Led a national student race-vehicle project through design, construction, testing, and competition.'
 ]))
 story.append(job('2020-2023', 'Research Assistant', 'ÉTS, Montréal', [
-    'Deployed learning-based inverse kinematics for a 7-DoF rehabilitation exoskeleton in approximately 43 microseconds.',
-    'Developed a 1 to 4 kHz hard real-time motion-control stack and a robust predictive controller.',
+    'Deployed closed-form inverse kinematics in approximately 5 microseconds and learning-based inverse kinematics in approximately 43 microseconds.',
+    'Developed a 1 to 4 kHz hard real-time motion-control stack and deployed learning-based predictive control in approximately 387 microseconds.',
+    'Reduced symbolic model-expression size by approximately 90 percent and computed feedforward torque in approximately 210 microseconds.',
     'Built LabVIEW and Simscape digital twins and integrated EMG, IMU, and depth-camera sensing.',
     'Designed an EMG and IMU mirror-rehabilitation system for upper-limb therapy.'
 ]))
@@ -133,15 +135,25 @@ projects = [
 for p in projects:
     story.append(Paragraph('• ' + p, styles['Pub']))
 
+story += section('Awards and Scholarships')
+awards = [
+    ['2024', '<b>ÉTS Excellence Award nomination</b>'],
+    ['2020', '<b>Doctoral scholarship</b> - National Mexican Council of Humanities, Science and Technology'],
+    ['2014', '<b>Master\'s scholarship</b> - National Mexican Council of Humanities, Science and Technology']
+]
+aw = Table([[Paragraph(a, styles['Meta']), Paragraph(b, styles['BodySmall'])] for a,b in awards], colWidths=[0.7*inch, 6.4*inch], hAlign='LEFT')
+aw.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('BOTTOMPADDING',(0,0),(-1,-1),3)]))
+story.append(aw)
+
 story += section('Technical Skills')
 skills_data = [
-    [Paragraph('<b>Programming</b>', styles['BodySmall']), Paragraph('C, C++, Python, MATLAB, LabVIEW, VHDL', styles['BodySmall'])],
-    [Paragraph('<b>Robotics</b>', styles['BodySmall']), Paragraph('ROS 2, Pinocchio, URDF, motion planning, real-time control, mobile manipulation', styles['BodySmall'])],
-    [Paragraph('<b>Modeling and Control</b>', styles['BodySmall']), Paragraph('Kinematics, dynamics, RNEA, MPC, sliding-mode control, reinforcement learning, Gaussian Processes', styles['BodySmall'])],
-    [Paragraph('<b>Simulation and Hardware</b>', styles['BodySmall']), Paragraph('Simulink, Simscape Multibody, LabVIEW RT and FPGA, DAQ, microcontrollers, IMU, EMG, depth cameras', styles['BodySmall'])]
+    [Paragraph('<b>Programming</b>', styles['SkillCell']), Paragraph('C, C++, Python, MATLAB, LabVIEW, VHDL', styles['SkillCell'])],
+    [Paragraph('<b>Robotics</b>', styles['SkillCell']), Paragraph('ROS 2, Pinocchio, URDF, motion planning, real-time control, mobile manipulation', styles['SkillCell'])],
+    [Paragraph('<b>Modeling and Control</b>', styles['SkillCell']), Paragraph('Kinematics, dynamics, RNEA, MPC, sliding-mode control, reinforcement learning, Gaussian Processes', styles['SkillCell'])],
+    [Paragraph('<b>Simulation and Hardware</b>', styles['SkillCell']), Paragraph('Simulink, Simscape Multibody, LabVIEW RT and FPGA, DAQ, microcontrollers, IMU, EMG, depth cameras', styles['SkillCell'])]
 ]
 sk = Table(skills_data, colWidths=[1.55*inch, 5.55*inch], hAlign='LEFT')
-sk.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('ROWBACKGROUNDS',(0,0),(-1,-1),[colors.white, colors.HexColor('#F7F9FC')]),('BOX',(0,0),(-1,-1),0.35,LIGHT),('INNERGRID',(0,0),(-1,-1),0.25,LIGHT),('LEFTPADDING',(0,0),(-1,-1),7),('RIGHTPADDING',(0,0),(-1,-1),7),('TOPPADDING',(0,0),(-1,-1),5),('BOTTOMPADDING',(0,0),(-1,-1),5)]))
+sk.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('ROWBACKGROUNDS',(0,0),(-1,-1),[colors.white, colors.HexColor('#F7F9FC')]),('BOX',(0,0),(-1,-1),0.35,LIGHT),('INNERGRID',(0,0),(-1,-1),0.25,LIGHT),('LEFTPADDING',(0,0),(-1,-1),7),('RIGHTPADDING',(0,0),(-1,-1),7),('TOPPADDING',(0,0),(-1,-1),3),('BOTTOMPADDING',(0,0),(-1,-1),3)]))
 story.append(sk)
 
 doc.build(story, onFirstPage=footer, onLaterPages=footer)

@@ -27,18 +27,76 @@ themeToggle?.addEventListener('click', () => {
   syncThemeControl();
 });
 
+const setNavigationOpen = (isOpen) => {
+  siteNav?.classList.toggle('open', isOpen);
+  navToggle?.setAttribute('aria-expanded', String(isOpen));
+  navToggle?.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+};
+
 navToggle?.addEventListener('click', () => {
-  const isOpen = siteNav.classList.toggle('open');
-  navToggle.setAttribute('aria-expanded', String(isOpen));
-  navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+  setNavigationOpen(!siteNav?.classList.contains('open'));
 });
 
 siteNav?.querySelectorAll('a').forEach((link) => {
   link.addEventListener('click', () => {
-    siteNav.classList.remove('open');
-    navToggle?.setAttribute('aria-expanded', 'false');
+    setNavigationOpen(false);
   });
 });
+
+document.addEventListener('click', (event) => {
+  const clickedInsideNavigation = event.target instanceof Element && event.target.closest('.nav-wrap');
+  if (siteNav?.classList.contains('open') && !clickedInsideNavigation) setNavigationOpen(false);
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && siteNav?.classList.contains('open')) {
+    setNavigationOpen(false);
+    navToggle?.focus();
+  }
+});
+
+const sectionNavLinks = [...(siteNav?.querySelectorAll('.nav-section-links a[href^="#"]') || [])];
+const navigationSections = sectionNavLinks
+  .map((link) => document.querySelector(link.getAttribute('href')))
+  .filter(Boolean);
+
+const setActiveNavigation = (sectionId) => {
+  sectionNavLinks.forEach((link) => {
+    const isActive = link.getAttribute('href') === `#${sectionId}`;
+    link.classList.toggle('active', isActive);
+    if (isActive) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+};
+
+const updateActiveNavigation = () => {
+  const activationLine = Math.min(220, window.innerHeight * 0.32);
+  let activeSection = '';
+  navigationSections.forEach((section) => {
+    if (section.getBoundingClientRect().top <= activationLine) activeSection = section.id;
+  });
+  setActiveNavigation(activeSection);
+};
+
+let navigationFrame = 0;
+const scheduleNavigationUpdate = () => {
+  if (navigationFrame) return;
+  navigationFrame = window.requestAnimationFrame(() => {
+    navigationFrame = 0;
+    updateActiveNavigation();
+  });
+};
+
+sectionNavLinks.forEach((link) => {
+  link.addEventListener('click', () => setActiveNavigation(link.hash.slice(1)));
+});
+window.addEventListener('scroll', scheduleNavigationUpdate, { passive: true });
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 980) setNavigationOpen(false);
+  scheduleNavigationUpdate();
+});
+window.addEventListener('hashchange', scheduleNavigationUpdate);
+updateActiveNavigation();
 
 const revealElements = document.querySelectorAll('.reveal');
 
@@ -62,57 +120,50 @@ if ('IntersectionObserver' in window) {
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const videoGrid = document.getElementById('video-grid');
+const youtubeIdFromUrl = (value) => {
+  const raw = String(value || '').trim();
+  if (/^[A-Za-z0-9_-]{11}$/.test(raw)) return raw;
 
-const makeTextElement = (tag, className, value) => {
-  const element = document.createElement(tag);
-  if (className) element.className = className;
-  element.textContent = value;
-  return element;
+  try {
+    const url = new URL(raw);
+    const hostname = url.hostname.toLowerCase().replace(/^www\./, '');
+    if (hostname === 'youtu.be') return url.pathname.split('/').filter(Boolean)[0] || '';
+
+    const queryId = url.searchParams.get('v');
+    if (queryId) return queryId;
+
+    const pathParts = url.pathname.split('/').filter(Boolean);
+    const markerIndex = pathParts.findIndex((part) => ['embed', 'shorts', 'live'].includes(part));
+    return markerIndex >= 0 ? pathParts[markerIndex + 1] || '' : '';
+  } catch {
+    return '';
+  }
 };
 
-const renderVideo = (video) => {
-  const card = document.createElement('article');
-  card.className = 'video-card';
+const mountProjectVideo = (project) => {
+  const card = document.querySelector(`[data-project-id="${project.id}"]`);
+  const youtubeId = youtubeIdFromUrl(project.youtubeUrl);
+  if (!card || !/^[A-Za-z0-9_-]{11}$/.test(youtubeId)) return;
 
-  const frame = document.createElement('div');
-  frame.className = 'video-frame';
+  card.classList.add('has-video');
+  const title = card.querySelector('h3')?.textContent?.trim() || 'Robotics project video';
+  const media = document.createElement('div');
+  media.className = 'project-media project-video';
 
   const preview = document.createElement('div');
-  preview.className = 'video-preview';
-
+  preview.className = 'project-video-preview';
   const thumbnail = document.createElement('img');
-  thumbnail.className = 'video-thumbnail';
-  thumbnail.src = `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`;
+  thumbnail.src = `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`;
   thumbnail.alt = '';
-  thumbnail.width = 480;
-  thumbnail.height = 360;
   thumbnail.loading = 'lazy';
   thumbnail.decoding = 'async';
-
-  const mutedIcon = makeTextElement('span', 'video-muted-icon', '🔇');
-  mutedIcon.setAttribute('aria-hidden', 'true');
-  const autoplayLabel = makeTextElement('span', 'video-autoplay-label', 'Autoplays muted');
-  preview.append(thumbnail, mutedIcon, autoplayLabel);
-  frame.appendChild(preview);
+  const label = document.createElement('span');
+  label.textContent = 'Project video';
+  preview.append(thumbnail, label);
+  media.appendChild(preview);
 
   let iframe;
   let shouldPlay = false;
-  const mountPlayer = () => {
-    if (iframe) return;
-    const player = document.createElement('iframe');
-    player.src = `https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&enablejsapi=1&loop=1&playlist=${video.youtubeId}`;
-    player.title = video.title;
-    player.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-    player.referrerPolicy = 'strict-origin-when-cross-origin';
-    player.allowFullscreen = true;
-    player.addEventListener('load', () => {
-      sendPlayerCommand(shouldPlay ? 'playVideo' : 'pauseVideo');
-    });
-    frame.replaceChildren(player);
-    return player;
-  };
-
   const sendPlayerCommand = (command) => {
     iframe?.contentWindow?.postMessage(
       JSON.stringify({ event: 'command', func: command, args: [] }),
@@ -120,12 +171,29 @@ const renderVideo = (video) => {
     );
   };
 
+  const mountPlayer = () => {
+    if (iframe) return iframe;
+    iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&enablejsapi=1&loop=1&playlist=${youtubeId}`;
+    iframe.title = `${title} video`;
+    iframe.loading = 'lazy';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.allowFullscreen = true;
+    iframe.addEventListener('load', () => sendPlayerCommand(shouldPlay ? 'playVideo' : 'pauseVideo'));
+    media.replaceChildren(iframe);
+    return iframe;
+  };
+
+  const currentMedia = [...card.children].find((child) => child.matches('img, .project-media'));
+  currentMedia?.replaceWith(media);
+
   if ('IntersectionObserver' in window) {
     const playbackObserver = new IntersectionObserver(
       ([entry]) => {
         shouldPlay = entry.isIntersecting;
-        if (entry.isIntersecting) {
-          iframe = mountPlayer() || iframe;
+        if (shouldPlay) {
+          mountPlayer();
           sendPlayerCommand('playVideo');
         } else {
           sendPlayerCommand('pauseVideo');
@@ -133,55 +201,22 @@ const renderVideo = (video) => {
       },
       { threshold: 0.45 }
     );
-    playbackObserver.observe(frame);
+    playbackObserver.observe(media);
   } else {
     shouldPlay = true;
-    iframe = mountPlayer();
+    mountPlayer();
   }
-
-  const body = document.createElement('div');
-  body.className = 'video-body';
-  body.appendChild(makeTextElement('span', 'video-category', video.category || 'Robotics demo'));
-  body.appendChild(makeTextElement('h4', '', video.title));
-  body.appendChild(makeTextElement('p', '', video.description || 'Robotics engineering demonstration.'));
-  const youtubeLink = makeTextElement('a', 'video-link', 'Open on YouTube');
-  youtubeLink.href = `https://youtu.be/${video.youtubeId}`;
-  youtubeLink.target = '_blank';
-  youtubeLink.rel = 'noopener';
-  body.appendChild(youtubeLink);
-
-  card.append(frame, body);
-  return card;
 };
 
-if (videoGrid) {
-  fetch('assets/data/videos.json')
-    .then((response) => {
-      if (!response.ok) throw new Error('Video data could not be loaded.');
-      return response.json();
-    })
-    .then((videos) => {
-      const validVideos = videos.filter(
-        (video) =>
-          typeof video.title === 'string' &&
-          typeof video.youtubeId === 'string' &&
-          /^[A-Za-z0-9_-]{11}$/.test(video.youtubeId)
-      );
-
-      if (!validVideos.length) throw new Error('No valid videos are available.');
-      videoGrid.replaceChildren(...validVideos.map(renderVideo));
-    })
-    .catch(() => {
-      const fallback = document.createElement('p');
-      fallback.className = 'video-status';
-      fallback.append('The embedded playlist is unavailable. ');
-
-      const link = document.createElement('a');
-      link.href = 'https://youtu.be/4rHsXWw5kek';
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = 'Watch the robotics portfolio on YouTube.';
-      fallback.appendChild(link);
-      videoGrid.replaceChildren(fallback);
-    });
-}
+fetch('assets/data/project-media.json?v=20260801-publicrepo1')
+  .then((response) => {
+    if (!response.ok) throw new Error('Project media data could not be loaded.');
+    return response.json();
+  })
+  .then((data) => {
+    if (!Array.isArray(data.projects)) throw new Error('Project media must contain a projects list.');
+    data.projects.forEach(mountProjectVideo);
+  })
+  .catch((error) => {
+    console.warn('Project videos were not loaded; keeping the project illustrations.', error);
+  });

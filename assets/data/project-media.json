@@ -1,0 +1,32 @@
+{
+  "projects": [
+    {
+      "id": "exoskeleton-control",
+      "youtubeUrl": "https://youtube.com/shorts/QAqGqnWXZ5I?feature=share"
+    },
+    {
+      "id": "kinova-analytical-redundancy",
+      "youtubeUrl": "https://youtube.com/shorts/45pMyiITNns"
+    },
+    {
+      "id": "mobile-manipulator-nullspace",
+      "youtubeUrl": "https://youtube.com/shorts/bXCMJ5xxLK0"
+    },
+    {
+      "id": "mobile-manipulator-analytical",
+      "youtubeUrl": "https://youtube.com/shorts/q_POaccER_o?feature=share"
+    },
+    {
+      "id": "mobile-manipulator-world-frame",
+      "youtubeUrl": "https://youtube.com/shorts/Nh0xvZrZQ18?feature=share"
+    },
+    {
+      "id": "learning-based-predictive-control",
+      "youtubeUrl": "https://youtube.com/shorts/gqUnTe_00sA?feature=share"
+    },
+    {
+      "id": "trajectory-planning-application",
+      "youtubeUrl": "https://youtube.com/shorts/AiUlFXjvsWw?feature=share"
+    }
+  ]
+}

@@ -19,7 +19,9 @@ Each project is an `<article class="project-card">` inside the `#projects` secti
 
 Project illustrations are stored in `assets/images/`.
 
-The video gallery in this section is controlled by `assets/data/videos.json`. See `docs/VIDEO_GUIDE.md` for the exact format.
+To replace a project illustration with an embedded YouTube video, paste its URL into `assets/data/project-media.json`. Leave the URL blank to keep the illustration. See `docs/VIDEO_GUIDE.md` for the exact format.
+
+The Dynamics Forge Web Demos use `assets/data/dynamics-forge-demos.json` for their labels, controls, camera views, and CAD references. See `docs/DYNAMICS_FORGE_DEMOS.md` before changing a model or its worker-side equations.
 
 ## 4. Experience
 
@@ -43,13 +45,13 @@ Replace `documents/David_Bedolla_CV.pdf` with your latest CV while keeping the s
 
 The source generator is available at `tools/create_cv_pdf.py`.
 
-## 9. Repository rename
+## 9. Public repository
 
-The current project URL includes the repository path:
+The GitHub Pages repository is:
 
-`https://BedollaDavidPhD.github.io/BedollaDavid.github.io/`
+`https://github.com/BedollaDavidPhD/BedollaDavidPhD.github.io`
 
-For the shorter URL `https://BedollaDavidPhD.github.io/`, rename the repository to `BedollaDavidPhD.github.io`, then update the canonical URL in `index.html`, `robots.txt`, `sitemap.xml`, and `404.html`.
+Its public website URL is `https://bedolladavidphd.github.io/`. Keep the canonical URL in `index.html`, `robots.txt`, `sitemap.xml`, and `404.html` aligned with that root address.
 
 ## 10. Profile consistency
 

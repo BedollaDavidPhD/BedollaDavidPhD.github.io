@@ -1,19 +1,12 @@
 # David Bedolla profile consistency review
 
-Last reviewed: 2026-07-30
+Last reviewed: 2026-07-31
 
-This file compares the portfolio website, its downloadable PDF CV, and the uploaded LaTeX CV source. It separates changes that were directly requested from facts that still need your decision.
+This file compares the portfolio website, downloadable PDF CV, Google Drive portfolio material, ChatGPT project history, and the editable Overleaf sources. It records the consistency decisions approved by David Bedolla and where they were applied.
 
-## How to send your decisions back
+## Status
 
-For every numbered item below:
-
-1. Delete the options you do **not** want.
-2. Add `[KEEP]` beside the option that should become the standard.
-3. Correct any wording or date that is inaccurate.
-4. Send this file back to Codex.
-
-The website can then be aligned with the final choices, and the CV can be regenerated from the same source of truth.
+All twelve decisions in the former unresolved-conflicts list were approved and applied on 2026-07-31. This document remains the source-of-truth record for future consistency reviews.
 
 ## Applied to the website and downloadable PDF now
 
@@ -30,11 +23,11 @@ The website can then be aligned with the final choices, and the CV can be regene
 | Current role | Associate Researcher, 2026-Present |
 | Video portfolio | YouTube, muted autoplay when visible |
 
-## Decisions needed
+## Previously resolved decisions
 
 ### 1. Primary GitHub account
 
-- Option A - `github.com/BedollaDavidPhD` (currently linked by the website and PDF; use this account when recreating the deleted portfolio repository)
+- Approved - `github.com/BedollaDavidPhD` (verified through GitHub authentication, linked consistently by the website and PDF, and used for the public portfolio repository)
 
 Current website choice: Option A.
 
@@ -116,10 +109,79 @@ These figures agree across the website and the available CV material:
 - 30x lower-limb control latency improvement
 - 43 microseconds for rehabilitation inverse kinematics
 - 1-4 kHz hard real-time exoskeleton control
-- 387 microseconds for the learning-based predictive controller (CV only)
-- 20% tracking improvement for the 7-DoF optimization work (CV only)
+- 387 microseconds for the learning-based predictive controller
+- 20% tracking improvement for the 7-DoF optimization work
+- 90% reduction in symbolic model-expression size
+- 210 microseconds for feedforward-torque computation
+- 5 microseconds for closed-form inverse kinematics
 
 ## Optional profile additions
 
 - [APPLIED] Add ORCID `0000-0001-8552-6842` to the website and CV.
 - [APPLIED] Use the professional email `davidbedollamartinez@outlook.es`.
+
+## Corrections applied to the editable Overleaf sources
+
+- Standardized document identity to **David Bedolla, PhD** outside formal publication citations.
+- Changed the Publications headline from **Roboticist R&D** to **Robotics Software Engineer**.
+- Replaced the ÉTS email with `davidbedollamartinez@outlook.es`.
+- Verified the account and standardized the portfolio on `github.com/BedollaDavidPhD`.
+- Corrected the doctoral dissertation year from **2024** to the confirmed **2023**.
+- Corrected the Ranger-Kinova demo title and replaced the project description that had been placed incorrectly in the author field.
+- Added the confirmed author name to the ÉTS exoskeleton project description.
+- Removed the public phone number from the Publications project.
+- Corrected the MSc dissertation/repository year to 2016.
+- Corrected the ICARCV citation year to 2024.
+- Relabeled items 13-18 as technical contributions to non-authored publications.
+- Removed the unsupported 80% emergency-stop reduction figure from the STAR story.
+
+## Approved decisions applied on 2026-07-31
+
+### 1. Professional name versus publication name - APPLIED
+
+Use `David Bedolla, PhD` for the website, CV header, interviews, and project documents. Retain `Bedolla-Martínez, D.` inside formal publication citations.
+
+### 2. Phone-number visibility - APPLIED
+
+Keep the phone only in private application documents. It is omitted from the website, public CV, and Publications LaTeX project.
+
+### 3. Years-of-experience statement - APPLIED
+
+Do not publish a single total; let the dated timeline demonstrate experience.
+
+### 4. MSc dissertation/publication year - APPLIED
+
+Keep the MSc dates as `2014-2016` and the dissertation/repository entry as `2016`.
+
+### 5. ICARCV citation year - APPLIED
+
+Use 2024. The Publications LaTeX source and website contribution list now agree.
+
+### 6. Work on papers where you are not an author - APPLIED
+
+Keep items 13-18 under **Technical Contributions to Non-Authored Publications**, never under authored publications.
+
+### 7. Emergency-stop reduction claim - APPLIED
+
+Keep the STAR story but remove the 80% figure. The revised result says the workflow helped reduce software-caused emergency stops.
+
+### 8. Additional performance claims - APPLIED
+
+Publish the 20% tracking improvement, 90% expression-size reduction, 210-microsecond feedforward-torque computation, and 5-microsecond closed-form inverse kinematics. All four now appear on the website and current CV.
+
+### 9. Tools discussed but not yet demonstrated consistently - APPLIED
+
+Do not list React, Three.js, Isaac Lab, MuJoCo, diffusion policies, imitation learning, or production bimanual manipulation as established skills until a demonstrable project exists.
+
+### 10. Publications shown on the website - APPLIED
+
+Keep three selected publications visible and provide expandable lists for the complete authored record and the separately labeled technical contributions.
+
+
+### 11. Awards and scholarships - APPLIED
+
+Add the ÉTS Excellence Award nomination and the doctoral/master's scholarships as a compact website section and include them in the current CV.
+
+### 12. Outdated Google Drive files - APPLIED
+
+Moved `David_Bedolla_CV_Eng.pdf`, `David_Bedolla_CV_R_D.pdf`, and the previous `David_Bedolla_CV.pdf` into `G:\My Drive\Portfolio\Archive - outdated`. Copied the finalized current CV to `G:\My Drive\Portfolio\David_Bedolla_CV.pdf`. The archived files remain recoverable.

@@ -12,8 +12,9 @@ __pycache__/
 *.pyc
 portfolio_preview_*
 cv_render/
+tmp/
 dist/
 *.tar.gz
-David_Bedolla_Portfolio_Updated.zip
-David_Bedolla_GitHub_Pages_Lightweight.zip
-David_Bedolla_GitHub_Pages_Full_Quality.zip
+
+# Private editable source material (not part of the public website)
+source-materials/

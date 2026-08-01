@@ -2,10 +2,10 @@
 
 Complete static portfolio project for:
 
-- Intended repository to create or recreate: `https://github.com/BedollaDavidPhD/BedollaDavid.github.io`
-- Intended GitHub Pages URL: `https://BedollaDavidPhD.github.io/BedollaDavid.github.io/`
+- Public repository: `https://github.com/BedollaDavidPhD/BedollaDavidPhD.github.io`
+- GitHub Pages URL: `https://bedolladavidphd.github.io/`
 
-The local project folder is the current source of truth. The previous GitHub repository was deleted, so recreate it before following the deployment steps.
+The local project folder remains the editable source of truth for the public GitHub Pages site.
 
 The project uses plain HTML, CSS, and JavaScript. It has no framework, package manager, or build dependency.
 
@@ -17,13 +17,17 @@ The optional `tools/build_sites_preview.mjs` script packages the same static fil
 - Visitors can switch between a clear light theme and a high-contrast dark theme.
 - The theme follows the visitor’s system preference on first visit and remembers their choice.
 - Project illustrations load only when visitors approach them.
-- YouTube demonstrations start automatically, muted, when they enter the viewport and pause after leaving it.
+- A project illustration can be replaced with a YouTube embed by pasting its URL into `assets/data/project-media.json`.
+- Embedded project demonstrations start muted when they enter the viewport and pause after leaving it.
+- The portfolio case studies now include verified software architecture, real-time control, planning, reinforcement-learning, and hardware evidence.
+- Six Dynamics Forge Web Demos cover a manipulator, Copter1, Copter2, Drone4, full-pose Drone6, and full-pose 18-rotor TaxiDrone in a browser worker with editable controller gains, CAD, links, coordinate frames, DFM center-of-mass markers, multiple views, and response plots. Copter1 and Copter2 use their original DFM cubic trajectories, and the DFM-derived visualization trees are not imported from URDF.
+- Private Overleaf source material is stored locally under `source-materials/` and excluded from Git.
 
 ## Deploy to GitHub Pages
 
-1. Create or recreate the `BedollaDavid.github.io` repository under `BedollaDavidPhD`.
-2. Extract `David_Bedolla_GitHub_Pages_Full_Quality.zip`.
-3. Upload all extracted files and folders to the root of the repository's `main` branch.
+1. Use the public `BedollaDavidPhD.github.io` repository under `BedollaDavidPhD`.
+2. Upload the contents of this local project folder to the root of the repository's `main` branch.
+3. Keep the same file and folder structure.
 4. Confirm that `index.html` is at the repository root.
 5. Open **Settings > Pages** in GitHub.
 6. Choose **Deploy from a branch**.
@@ -50,11 +54,18 @@ Open `http://localhost:8000` in a browser.
 - `assets/images/`: profile placeholder and project illustrations
 - `assets/images/profile.jpg`: original-quality profile image used by the website
 - `assets/images/init-robots-logo.png`: original-quality INIT Robots logo used by the website
-- `assets/data/videos.json`: editable YouTube portfolio list
+- `assets/data/project-media.json`: project-to-YouTube URL mapping; blank URLs keep the current illustrations
+- `assets/data/dynamics-forge-demos.json`: editable web-demo systems, controls, camera views, and CAD references
+- `assets/js/dynamics-forge-demos.js`: interactive CAD viewer, controls, playback, and plots
+- `assets/js/dynamics-forge-worker.js`: browser-side nonlinear simulation subset
+- `assets/models/dynamics-forge/`: CAD exported from the Dynamics Forge project
 - `documents/David_Bedolla_CV.pdf`: downloadable CV
 - `tools/create_cv_pdf.py`: editable CV PDF generation source
+- `tools/sync_dynamics_forge_web_assets.py`: refreshes the selected CAD from Dynamics Forge
 - `tools/build_sites_preview.mjs`: private preview packaging helper
 - `docs/PROFILE_CONSISTENCY_REVIEW.md`: decisions needed to align the website and CV
+- `docs/DYNAMICS_FORGE_DEMOS.md`: browser-demo architecture, reliability boundary, and update instructions
+- `source-materials/overleaf-projects/`: private editable LaTeX sources, excluded from Git and public deployment
 - `404.html`: custom not-found page
 - `robots.txt` and `sitemap.xml`: search-engine metadata
 - `.nojekyll`: prevents Jekyll processing

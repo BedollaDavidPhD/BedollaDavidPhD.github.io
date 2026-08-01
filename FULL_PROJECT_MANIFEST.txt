@@ -1,5 +1,5 @@
 David Bedolla Portfolio - Full Project Manifest
-Updated: 2026-07-30
+Updated: 2026-07-31
 
 .gitignore
 .gitattributes
@@ -12,6 +12,9 @@ LICENSE
 README.md
 UPLOAD_INSTRUCTIONS.txt
 assets/css/styles.css
+assets/data/dynamics-forge-demos.json
+assets/data/project-media.json
+assets/data/videos.example.json
 assets/data/videos.json
 assets/images/dynamics-forge.svg
 assets/images/exoskeleton.svg
@@ -21,8 +24,15 @@ assets/images/mobile-manipulator.svg
 assets/images/profile.jpg
 assets/images/profile-placeholder.svg
 assets/images/tooling.svg
+assets/js/dynamics-forge-demos.js
+assets/js/dynamics-forge-worker.js
 assets/js/main.js
+assets/models/dynamics-forge/MotorPropCCW.STL
+assets/models/dynamics-forge/MotorPropCW.STL
+assets/models/dynamics-forge/forearm.stl
+assets/models/dynamics-forge/link.stl
 docs/CUSTOMIZATION.md
+docs/DYNAMICS_FORGE_DEMOS.md
 docs/PROFILE_CONSISTENCY_REVIEW.md
 docs/VIDEO_GUIDE.md
 documents/David_Bedolla_CV.pdf
@@ -33,3 +43,4 @@ site.webmanifest
 sitemap.xml
 tools/create_cv_pdf.py
 tools/build_sites_preview.mjs
+tools/sync_dynamics_forge_web_assets.py

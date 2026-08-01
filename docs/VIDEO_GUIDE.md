@@ -1,37 +1,43 @@
-# Add videos to the portfolio
+# Add videos to project cards
 
-The video gallery in the **Research and engineering work** section is controlled by:
+YouTube videos are configured in one file:
 
-`assets/data/videos.json`
+`assets/data/project-media.json`
 
-You do not need to edit `index.html`.
+Each entry corresponds to one card in the **Research and engineering work** section. Paste a complete YouTube URL into `youtubeUrl`. When that value is blank, the current project illustration remains visible.
 
-Videos use YouTube and start automatically with sound disabled when their cards enter the screen. They pause after leaving the screen. Visitors can use the YouTube controls to enable sound.
+## Add or change a video
 
-## Add another YouTube video
-
-1. Open `assets/data/videos.json`.
-2. Add a comma after the previous video object.
-3. Copy the example below and replace its values.
-4. Use only the 11-character YouTube video ID, not the full URL.
-
-For `https://youtu.be/4rHsXWw5kek`, the video ID is `4rHsXWw5kek`.
-
-```json
-{
-  "youtubeId": "VIDEO_ID_HERE",
-  "title": "Short video title",
-  "category": "Mobile manipulation",
-  "description": "One sentence explaining the system, your contribution, and the result."
-}
-```
-
-Keep the square brackets around the full list and make sure there is a comma between video objects.
-
-## Recommended description pattern
-
-Use: **system + your contribution + measurable result**
+1. Open `assets/data/project-media.json`.
+2. Find the project by its `id`.
+3. Paste the YouTube link between the quotation marks after `youtubeUrl`.
+4. Save the file and refresh the local website.
 
 Example:
 
-> Kinova Gen3 and mobile-base control demo showing my 400 Hz ROS 2/C++ whole-body controller and real-time redundancy resolution.
+```json
+{
+  "id": "exoskeleton-control",
+  "youtubeUrl": "https://youtu.be/ABCDEFGHIJK"
+}
+```
+
+Full `youtube.com` links, `youtu.be` links, Shorts links, Live links, embed links, and the 11-character video ID are accepted.
+
+Configured videos replace the illustration and use a 9:16 phone-video frame. On desktop, the vertical video appears on the left and the project title and description appear on the right while the portfolio keeps two cards per row. Narrow screens switch to one card per row, and phones stack the video above its description. Videos load only when the card approaches the screen, start muted, include the normal YouTube controls, and pause after leaving the viewport.
+
+## Remove a video
+
+Set its value back to an empty string:
+
+```json
+"youtubeUrl": ""
+```
+
+The original project illustration will be used again on the next page load.
+
+## Add a new project card
+
+Give the new `<article class="project-card">` in `index.html` a unique `data-project-id`, then add the same ID to `assets/data/project-media.json`.
+
+Keep each project card focused on one engineering system. Its existing title and description provide the context below the embedded video, so no duplicate video metadata is required in the JSON file.

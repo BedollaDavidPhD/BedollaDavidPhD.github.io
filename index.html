@@ -8,8 +8,8 @@
   <meta property="og:title" content="David Bedolla, PhD | Robotics Software Engineer">
   <meta property="og:description" content="Real-time robotics software, control, simulation, and hardware deployment for mobile manipulation and rehabilitation robotics.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/">
-  <meta property="og:image" content="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/public/og.png">
+  <meta property="og:url" content="https://bedolladavidphd.github.io/">
+  <meta property="og:image" content="https://bedolladavidphd.github.io/public/og.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1732">
   <meta property="og:image:height" content="908">
@@ -17,8 +17,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="David Bedolla, PhD | Robotics Software Engineer">
   <meta name="twitter:description" content="Real-time robotics software, control, simulation, and hardware deployment.">
-  <meta name="twitter:image" content="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/public/og.png">
-  <link rel="canonical" href="https://BedollaDavidPhD.github.io/BedollaDavid.github.io/">
+  <meta name="twitter:image" content="https://bedolladavidphd.github.io/public/og.png">
+  <link rel="canonical" href="https://bedolladavidphd.github.io/">
   <meta name="theme-color" content="#0b1220">
   <meta name="color-scheme" content="light dark">
   <title>David Bedolla, PhD | Robotics Software Engineer</title>
@@ -34,8 +34,9 @@
       document.documentElement.dataset.theme = 'light';
     }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <script defer src="assets/js/main.js"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260801-fourparts1">
+  <script defer src="assets/js/main.js?v=20260801-publicrepo1"></script>
+  <script defer src="assets/js/dynamics-forge-demos.js?v=20260801-nullspace1"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -48,13 +49,17 @@
       </a>
 
       <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
-        <a href="#about">About</a>
-        <a href="#projects">Engineering work</a>
-        <a href="#experience">Experience</a>
-        <a href="#publications">Publications</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf" target="_blank" rel="noopener">CV PDF</a>
+        <div class="nav-section-links" aria-label="Page sections">
+          <a href="#about">About</a>
+          <a href="#projects">Portfolio</a>
+          <a href="#experience">Experience</a>
+          <a href="#publications">Publications</a>
+          <a href="#skills">Skills</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf" target="_blank" rel="noopener">
+          <span>CV PDF</span><span class="nav-cta-arrow" aria-hidden="true">↗</span>
+        </a>
       </nav>
 
       <div class="header-controls">
@@ -93,11 +98,13 @@
 
         <div class="hero-visual reveal" aria-label="Robotics profile illustration">
           <div class="portrait-card">
-            <img class="profile-photo" src="assets/images/profile.jpg" alt="David Bedolla in a robotics laboratory" width="1536" height="2048" decoding="async" fetchpriority="high">
+            <div class="portrait-image">
+              <img class="profile-photo" src="assets/images/profile.jpg?v=20260730-portrait" alt="David Bedolla in a robotics laboratory" width="1536" height="2048" decoding="async" fetchpriority="high">
+            </div>
             <div class="portrait-caption">
               <strong>Robotics Software Engineer</strong>
               <span class="employer-lockup">
-                <img class="init-logo" src="assets/images/init-robots-logo.png" alt="INIT Robots logo" width="200" height="200" decoding="async">
+                <img class="init-logo" src="assets/images/init-robots-logo.png?v=20260730-portrait" alt="INIT Robots logo" width="200" height="200" decoding="async">
                 <span>Lab INIT Robots</span>
               </span>
             </div>
@@ -112,6 +119,10 @@
         <article><strong>3 μs</strong><span>Redundancy-resolution runtime</span></article>
         <article><strong>30×</strong><span>Lower-limb control speedup</span></article>
         <article><strong>1-4 kHz</strong><span>Hard real-time exoskeleton control</span></article>
+        <article><strong>20%</strong><span>Tracking improvement with PSO tuning</span></article>
+        <article><strong>90%</strong><span>Smaller symbolic model expressions</span></article>
+        <article><strong>210 μs</strong><span>Feedforward torque computation</span></article>
+        <article><strong>5 μs</strong><span>Closed-form inverse kinematics</span></article>
       </div>
     </section>
 
@@ -144,84 +155,208 @@
     <section id="projects" class="section-pad">
       <div class="container">
         <div class="section-heading centered reveal">
-          <p class="eyebrow">Selected engineering work</p>
+          <p class="eyebrow">Robotics portfolio</p>
           <h2>Research and engineering work</h2>
-          <p>Applied robotics work framed around the engineering problem, implementation, and measurable result.</p>
         </div>
 
         <div class="project-grid">
-          <article class="project-card reveal">
-            <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
-            <div class="project-body">
-              <p class="project-kicker">Mobile manipulation</p>
-              <h3>Whole-Body Control for a 10-DoF Robot</h3>
-              <p>Built and deployed a 400 Hz ROS 2 and C++ control pipeline coordinating a Kinova Gen3 arm and mobile base, with deterministic redundancy resolution, safe command transitions, and Cartesian tracking.</p>
-              <ul>
-                <li>ROS 2, C++, Pinocchio</li>
-                <li>Redundancy resolution in 3 μs</li>
-                <li>Super-twisting Cartesian control</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
+          <article class="project-card featured-project reveal" data-project-id="exoskeleton-control">
             <img src="assets/images/exoskeleton.svg" alt="Stylized rehabilitation exoskeleton illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Rehabilitation robotics</p>
-              <h3>Learning-Based Upper-Limb Rehabilitation</h3>
-              <p>Implemented human-like inverse kinematics and robust learning-based control for a 7-DoF rehabilitation exoskeleton, then validated the algorithms in hard real-time hardware operation.</p>
+              <p class="project-kicker">Rehabilitation robotics · Sensor-driven assistance</p>
+              <h3>Real-Time Mirror Rehabilitation with a 7-DoF Exoskeleton</h3>
+              <p>Extends mirror therapy by capturing movement of the unaffected arm and physically reproducing it on the impaired arm in real time. Two wearable IMUs measure upper-arm and forearm motion, while surface EMG estimates wrist orientation; the fused measurements generate a complete reference trajectory for the exoskeleton. Human-oriented inverse kinematics, smooth trajectory generation, and closed-loop tracking reproduce natural upper-limb configurations while adding proprioceptive and kinesthetic feedback to the visual mirror effect.</p>
               <ul>
-                <li>Gaussian Process modeling</li>
-                <li>43 μs inverse kinematics</li>
-                <li>Real-time predictive control</li>
+                <li>Motion capture: two wearable IMUs plus surface EMG</li>
+                <li>Complete shoulder, elbow, forearm, and wrist reference</li>
+                <li>Physical assistance beyond conventional visual mirror therapy</li>
+                <li>1-4 kHz LabVIEW RT/FPGA and C++ control stack</li>
               </ul>
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <img src="assets/images/dynamics-forge.svg" alt="Stylized simulation and dynamics illustration" loading="lazy" decoding="async">
+          <article class="project-card reveal" data-project-id="kinova-analytical-redundancy">
+            <img src="assets/images/tooling.svg" alt="Stylized analytical robotics and kinematics illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Simulation platform</p>
-              <h3>Dynamics Forge</h3>
-              <p>Developed a reusable dynamics and control platform for copters, drones, pendulums, cart-pole systems, and manipulators, with interactive testing, plotting, playback, and a C++ backend.</p>
+              <p class="project-kicker">Analytical robotics</p>
+              <h3>Analytical Redundancy Resolution for a 7-DoF Manipulator</h3>
+              <p>Developed a closed-form redundancy-resolution method for the 7-DoF Kinova Gen3. A swivel angle parameterizes the elbow position along a geometrically determined circle for a specified end-effector pose, providing direct configuration control without iterative inverse-kinematics optimization. Pinocchio-based computational testing confirmed smooth elbow motion and evaluated approximately 1.05 million solutions in 2.84 seconds on an Intel i7 laptop.</p>
               <ul>
-                <li>Analytical dynamic models</li>
-                <li>Interactive teaching simulations</li>
-                <li>Python GUI and C++ backend</li>
+                <li>Geometric elbow-circle parameterization</li>
+                <li>Closed-form solution without iterative optimization</li>
+                <li>1.05 million solutions evaluated in 2.84 seconds</li>
+                <li>Pinocchio-based kinematic validation</li>
               </ul>
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <img src="assets/images/tooling.svg" alt="Stylized robotics software tools illustration" loading="lazy" decoding="async">
+          <article class="project-card reveal" data-project-id="mobile-manipulator-nullspace">
+            <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Robotics tooling</p>
-              <h3>Automatic Kinematics and Dynamics Tools</h3>
-              <p>Created symbolic tools that shorten robot-model setup, support inverse-kinematics validation, and generate efficient dynamic expressions for serial and branched systems.</p>
+              <p class="project-kicker">Real hardware</p>
+              <h3>Real-Time Implementation of 7-DoF Redundancy Resolution</h3>
+              <p>Deployed the redundancy controller on the physical Kinova Gen3 with PS4-commanded Cartesian motion along x, y, and z. The ROS 2 and C++ pipeline accepts velocity-based twist references and absolute pose targets, while command arbitration prioritizes fresh twist inputs for predictable, safety-oriented operation. An independently commanded swivel angle is projected into the Cartesian task null space, enabling real-time elbow reconfiguration with a 3 μs analytical redundancy-resolution computation.</p>
               <ul>
-                <li>Standard and Modified DH</li>
-                <li>Recursive Newton-Euler methods</li>
-                <li>Symbolic optimization</li>
+                <li>PS4 Cartesian velocity commands on real hardware</li>
+                <li>Unified twist and absolute-pose control pipeline</li>
+                <li>Fresh-twist priority through command arbitration</li>
+                <li>Null-space swivel control with 3 μs redundancy resolution</li>
               </ul>
             </div>
           </article>
+
+          <article class="project-card reveal" data-project-id="mobile-manipulator-analytical">
+            <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
+            <div class="project-body">
+              <p class="project-kicker">Whole-body control</p>
+              <h3>Analytical Whole-Body Redundancy Resolution for a Mobile Manipulator</h3>
+              <p>Extended the analytical formulation to the 10-DoF Kinova Gen3 and AgileX mobile manipulator. A task-priority model allocates the additional degrees of freedom to elbow configuration and mobile-base pose regulation after satisfying the Cartesian end-effector objective. This creates one hardware-independent mathematical framework for coordinating arm self-motion, base displacement, and Cartesian tracking.</p>
+              <ul>
+                <li>Unified 10-DoF arm-and-base kinematic model</li>
+                <li>Hierarchical Cartesian and configuration objectives</li>
+                <li>Secondary elbow and mobile-base pose regulation</li>
+                <li>Analytical coordination without hardware-specific logic</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-id="mobile-manipulator-world-frame">
+            <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
+            <div class="project-body">
+              <p class="project-kicker">Whole-body implementation</p>
+              <h3>Real-Time Whole-Body Control of a 10-DoF Mobile Manipulator</h3>
+              <p>Demonstrates whole-body control on the complete AgileX and Kinova Gen3 mobile manipulator. The end-effector target is fixed in the world frame; as the base moves, filtered odometry continuously transforms that target into the arm-base frame, and the manipulator compensates for base displacement to maintain the commanded global position and orientation. The onboard ROS 2 and C++ architecture coordinates base motion, odometry transformation, Cartesian tracking, redundancy resolution, and arm joint-velocity control at 400 Hz.</p>
+              <ul>
+                <li>Primary task: world-frame end-effector position and orientation</li>
+                <li>Filtered odometry transformation into the arm-base frame</li>
+                <li>Onboard ROS 2 and C++ control nodes operating at 400 Hz</li>
+                <li>Coordinated base commands and arm joint-velocity control</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-id="learning-based-predictive-control">
+            <img src="assets/images/exoskeleton.svg" alt="Stylized rehabilitation exoskeleton control illustration" loading="lazy" decoding="async">
+            <div class="project-body">
+              <p class="project-kicker">Learning-based control · Real hardware</p>
+              <h3>Learning-Based Robust Predictive Control for a 7-DoF Rehabilitation Exoskeleton</h3>
+              <p>Developed a learning-based model predictive control framework for the 7-DoF ETS-MARSE upper-limb rehabilitation exoskeleton. A Gaussian Process learns behavior not represented by the analytical model: its predictive mean improves future-state estimates, while its uncertainty quantifies when the controller should act assertively or cautiously. The MPC optimizes control over a prediction horizon with explicit state and input constraints, and a robust sliding-mode layer compensates for remaining disturbances, interaction forces, and prediction errors.</p>
+              <ul>
+                <li>Gaussian Process predictive mean and uncertainty estimation</li>
+                <li>Explicit exoskeleton state and actuator constraints</li>
+                <li>Robust sliding-mode compensation for residual errors</li>
+                <li>Physical-system validation at approximately 387 μs per control iteration</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-id="trajectory-planning-application">
+            <img src="assets/images/tooling.svg" alt="Stylized robot trajectory-planning application illustration" loading="lazy" decoding="async">
+            <div class="project-body">
+              <p class="project-kicker">Motion-planning software · C++ desktop application</p>
+              <h3>URDF-Driven Trajectory Planning and Visualization</h3>
+              <p>Built a modular C++ and Qt application for robot-independent trajectory planning, demonstrated with the Kinova Gen3. Loading a URDF automatically creates the corresponding joint controls and kinematic model, allowing the same interface to support different joint counts and structures. The application combines joint-space time laws, Cartesian waypoints, configurable damped least-squares inverse kinematics, Euler-angle or quaternion orientation references, B-spline and blended paths, Ruckig motion limits, trajectory plots, and OpenGL CAD visualization.</p>
+              <ul>
+                <li>Linear, trapezoidal, cubic, quintic, and seventh-order joint profiles</li>
+                <li>URDF-based inverse kinematics operating at up to 1 kHz in current tests</li>
+                <li>Position, velocity, acceleration, and jerk analysis</li>
+                <li>Lock-free data flow with batched kinematics and asynchronous 3D overlays</li>
+              </ul>
+            </div>
+          </article>
+
         </div>
 
-        <div class="video-showcase reveal">
-          <div class="video-heading">
+        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260731-taxi2">
+          <div class="forge-heading">
             <div>
-              <p class="eyebrow">Video portfolio</p>
-              <h3>Robotics systems in motion</h3>
+              <p class="eyebrow">Interactive simulator</p>
+              <h3>Dynamics Forge Web Demos</h3>
             </div>
-            <p>Demonstrations of control, simulation, and hardware implementation. New videos can be added without changing this page.</p>
+            <p>Tune manipulators and aerial systems, inspect CAD geometry, and compare position and orientation control directly in the portfolio.</p>
           </div>
-          <div id="video-grid" class="video-grid" aria-live="polite">
-            <p class="video-status">Loading video portfolio…</p>
+
+          <div class="forge-layout">
+            <div class="forge-viewer-shell">
+              <div class="forge-canvas-wrap">
+                <canvas id="forge-canvas" tabindex="0" aria-label="Interactive three-dimensional robotics simulator. Drag to rotate, use Shift-drag to pan, and use the mouse wheel or zoom buttons to zoom."></canvas>
+                <span class="forge-live-badge">Browser simulation</span>
+                <div class="forge-canvas-note">Drag to rotate · Shift-drag to pan</div>
+              </div>
+
+              <div class="forge-controls" aria-label="Simulation playback controls">
+                <button id="forge-play" type="button" disabled aria-pressed="false">Play</button>
+                <button id="forge-restart" type="button" disabled>Restart</button>
+                <label>Speed
+                  <select id="forge-speed" disabled>
+                    <option value="0.5">0.5×</option>
+                    <option value="1" selected>1×</option>
+                    <option value="2">2×</option>
+                  </select>
+                </label>
+                <label>View
+                  <select id="forge-view" disabled>
+                    <option value="full" selected>Full 3D</option>
+                    <option value="top">Top</option>
+                    <option value="front">Front</option>
+                    <option value="side">Side</option>
+                  </select>
+                </label>
+                <span class="forge-control-separator" aria-hidden="true"></span>
+                <button id="forge-zoom-out" type="button" disabled aria-label="Zoom out">−</button>
+                <button id="forge-zoom-in" type="button" disabled aria-label="Zoom in">+</button>
+                <button id="forge-camera-reset" type="button" disabled>Reset view</button>
+              </div>
+
+              <div class="forge-plot-wrap">
+                <canvas id="forge-plot" aria-label="Reference and simulated response plot"></canvas>
+              </div>
+
+              <div class="forge-timeline-row">
+                <input id="forge-timeline" type="range" min="0" max="1000" value="0" disabled aria-label="Simulation playback position">
+                <output id="forge-time" for="forge-timeline">0.00 / 0.00 s</output>
+              </div>
+              <p id="forge-demo-status" class="forge-status" role="status">Loading interactive systems…</p>
+            </div>
+
+            <div class="forge-demo-panel">
+              <div id="forge-demo-tabs" class="forge-demo-tabs" role="tablist" aria-label="Dynamics Forge examples"></div>
+              <div class="forge-demo-copy" role="tabpanel" aria-live="polite">
+                <p id="forge-demo-category" class="project-kicker">Robotics system</p>
+                <h4 id="forge-demo-title">Interactive system</h4>
+                <p id="forge-demo-description">Select a model, adjust its controller, and run the simulation.</p>
+                <p class="forge-controller-line">Controller <strong id="forge-controller-name">—</strong></p>
+              </div>
+
+              <fieldset class="forge-layer-controls">
+                <legend>Viewer layers</legend>
+                <label><input id="forge-show-cad" type="checkbox" checked> CAD</label>
+                <label><input id="forge-show-links" type="checkbox" checked> Links</label>
+                <label><input id="forge-show-frames" type="checkbox" checked> Frames</label>
+                <label><input id="forge-show-numbers" type="checkbox" checked> Labels</label>
+                <label><input id="forge-show-com" type="checkbox" checked> COM</label>
+              </fieldset>
+
+              <div class="forge-gains-heading">
+                <h5>Controller parameters</h5>
+                <button id="forge-reset-gains" type="button">Reset</button>
+              </div>
+              <div id="forge-gain-grid" class="forge-gain-grid"></div>
+              <button id="forge-run" class="forge-run" type="button">Run simulation</button>
+
+              <div class="forge-results" aria-label="Simulation results">
+                <div><span id="forge-rms-label">Primary RMS</span><strong id="forge-rms">—</strong></div>
+                <div id="forge-secondary-result"><span id="forge-secondary-rms-label">Secondary RMS</span><strong id="forge-secondary-rms">—</strong></div>
+                <div><span>Peak effort</span><strong id="forge-peak">—</strong></div>
+              </div>
+            </div>
           </div>
+
           <noscript>
-            <p class="video-noscript"><a href="https://youtu.be/4rHsXWw5kek">Watch David Bedolla’s robotics and AI portfolio on YouTube</a>.</p>
+            <p class="forge-noscript">Enable JavaScript to run the interactive robotics demos.</p>
           </noscript>
         </div>
+
       </div>
     </section>
 
@@ -238,7 +373,7 @@
             <div>
               <h3>Associate Researcher</h3>
               <p class="timeline-place">Lab INIT Robots, Montréal</p>
-              <p>Delivering whole-body control and mobile-manipulation software for a Kinova Gen3 system, including ROS 2 and C++ integration, deterministic redundancy resolution, and safety-oriented commands.</p>
+              <p>Delivering 400 Hz whole-body control and mobile-manipulation software for a Kinova Gen3 and AgileX system, including ROS 2/C++ integration, world-frame tracking, deterministic redundancy resolution, and safety-oriented commands.</p>
             </div>
           </article>
 
@@ -247,7 +382,7 @@
             <div>
               <h3>Postdoctoral Researcher</h3>
               <p class="timeline-place">ÉTS, Montréal</p>
-              <p>Improved control latency and tracking, strengthened real-time scheduling, and delivered reusable symbolic dynamics and inverse-kinematics tools for multiple robotics collaborations.</p>
+              <p>Reduced lower-limb control latency by 30×, improved ROS/Python scheduling for autonomous-vehicle control, and delivered reusable dynamics, inverse-kinematics, and simulation tools for international robotics collaborations.</p>
             </div>
           </article>
 
@@ -265,8 +400,64 @@
             <div>
               <h3>Research Assistant</h3>
               <p class="timeline-place">ÉTS, Montréal</p>
-              <p>Built hard real-time exoskeleton software, digital twins, predictive control, and sensor-driven motion pipelines integrating EMG, IMU, and depth-camera data.</p>
+              <p>Deployed a 1-4 kHz exoskeleton control stack, FPGA interfaces, digital twins, learning-based predictive control, safety logic, and sensor-driven motion pipelines integrating EMG, IMU, depth-camera, and force data.</p>
             </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="section-pad">
+      <div class="container">
+        <div class="section-heading centered reveal">
+          <p class="eyebrow">Education</p>
+          <h2>Robotics, embedded systems, and mechatronics</h2>
+        </div>
+
+        <div class="education-grid">
+          <article class="education-card reveal">
+            <span>2020-2023</span>
+            <h3>PhD in Robotics</h3>
+            <p>ÉTS, Montréal</p>
+            <small>Learning-Based Upper-Limb Robotic Rehabilitation</small>
+          </article>
+          <article class="education-card reveal">
+            <span>2014-2016</span>
+            <h3>MSc in Robotics</h3>
+            <p>Universidad Tecnológica de la Mixteca</p>
+            <small>Hardware-in-the-loop simulation of a robotic manipulator</small>
+          </article>
+          <article class="education-card reveal">
+            <span>2009-2014</span>
+            <h3>BEng in Mechatronics</h3>
+            <p>Universidad Tecnológica de la Mixteca</p>
+            <small>CENEVAL EGEL Outstanding distinction</small>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="awards" class="section-pad compact-section">
+      <div class="container">
+        <div class="section-heading centered reveal">
+          <p class="eyebrow">Awards and scholarships</p>
+          <h2>Recognition supporting robotics research</h2>
+        </div>
+
+        <div class="awards-grid">
+          <article class="award-card reveal">
+            <span>2024</span>
+            <h3>ÉTS Excellence Award nomination</h3>
+          </article>
+          <article class="award-card reveal">
+            <span>2020</span>
+            <h3>Doctoral scholarship</h3>
+            <p>National Mexican Council of Humanities, Science and Technology</p>
+          </article>
+          <article class="award-card reveal">
+            <span>2014</span>
+            <h3>Master's scholarship</h3>
+            <p>National Mexican Council of Humanities, Science and Technology</p>
           </article>
         </div>
       </div>
@@ -307,6 +498,44 @@
             </div>
           </article>
         </div>
+
+        <div class="publication-archives reveal">
+          <details class="publication-expand">
+            <summary>
+              <span>Complete authored publication record</span>
+              <small>12 publications and dissertations</small>
+            </summary>
+            <ol class="expanded-publications">
+              <li><strong>Bedolla-Martínez, D.</strong>, Kali, Y., Saad, M., Ochoa-Luna, C., &amp; Rahman, M. H. (2023). <em>Learning human inverse kinematics solutions for redundant robotic upper-limb rehabilitation.</em> Engineering Applications of Artificial Intelligence, 126, 106966. <a href="https://doi.org/10.1016/j.engappai.2023.106966" target="_blank" rel="noopener">DOI</a></li>
+              <li><strong>Bedolla-Martínez, D.</strong>, Kali, Y., Saad, M., Ochoa-Luna, C., &amp; Rahman, M. H. (2023). <em>Robust MPC with Integral Super-Twisting for Trajectory Tracking of an Exoskeleton Robot Arm.</em> IEEE PEDS. <a href="https://doi.org/10.1109/PEDS57185.2023.10246735" target="_blank" rel="noopener">DOI</a></li>
+              <li><strong>Bedolla-Martínez, D.</strong> (2023). <em>Learning-Based Upper Limb Robotic Rehabilitation.</em> Doctoral dissertation, ÉTS.</li>
+              <li><strong>Bedolla-Martínez, D.</strong> (2016). <em>Emulator of a 2-Degree-of-Freedom Robotic Manipulator Based on a Digital Signal Controller.</em> Master's dissertation, CONACYT National Repository.</li>
+              <li><strong>Bedolla-Martínez, D.</strong>, Lugo, E., &amp; Trujillo-Romero, F. (2019). <em>Artificial neural network topology to calculate the PUMA 560's inverse kinematics for real-time applications.</em> Research in Computing Science, 148(8), 397-405.</li>
+              <li><strong>Bedolla-Martínez, D.</strong>, Ramírez, F., &amp; Arias, J. (2018). <em>Hardware-in-the-loop simulation for a robot manipulator based on a digital signal controller.</em> La Mecatrónica en México, 7, 25-36.</li>
+              <li><strong>Bedolla-Martínez, D.</strong>, Lugo, E., Trujillo-Romero, F., &amp; Ramírez, F. (2016). <em>Offline tuner for a discrete PID controller using a multi-objective genetic algorithm.</em> Research in Computing Science, 113, 171-180.</li>
+              <li>Sosa Méndez, D., García Cena, C. E., <strong>Bedolla-Martínez, D.</strong>, &amp; Martín González, A. (2024). <em>Innovative Metaheuristic Optimization Approach with a Bi-Triad for Rehabilitation Exoskeletons.</em> Sensors, 24(7), 2231. <a href="https://doi.org/10.3390/s24072231" target="_blank" rel="noopener">DOI</a></li>
+              <li>Rahman, M. M., Shahria, M. T., Sunny, M. S. H., Khan, M. M. R., <strong>Bedolla-Martínez, D.</strong>, &amp; Rahman, M. H. (2024). <em>Development of a Three-Finger Adaptive Robotic Gripper to Assist Activities of Daily Living.</em> Designs, 8(2), 35. <a href="https://doi.org/10.3390/designs8020035" target="_blank" rel="noopener">DOI</a></li>
+              <li>Sosa Méndez, D., <strong>Bedolla-Martínez, D.</strong>, Saad, M., Kali, Y., Garcia Cena, C. E., &amp; Martin Gonzalez, Á. (2025). <em>Upper-Limb Robotic Rehabilitation: Online Sliding Mode Controller Gain Tuning Using Particle Swarm Optimization.</em> Robotics, 14(4), 51. <a href="https://doi.org/10.3390/robotics14040051" target="_blank" rel="noopener">DOI</a></li>
+              <li>Rahman, M. M., Zarif, M. I. I., Shahria, M. T., <strong>Bedolla-Martinez, D.</strong>, De Caro, J. D. S., Ahamed, S. I., &amp; Rahman, M. H. (2025). <em>Development of a User-Friendly Simulation Model and Control System for Wheelchair-Mounted Robots Performing Pick-and-Place Tasks in Assistive Environments.</em> 6th International Conference on Artificial Intelligence, Robotics and Control.</li>
+              <li>Rahman, M. M., Zarif, M. I. I., Shahria, M. T., <strong>Bedolla-Martinez, D.</strong>, De Caro, J. D. S., Ahamed, S. I., &amp; Rahman, M. H. (2025). <em>Wheelchair-Mounted Robotic Arms: A Systematic Review of Technical Design and Activities of Daily Living Outcomes.</em> Disability and Rehabilitation: Assistive Technology. <a href="https://doi.org/10.1080/17483107.2025.2547042" target="_blank" rel="noopener">DOI</a></li>
+            </ol>
+          </details>
+
+          <details class="publication-expand">
+            <summary>
+              <span>Technical contributions to non-authored publications</span>
+              <small>6 implementation and validation contributions</small>
+            </summary>
+            <ol class="expanded-publications contribution-list" start="13">
+              <li>Bancel, B., Kali, Y., Nerguizian, V., &amp; Saad, M. (2026). <em>Fixed-time lateral control of autonomous vehicles with prescribed performance.</em> SAE International Journal of Vehicle Dynamics, Stability, and NVH, 10(2). <span>Contribution: latency analysis and fixed-time scheduling improvements.</span></li>
+              <li>Abdallah, M., Kali, Y., Saad, M., Fareh, R., &amp; Bettayeb, M. (2025). <em>Wearable exoskeleton robot control using radial basis function-based fixed-time terminal sliding mode with prescribed performance.</em> Asian Journal of Control. <span>Contribution: simulation, real-time implementation, and experimental validation.</span></li>
+              <li>Kali, Y., Saad, M., Saad, M., &amp; Rahman, M. H. (2024). <em>Control of a 7-DOF exoskeleton for upper-limb rehabilitation using a fast terminal super-twisting.</em> IRASET. <span>Contribution: real-time controller implementation.</span></li>
+              <li>Kali, Y., Saad, M., &amp; Fallaha, C. (2024). <em>Variable-Gains Bi-power reaching law of SMC with terminal model-based switching surfaces for a 7-DoF exoskeleton robot.</em> ICARCV. <span>Contribution: real-time controller implementation.</span></li>
+              <li>Abdallah, M., Kali, Y., Saad, M., Fareh, R., &amp; Bettayeb, M. (2023). <em>Robust fast terminal SMC with prescribed performance for a wearable exoskeleton robot.</em> IEEE PEDS. <span>Contribution: real-time controller implementation and experiments.</span></li>
+              <li>Fallaha, C., Saad, M., Ghommam, J., &amp; Kali, Y. (2020). <em>Sliding mode control with model-based switching functions applied on a 7-DOF exoskeleton arm.</em> IEEE/ASME Transactions on Mechatronics, 26(1), 539-550. <span>Contribution: real-time implementation and experimental validation.</span></li>
+            </ol>
+          </details>
+        </div>
       </div>
     </section>
 
@@ -320,19 +549,23 @@
         <div class="skills-grid">
           <article class="skill-card reveal">
             <h3>Programming</h3>
-            <p>C, C++, Python, MATLAB, LabVIEW, VHDL</p>
+            <p>C, C++, Python, MATLAB, Kotlin, LabVIEW, VHDL</p>
           </article>
           <article class="skill-card reveal">
             <h3>Robotics</h3>
-            <p>ROS 2, Pinocchio, URDF, real-time control, motion planning</p>
+            <p>ROS 2, Pinocchio, URDF, Ruckig, real-time control, motion planning</p>
           </article>
           <article class="skill-card reveal">
             <h3>Modeling and control</h3>
-            <p>Kinematics, dynamics, RNEA, MPC, sliding-mode control, reinforcement learning</p>
+            <p>Kinematics, Featherstone ABA, RNEA, MPC, sliding-mode control, reinforcement learning</p>
+          </article>
+          <article class="skill-card reveal">
+            <h3>Software systems</h3>
+            <p>CMake, Qt 6, PySide6, FastAPI, pybind11, Gymnasium, Stable-Baselines3, Android NDK, testing and CI</p>
           </article>
           <article class="skill-card reveal">
             <h3>Simulation and hardware</h3>
-            <p>Simulink, Simscape Multibody, LabVIEW RT and FPGA, DAQ, IMU, EMG, depth cameras</p>
+            <p>Simulink, Simscape Multibody, OpenGL, LabVIEW RT/FPGA, TI DSP, DAQ, IMU, EMG, depth and force sensors</p>
           </article>
         </div>
       </div>

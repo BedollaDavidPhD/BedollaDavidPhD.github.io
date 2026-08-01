@@ -1,13 +1,14 @@
-UPLOAD THE CONTENTS OF THIS FOLDER TO THE REPOSITORY ROOT
+LOCAL SOURCE OF TRUTH
+C:\Dev\BedollaDavid.github.io
 
-For the current full-quality GitHub Pages upload, use:
-David_Bedolla_GitHub_Pages_Full_Quality.zip
+No ZIP or download package is required. Edit and keep the website directly
+in this folder.
 
-That package contains the live website, original-quality images, editable
-video list, CV, and guides, while excluding private-preview files.
+When you decide to publish later, upload the CONTENTS of this folder to the
+repository root while preserving the same file and folder structure.
 
-Repository to create or recreate:
-https://github.com/BedollaDavidPhD/BedollaDavid.github.io
+Public repository:
+https://github.com/BedollaDavidPhD/BedollaDavidPhD.github.io
 
 Required repository-root file:
 index.html
@@ -16,4 +17,4 @@ GitHub Pages configuration:
 Settings > Pages > Deploy from a branch > main > /(root)
 
 Expected public URL:
-https://BedollaDavidPhD.github.io/BedollaDavid.github.io/
+https://bedolladavidphd.github.io/
