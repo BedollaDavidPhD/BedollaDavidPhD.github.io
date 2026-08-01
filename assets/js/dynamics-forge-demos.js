@@ -241,6 +241,46 @@
         { label: "5", point: matrixPoint(frame5) },
       );
       focus = matrixPoint(frame1);
+    } else if (system.id === "copter3") {
+      const offset = sampleIndex * 10;
+      const yaw = result.states[offset] || 0;
+      const pitch = result.states[offset + 1] || 0;
+      const roll = result.states[offset + 2] || 0;
+      const leftRotorAngle = result.states[offset + 3] || 0;
+      const rightRotorAngle = result.states[offset + 4] || 0;
+      const frame0 = matIdentity();
+      const frame1 = matMultiply(frame0, modifiedDh(0, 0, yaw, 1));
+      const frame2 = matMultiply(frame1, modifiedDh(Math.PI / 2, 0, pitch + Math.PI / 2, 0));
+      const frame3 = matMultiply(frame2, modifiedDh(Math.PI / 2, 0, 0, -1.3));
+      const frame4 = matMultiply(frame2, modifiedDh(Math.PI / 2, 0, roll - Math.PI / 2, 1.5));
+      const frame5 = matMultiply(frame4, modifiedDh(-Math.PI / 2, 0.5, leftRotorAngle - Math.PI / 2, 0));
+      const frame6 = matMultiply(frame4, modifiedDh(-Math.PI / 2, -0.5, rightRotorAngle - Math.PI / 2, 0));
+      meshes.push({ key: "prop_ccw", transform: matMultiply(frame5, scaleMatrix(3)), color: "#22d3ee" });
+      meshes.push({ key: "prop_cw", transform: matMultiply(frame6, scaleMatrix(3)), color: "#fb923c" });
+      links.push(
+        { a: matrixPoint(frame0), b: matrixPoint(frame1), actuated: false },
+        { a: matrixPoint(frame1), b: matrixPoint(frame2), actuated: false },
+        { a: matrixPoint(frame2), b: matrixPoint(frame3), actuated: false },
+        { a: matrixPoint(frame2), b: matrixPoint(frame4), actuated: false },
+        { a: matrixPoint(frame4), b: matrixPoint(frame5), actuated: true },
+        { a: matrixPoint(frame4), b: matrixPoint(frame6), actuated: true },
+      );
+      frames.push(
+        { label: "0", transform: frame0 },
+        { label: "1", transform: frame1 },
+        { label: "2", transform: frame2 },
+        { label: "3", transform: frame3 },
+        { label: "4", transform: frame4 },
+        { label: "5", transform: frame5 },
+        { label: "6", transform: frame6 },
+      );
+      centersOfMass.push(
+        { label: "3", point: matrixPoint(frame3) },
+        { label: "4", point: matrixPoint(frame4) },
+        { label: "5", point: matrixPoint(frame5) },
+        { label: "6", point: matrixPoint(frame6) },
+      );
+      focus = matrixPoint(frame1);
     } else if (system.id === "taxi_drone") {
       const offset = sampleIndex * 12;
       const x = result.states[offset] || 0;
@@ -278,7 +318,7 @@
       frames.unshift({ label: "6", transform: body });
       centersOfMass.push({ label: "body", point: center });
       focus = center;
-    } else if (system.id === "drone6") {
+    } else if (system.id === "drone6" || system.id === "drone8") {
       const offset = sampleIndex * 12;
       const x = result.states[offset] || 0;
       const y = result.states[offset + 1] || 0;
@@ -289,12 +329,17 @@
       const time = result.time[sampleIndex] || 0;
       const body = matMultiply(translate(x, y, z), matMultiply(rotZ(yaw), matMultiply(rotY(pitch), rotX(roll))));
       meshes.push({ key: "cylinder", transform: matMultiply(body, scaleMatrix(0.28, 0.28, 0.12)), color: "#64748b" });
-      for (const angle of [0, Math.PI / 3, 2 * Math.PI / 3]) meshes.push({ key: "box", transform: matMultiply(body, matMultiply(rotZ(angle), scaleMatrix(1.3, 0.065, 0.055))), color: "#94a3b8" });
+      const isDrone8 = system.id === "drone8";
+      const armAngles = isDrone8 ? [Math.PI / 8, 3 * Math.PI / 8, 5 * Math.PI / 8, 7 * Math.PI / 8] : [0, Math.PI / 3, 2 * Math.PI / 3];
+      const armLength = isDrone8 ? 2 : 1.3;
+      for (const angle of armAngles) meshes.push({ key: "box", transform: matMultiply(body, matMultiply(rotZ(angle), scaleMatrix(armLength, 0.065, 0.055))), color: "#94a3b8" });
       const center = matrixPoint(body);
-      for (let index = 0; index < 6; index += 1) {
-        const angle = Math.PI / 3 * index;
+      const rotorLayout = isDrone8
+        ? [[-0.383, 0.924], [-0.924, 0.383], [-0.924, -0.383], [-0.383, -0.924], [0.383, -0.924], [0.924, -0.383], [0.924, 0.383], [0.383, 0.924]]
+        : Array.from({ length: 6 }, (_, index) => [0.65 * Math.cos(Math.PI / 3 * index), 0.65 * Math.sin(Math.PI / 3 * index)]);
+      for (let index = 0; index < rotorLayout.length; index += 1) {
         const direction = index % 2 === 0 ? 1 : -1;
-        const hub = matMultiply(body, translate(0.65 * Math.cos(angle), 0.65 * Math.sin(angle), 0));
+        const hub = matMultiply(body, translate(rotorLayout[index][0], rotorLayout[index][1], 0));
         const meshKey = direction > 0 ? "prop_ccw" : "prop_cw";
         const rotorFrame = matMultiply(hub, rotZ(direction * time * 42));
         meshes.push({ key: meshKey, transform: matMultiply(rotorFrame, scaleMatrix(3)), color: direction > 0 ? "#22d3ee" : "#fb923c" });
@@ -872,7 +917,7 @@
       const payload = await response.json();
       if (!Array.isArray(payload.systems) || payload.systems.length === 0) throw new Error("No systems configured");
       state.systems = [...payload.systems].sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER));
-      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260801-position-plots1");
+      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260801-eight-systems1");
       state.worker.addEventListener("message", (event) => {
         const result = event.data;
         if (result.requestId !== state.requestId || result.systemId !== state.systems[state.activeIndex]?.id) return;

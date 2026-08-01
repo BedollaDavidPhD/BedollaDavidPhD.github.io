@@ -1,4 +1,4 @@
-importScripts("dynamics-forge-level4.js?v=20260801-position-plots1");
+importScripts("dynamics-forge-level4.js?v=20260801-eight-systems1");
 
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
 const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
@@ -191,7 +191,7 @@ self.addEventListener("message", (event) => {
     for (const [key, value] of Object.entries(parameters)) requireFinite(value, `Parameter ${key}`);
     let result;
     if (systemId === "two_link") result = simulateTwoLink(parameters, duration);
-    else if (["copter1", "copter2", "drone4", "drone6", "taxi_drone"].includes(systemId)) result = DynamicsForgeLevel4.simulate(systemId, parameters, duration);
+    else if (["copter1", "copter2", "copter3", "drone4", "drone6", "drone8", "taxi_drone"].includes(systemId)) result = DynamicsForgeLevel4.simulate(systemId, parameters, duration);
     else throw new Error(`Unknown system: ${systemId}`);
     result.requestId = requestId;
     result.systemId = systemId;

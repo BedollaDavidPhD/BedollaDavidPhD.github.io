@@ -54,6 +54,20 @@
     };
   }
 
+  function sampleQuinticTrajectory(time, totalTime, waypoints) {
+    const segmentCount = Math.max(1, waypoints.length - 1);
+    const segmentTime = totalTime / segmentCount;
+    const localTime = clamp(time, 0, totalTime);
+    if (localTime >= totalTime) return { position: waypoints[waypoints.length - 1], velocity: 0 };
+    const segment = Math.min(Math.floor(localTime / segmentTime), segmentCount - 1);
+    const tau = (localTime - segment * segmentTime) / segmentTime;
+    const blend = 10 * tau ** 3 - 15 * tau ** 4 + 6 * tau ** 5;
+    const blendRate = (30 * tau ** 2 - 60 * tau ** 3 + 30 * tau ** 4) / segmentTime;
+    const start = waypoints[segment];
+    const delta = waypoints[segment + 1] - start;
+    return { position: start + delta * blend, velocity: delta * blendRate };
+  }
+
   function zeros(length) {
     return new Float64Array(length);
   }
@@ -338,7 +352,7 @@
     };
   }
 
-  function configuredModel({ id, parents, jointTypes, dh, physical, rotorFrames, rotorDirections, estimation, actuators }) {
+  function configuredModel({ id, parents, jointTypes, dh, physical, rotorFrames, rotorDirections, estimation, actuators, passiveViscousFriction = [] }) {
     return {
       id,
       parents,
@@ -350,6 +364,7 @@
       rotorDirections,
       estimation,
       actuators,
+      passiveViscousFriction,
       positiveRoll: new Set(), negativeRoll: new Set(),
       positivePitch: new Set(), negativePitch: new Set(),
       positiveYaw: new Set(), negativeYaw: new Set(),
@@ -386,6 +401,16 @@
         positiveRoll: [8, 10, 12], negativeRoll: [14, 16, 18],
         positivePitch: [12, 14], negativePitch: [8, 18],
         positiveYaw: [10, 14, 18], negativeYaw: [8, 12, 16],
+      },
+    ),
+    drone8: makeModel(
+      "drone8",
+      [[-0.383, 0.924], [-0.924, 0.383], [-0.924, -0.383], [-0.383, -0.924], [0.383, -0.924], [0.924, -0.383], [0.924, 0.383], [0.383, 0.924]],
+      [1, -1, 1, -1, 1, -1, 1, -1],
+      {
+        positiveRoll: [8, 10, 12, 14], negativeRoll: [16, 18, 20, 22],
+        positivePitch: [12, 14, 16, 18], negativePitch: [8, 10, 20, 22],
+        positiveYaw: [10, 14, 18, 22], negativeYaw: [8, 12, 16, 20],
       },
     ),
     taxi_drone: makeModel(
@@ -450,6 +475,39 @@
         { encoderEnabled: true, estimationEnabled: true, countsPerRevolution: 2048, naturalFrequencyHz: 25, dampingRatio: 0.5 },
       ],
       actuators: [rotorActuator(), rotorActuator()],
+    }),
+    copter3: configuredModel({
+      id: "copter3",
+      parents: [-1, 0, 1, 1, 3, 3],
+      jointTypes: [0, 0, 2, 0, 0, 0],
+      dh: [
+        { alpha: 0, a: 0, theta: 10, d: 1, offset: 0 },
+        { alpha: 90, a: 0, theta: -10, d: 0, offset: 90 },
+        { alpha: 90, a: 0, theta: 0, d: -1.3, offset: 0 },
+        { alpha: 90, a: 0, theta: 20, d: 1.5, offset: -90 },
+        { alpha: -90, a: 0.5, theta: 0, d: 0, offset: -90 },
+        { alpha: -90, a: -0.5, theta: 0, d: 0, offset: -90 },
+      ],
+      physical: [
+        { cx: 0, cy: 0, cz: 0, ix: 0, iy: 0, iz: 0.01, mass: 0 },
+        { cx: 0, cy: 0, cz: 0, ix: 0, iy: 0, iz: 0.01, mass: 0 },
+        { cx: 0, cy: 0, cz: 0, ix: 0, iy: 0, iz: 0, mass: 0.1 },
+        { cx: 0, cy: 0, cz: 0, ix: 0.02, iy: 0.02, iz: 0.02, mass: 1.5 },
+        { cx: 0, cy: 0, cz: 0, ix: 0, iy: 0, iz: 0.00006, mass: 0.1 },
+        { cx: 0, cy: 0, cz: 0, ix: 0, iy: 0, iz: 0.00006, mass: 0.1 },
+      ],
+      rotorFrames: [4, 5],
+      rotorDirections: [1, -1],
+      estimation: [
+        { encoderEnabled: true, estimationEnabled: true, countsPerRevolution: 1024, naturalFrequencyHz: 10, dampingRatio: 1 },
+        { encoderEnabled: true, estimationEnabled: true, countsPerRevolution: 1024, naturalFrequencyHz: 10, dampingRatio: 1 },
+        { encoderEnabled: false, estimationEnabled: false, countsPerRevolution: 1024, naturalFrequencyHz: 10, dampingRatio: 1 },
+        { encoderEnabled: true, estimationEnabled: true, countsPerRevolution: 1024, naturalFrequencyHz: 10, dampingRatio: 1 },
+        { encoderEnabled: true, estimationEnabled: true, countsPerRevolution: 1024, naturalFrequencyHz: 25, dampingRatio: 0.5 },
+        { encoderEnabled: true, estimationEnabled: true, countsPerRevolution: 1024, naturalFrequencyHz: 25, dampingRatio: 0.5 },
+      ],
+      actuators: [rotorActuator(), rotorActuator()],
+      passiveViscousFriction: [0.1, 0.1, 0, 0.1, 0, 0],
     }),
   };
 
@@ -534,6 +592,9 @@
         const coulomb = actuator.coulombFriction * Math.tanh(velocity / 0.001);
         tau[frame] = this.appliedEffort[rotor] - actuator.viscousFriction * velocity - coulomb;
         peak = Math.max(peak, Math.abs(this.appliedEffort[rotor]));
+      }
+      for (let body = 0; body < this.n; body += 1) {
+        tau[body] -= (this.model.passiveViscousFriction?.[body] || 0) * this.dq[body];
       }
       this.lastActuatorEffort = peak;
       assertFiniteArray(tau, `${this.model.id} applied joint effort`, 1e3);
@@ -801,6 +862,55 @@
     }
   }
 
+  class Copter3Simulation extends ArticulatedSimulation {
+    constructor(model, parameters) {
+      const initialQ = zeros(model.parents.length);
+      initialQ[0] = deg2rad(10);
+      initialQ[1] = deg2rad(-10);
+      initialQ[3] = deg2rad(20);
+      super(model, parameters, initialQ);
+      this.pitchIntegral = new TrapezoidalIntegral(parameters.pitchIntegralInitial);
+      this.metricConfig = { primaryIndex: 0, secondaryIndex: 1, primaryAngular: true, secondaryAngular: true, primaryUnit: "deg", secondaryUnit: "deg", primaryScale: 180 / PI, secondaryScale: 180 / PI, effortUnit: "N·m" };
+    }
+
+    references(time) {
+      return {
+        yaw: sampleQuinticTrajectory(time, 10, [0, -10, -25, -35, -50, -50].map(deg2rad)),
+        pitch: sampleQuinticTrajectory(time, 10, [0, 0, 10, 10, 0, 0].map(deg2rad)),
+      };
+    }
+
+    updateController() {
+      const desired = this.references(this.time);
+      const yawError = desired.yaw.position - this.feedbackQ[0];
+      const yawVelocityError = desired.yaw.velocity - this.feedbackDq[0];
+      const pitchError = desired.pitch.position - this.feedbackQ[1];
+      const pitchVelocityError = desired.pitch.velocity - this.feedbackDq[1];
+      const rollError = -this.feedbackQ[3];
+      const rollVelocityError = -this.feedbackDq[3];
+      const pitchDrive = this.parameters.pitchIntegralGain
+        * (this.parameters.pitchIntegralPositionWeight * pitchError + this.parameters.pitchIntegralVelocityWeight * pitchVelocityError);
+      const pitchIntegral = this.pitchIntegral.update(pitchDrive, CONTROLLER_DT, this.parameters.pitchIntegralLimit);
+      const pitchCommand = this.parameters.pitchKp * pitchError + this.parameters.pitchKd * pitchVelocityError + pitchIntegral;
+      const rollCommand = this.parameters.rollKp * rollError + this.parameters.rollKd * rollVelocityError;
+      const yawCommand = this.parameters.yawKp * yawError + this.parameters.yawKd * yawVelocityError;
+      const differential = yawCommand + rollCommand;
+      const leftMagnitude = clamp(pitchCommand + differential, 0, ROTOR_EFFORT_LIMIT);
+      const rightMagnitude = clamp(pitchCommand - differential, 0, ROTOR_EFFORT_LIMIT);
+      this.desiredEffort[0] = this.model.rotorDirections[0] * leftMagnitude;
+      this.desiredEffort[1] = this.model.rotorDirections[1] * rightMagnitude;
+    }
+
+    recordedState() {
+      return [this.q[0], this.q[1], this.q[3], this.q[4], this.q[5], this.dq[0], this.dq[1], this.dq[3], this.dq[4], this.dq[5]];
+    }
+
+    recordingReference(time) {
+      const desired = this.references(time);
+      return { primary: desired.yaw.position, secondary: desired.pitch.position, effort: this.lastActuatorEffort };
+    }
+  }
+
   function calculateMetrics(states, stateStride, reference, secondaryReference, effort, config) {
     const count = reference.length;
     let primarySquaredError = 0;
@@ -845,6 +955,7 @@
     if (systemId === "drone4") simulation = new Drone4Simulation(model, parameters);
     else if (systemId === "copter1") simulation = new Copter1Simulation(model, parameters);
     else if (systemId === "copter2") simulation = new Copter2Simulation(model, parameters);
+    else if (systemId === "copter3") simulation = new Copter3Simulation(model, parameters);
     else simulation = new MultirotorSimulation(model, parameters, [0, 0, 1]);
     const count = Math.floor(duration * SAMPLE_RATE) + 1;
     const stateStride = simulation.recordedState().length;

@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 2.28 - Eight-System Simulator
+
+- Added Copter 3 using its three-DoF yaw/pitch plant, roll stabilization, quintic reference trajectories, rotor forces, motor limits, encoder quantization, and state estimation
+- Added Drone 8 using its eight-rotor layout and the same XYZ/yaw control interface as Drone 6, with roll and pitch targets fixed at zero and omitted from the controls
+- Reordered the plant selector into two rows: Arm and Copter 1-3, followed by Drone 4/6/8 and TaxiDrone
+- Shortened and standardized the public plant names and reduced selector-button size
+- Added matching English, Spanish, and French simulator copy and validation coverage
+
 ## Version 2.27 - XY Position Response Plot
 
 - Added a second time-history graph for Drone6 and TaxiDrone combining X and Y responses with their target traces

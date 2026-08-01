@@ -446,16 +446,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border: 1px solid var(--line);
   border-radius: 18px;
 }
-.forge-demo-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.forge-demo-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .forge-demo-tab {
   width: 100%;
-  padding: 10px 12px;
+  padding: 8px 7px;
   color: #334155;
   background: #f8fafc;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   font: inherit;
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   font-weight: 730;
   text-align: center;
   cursor: pointer;
@@ -825,7 +825,7 @@ html[data-theme="dark"] .site-footer { border-top: 1px solid #1f2c3e; }
   .impact-grid, .awards-grid, .skills-grid { grid-template-columns: repeat(2, 1fr); }
   .forge-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
   .forge-layout { grid-template-columns: 1fr; }
-  .forge-demo-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .forge-demo-tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .contact-card { align-items: flex-start; flex-direction: column; }
 }
 
@@ -848,7 +848,7 @@ html[data-theme="dark"] .site-footer { border-top: 1px solid #1f2c3e; }
   .impact-grid, .project-grid, .education-grid, .awards-grid, .skills-grid { grid-template-columns: 1fr; }
   .forge-showcase { margin-top: 48px; padding: 20px; }
   #forge-canvas { height: 320px; }
-  .forge-demo-tabs { grid-template-columns: 1fr; }
+  .forge-demo-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .forge-layer-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .forge-control-separator { display: none; }
   .forge-timeline-row { grid-template-columns: 1fr; gap: 2px; }

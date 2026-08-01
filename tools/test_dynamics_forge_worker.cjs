@@ -8,6 +8,9 @@ const workerRoot = path.join(projectRoot, "assets", "js");
 const catalogue = JSON.parse(fs.readFileSync(path.join(projectRoot, "assets", "data", "dynamics-forge-demos.json"), "utf8"));
 const translations = JSON.parse(fs.readFileSync(path.join(projectRoot, "assets", "data", "i18n.json"), "utf8"));
 const demoRenderer = fs.readFileSync(path.join(workerRoot, "dynamics-forge-demos.js"), "utf8");
+const orderedSystems = [...catalogue.systems].sort((a, b) => a.order - b.order);
+assert.deepEqual(orderedSystems.map((system) => system.id), ["two_link", "copter1", "copter2", "copter3", "drone4", "drone6", "drone8", "taxi_drone"]);
+assert.deepEqual(orderedSystems.map((system) => system.shortTitle), ["Arm", "Copter 1", "Copter 2", "Copter 3", "Drone 4", "Drone 6", "Drone 8", "TaxiDrone"]);
 const plotLabels = new Set();
 for (const system of catalogue.systems) {
   assert.equal(typeof system.primaryPlotLabel, "string", `${system.id} needs a primary plot label`);
@@ -104,7 +107,7 @@ function peakAbsolute(result, stateIndex) {
   return peak;
 }
 
-for (const systemId of ["drone6", "taxi_drone"]) {
+for (const systemId of ["drone6", "drone8", "taxi_drone"]) {
   const system = catalogue.systems.find((entry) => entry.id === systemId);
   assert(system.positionPlot, `${systemId} needs the combined X/Y position plot`);
   assert.equal(system.controls.some((control) => control.key === "targetRoll" || control.key === "targetPitch"), false, `${systemId} must not expose roll or pitch targets`);
@@ -123,6 +126,11 @@ for (const systemId of ["drone6", "taxi_drone"]) {
   assert(peakAbsolute(result, 6) > 0.01, `${systemId} did not generate roll for Y tracking`);
   assert(peakAbsolute(result, 7) > 0.01, `${systemId} did not generate pitch for X tracking`);
 }
+assert.deepEqual(
+  catalogue.systems.find((system) => system.id === "drone8").controls.map((control) => control.key),
+  catalogue.systems.find((system) => system.id === "drone6").controls.map((control) => control.key),
+  "Drone8 must expose the same full position/yaw control fields as Drone6",
+);
 
 for (const system of catalogue.systems) {
   assert.equal(system.duration, 10, `${system.id} must use the common 10-second simulation window`);
@@ -130,16 +138,16 @@ for (const system of catalogue.systems) {
   assert.equal(result.time.length, 601, `${system.id} must return 60 Hz samples for 10 seconds`);
 }
 
-for (const systemId of ["copter1", "copter2", "drone4"]) {
+for (const systemId of ["copter1", "copter2", "copter3", "drone4", "drone6", "drone8", "taxi_drone"]) {
   const source = fs.readFileSync(path.join(workerRoot, "dynamics-forge-worker.js"), "utf8");
-  assert(source.includes(`["copter1", "copter2", "drone4", "drone6", "taxi_drone"]`), `${systemId} is not dispatched through the articulated-body engine`);
+  assert(source.includes(`["copter1", "copter2", "copter3", "drone4", "drone6", "drone8", "taxi_drone"]`), `${systemId} is not dispatched through the articulated-body engine`);
 }
 
 const level4Source = fs.readFileSync(path.join(workerRoot, "dynamics-forge-level4.js"), "utf8");
 assert.equal(level4Source.includes("allocationScale"), false, "Rotor allocation must not be normalized by rotor count");
 assert.equal(level4Source.includes("collectiveScale"), false, "Collective effort must not be normalized by rotor count");
-assert.doesNotMatch(level4Source, /this\.parameters\.targetRoll|this\.parameters\.targetPitch/, "Drone6 and TaxiDrone must hold the independent roll and pitch targets at zero");
-assert.match(level4Source, /this\.integralMax/, "Drone6 and TaxiDrone must apply the editable anti-windup maximum");
+assert.doesNotMatch(level4Source, /this\.parameters\.targetRoll|this\.parameters\.targetPitch/, "Drone6, Drone8, and TaxiDrone must hold the independent roll and pitch targets at zero");
+assert.match(level4Source, /this\.integralMax/, "Drone6, Drone8, and TaxiDrone must apply the editable anti-windup maximum");
 
 const drone4Defaults = defaultsFor("drone4");
 assert.match(requestError("drone4", { ...drone4Defaults, zKp: Number.NaN }, 10), /finite number/i);
