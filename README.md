@@ -20,7 +20,7 @@ The optional `tools/build_sites_preview.mjs` script packages the same static fil
 - A project illustration can be replaced with a YouTube embed by pasting its URL into `assets/data/project-media.json`.
 - Embedded project demonstrations start muted when they enter the viewport and pause after leaving it.
 - The portfolio case studies now include verified software architecture, real-time control, planning, reinforcement-learning, and hardware evidence.
-- Six Dynamics Forge Web Demos cover a manipulator, Copter1, Copter2, Drone4, full-pose Drone6, and full-pose 18-rotor TaxiDrone in a browser worker with editable controller gains, CAD, links, coordinate frames, center-of-mass markers, multiple views, and response plots. Copter1 and Copter2 use configured cubic trajectories, and the visualization trees are not imported from URDF.
+- Six Dynamics Forge Web Demos cover a manipulator, Copter1, Copter2, Drone4, full-pose Drone6, and full-pose 18-rotor TaxiDrone in a browser worker with editable controller gains, CAD, links, coordinate frames, center-of-mass markers, multiple views, and response plots. Every run lasts 10 seconds. All five rotor systems use Featherstone articulated-body dynamics, physical rotor thrust and drag, motor delay and limits, encoder quantization, state estimation, and direct unnormalized rotor-group mixing.
 - Private Overleaf source material is stored locally under `source-materials/` and excluded from Git.
 
 ## Deploy to GitHub Pages
@@ -57,7 +57,7 @@ Open `http://localhost:8000` in a browser.
 - `assets/data/project-media.json`: project-to-YouTube URL mapping; blank URLs keep the current illustrations
 - `assets/data/dynamics-forge-demos.json`: editable web-demo systems, controls, camera views, and CAD references
 - `assets/js/dynamics-forge-demos.js`: interactive CAD viewer, controls, playback, and plots
-- `assets/js/dynamics-forge-level4.js`: static-browser multirotor model, articulated-body dynamics, actuator, encoder, and estimator pipeline
+- `assets/js/dynamics-forge-level4.js`: static-browser articulated model, rotor-force, actuator, encoder, estimator, and numerical-safety pipeline
 - `assets/js/dynamics-forge-worker.js`: browser-side simulation worker and demo dispatcher
 - `assets/models/dynamics-forge/`: CAD exported from the Dynamics Forge project
 - `documents/David_Bedolla_CV.pdf`: downloadable CV

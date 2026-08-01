@@ -1,38 +1,44 @@
-importScripts("dynamics-forge-level4.js?v=20260801-level4-1");
+importScripts("dynamics-forge-level4.js?v=20260801-level4-all1");
 
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
 const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
-const degreesToRadians = (degrees) => degrees * Math.PI / 180;
 
-function sampleCubicTrajectory(time, totalTime, waypoints) {
-  const segmentCount = Math.max(1, waypoints.length - 1);
-  const segmentTime = totalTime / segmentCount;
-  const localTime = ((Math.max(0, time) % totalTime) + totalTime) % totalTime;
-  const segment = Math.min(Math.floor(localTime / segmentTime), segmentCount - 1);
-  const tau = localTime - segment * segmentTime;
-  const start = waypoints[segment];
-  const finish = waypoints[segment + 1];
-  const delta = finish - start;
-  const a2 = 3 * delta / (segmentTime * segmentTime);
-  const a3 = -2 * delta / (segmentTime * segmentTime * segmentTime);
-  return {
-    position: start + a2 * tau * tau + a3 * tau * tau * tau,
-    velocity: 2 * a2 * tau + 3 * a3 * tau * tau,
-  };
+function requireFinite(value, label) {
+  if (!Number.isFinite(value)) throw new Error(`${label} must be a finite number.`);
+  return value;
+}
+
+function requireFiniteArray(values, label, magnitudeLimit = 1e6) {
+  for (const value of values) {
+    if (!Number.isFinite(value) || Math.abs(value) > magnitudeLimit) {
+      throw new Error(`${label} became non-finite or exceeded its numerical safety limit.`);
+    }
+  }
 }
 
 function rk4Step(state, time, dt, derivative) {
+  requireFiniteArray(state, "RK4 state");
   const k1 = derivative(state, time);
+  requireFiniteArray(k1, "RK4 derivative");
   const k2State = state.map((value, index) => value + 0.5 * dt * k1[index]);
   const k2 = derivative(k2State, time + 0.5 * dt);
+  requireFiniteArray(k2, "RK4 derivative");
   const k3State = state.map((value, index) => value + 0.5 * dt * k2[index]);
   const k3 = derivative(k3State, time + 0.5 * dt);
+  requireFiniteArray(k3, "RK4 derivative");
   const k4State = state.map((value, index) => value + dt * k3[index]);
   const k4 = derivative(k4State, time + dt);
-  return state.map((value, index) => value + (dt / 6) * (k1[index] + 2 * k2[index] + 2 * k3[index] + k4[index]));
+  requireFiniteArray(k4, "RK4 derivative");
+  const next = state.map((value, index) => value + (dt / 6) * (k1[index] + 2 * k2[index] + 2 * k3[index] + k4[index]));
+  requireFiniteArray(next, "Integrated state");
+  return next;
 }
 
 function integrateRecorded({ initialState, duration, stateStride, dt, derivative, observe, metrics }) {
+  requireFinite(duration, "Simulation duration");
+  requireFinite(dt, "Integration step");
+  if (duration <= 0 || duration > 30 || dt <= 0) throw new Error("Simulation timing is outside the supported safety limits.");
+  requireFiniteArray(initialState, "Initial state");
   const sampleRate = 60;
   const count = Math.floor(duration * sampleRate) + 1;
   const timeValues = new Float32Array(count);
@@ -52,8 +58,15 @@ function integrateRecorded({ initialState, duration, stateStride, dt, derivative
       integrationTime += step;
     }
     const observation = observe(state, sampleTime);
+    requireFinite(observation.reference, "Primary reference");
+    requireFinite(observation.effort, "Recorded effort");
+    if (observation.secondaryReference !== undefined && observation.secondaryReference !== null) requireFinite(observation.secondaryReference, "Secondary reference");
     timeValues[sample] = sampleTime;
-    for (let index = 0; index < stateStride; index += 1) states[sample * stateStride + index] = state[index] || 0;
+    for (let index = 0; index < stateStride; index += 1) {
+      const value = state[index];
+      requireFinite(value, `Recorded state ${index}`);
+      states[sample * stateStride + index] = value;
+    }
     reference[sample] = observation.reference;
     if (Number.isFinite(observation.secondaryReference)) secondaryReference[sample] = observation.secondaryReference;
     effort[sample] = observation.effort;
@@ -78,7 +91,7 @@ function integrateRecorded({ initialState, duration, stateStride, dt, derivative
     peakEffort = Math.max(peakEffort, Math.abs(effort[sample]));
   }
 
-  return {
+  const result = {
     time: timeValues,
     states,
     reference,
@@ -93,6 +106,10 @@ function integrateRecorded({ initialState, duration, stateStride, dt, derivative
       effortUnit: metrics.effortUnit,
     },
   };
+  requireFinite(result.metrics.rmsError, "RMS error");
+  requireFinite(result.metrics.peakEffort, "Peak effort");
+  if (result.metrics.secondaryRms !== null) requireFinite(result.metrics.secondaryRms, "Secondary RMS error");
+  return result;
 }
 
 function simulateTwoLink(parameters, duration) {
@@ -161,197 +178,20 @@ function simulateTwoLink(parameters, duration) {
       const command = control(values, time);
       return { reference: command.desired.q1, secondaryReference: command.desired.q2, effort: Math.max(Math.abs(command.tau1), Math.abs(command.tau2)) };
     },
-    metrics: { primaryIndex: 0, secondaryIndex: 1, primaryAngular: true, secondaryAngular: true, primaryUnit: "rad", secondaryUnit: "rad", effortUnit: "N·m" },
-  });
-}
-
-function simulateDrone4(parameters, duration) {
-  const mass = 1.5;
-  const gravity = 9.81;
-  const zIntegralLimit = 1;
-  const yawIntegralLimit = 1;
-  const yawTarget = degreesToRadians(parameters.yawTarget);
-  const references = (time) => ({ z: time < 0.75 ? 0.3 : parameters.zTarget, yaw: time < 1 ? 0 : yawTarget });
-
-  function control(values, time) {
-    const desired = references(time);
-    const zError = desired.z - values[0];
-    const zAcceleration = clamp(parameters.zKp * zError - parameters.zKd * values[1] + parameters.zKi * values[2], -0.78 * gravity, 0.78 * gravity);
-    const thrust = clamp(mass * (gravity + zAcceleration), 0, 2 * mass * gravity);
-    const yawError = wrapAngle(desired.yaw - values[3]);
-    const yawTorque = clamp(parameters.yawKp * yawError - parameters.yawKd * values[4] + parameters.yawKi * values[5], -0.24, 0.24);
-    return { desired, thrust, yawTorque, zError, yawError };
-  }
-
-  function derivative(values, time) {
-    const command = control(values, time);
-    const zIntegralDrive = 0.15 * command.zError - 0.1 * values[1];
-    const yawIntegralDrive = command.yawError;
-    return [
-      values[1],
-      command.thrust / mass - gravity - 0.35 * values[1],
-      Math.abs(values[2]) >= zIntegralLimit && Math.sign(values[2]) === Math.sign(zIntegralDrive) ? 0 : zIntegralDrive,
-      values[4],
-      command.yawTorque / 0.08 - 0.75 * values[4],
-      Math.abs(values[5]) >= yawIntegralLimit && Math.sign(values[5]) === Math.sign(yawIntegralDrive) ? 0 : yawIntegralDrive,
-    ];
-  }
-
-  return integrateRecorded({
-    initialState: [0.3, 0, parameters.zIntegralInitial, 0, 0, parameters.yawIntegralInitial],
-    duration,
-    stateStride: 6,
-    dt: 0.002,
-    derivative,
-    observe(values, time) {
-      const command = control(values, time);
-      return { reference: command.desired.z, secondaryReference: command.desired.yaw, effort: command.thrust };
-    },
-    metrics: { primaryIndex: 0, secondaryIndex: 3, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / Math.PI, effortUnit: "N" },
-  });
-}
-
-function simulateCopter1(parameters, duration) {
-  const trajectoryAt = (time) => sampleCubicTrajectory(time, 10, [0, 0.5, -0.5, -1.57]);
-
-  function control(values, time) {
-    const desired = trajectoryAt(time);
-    const error = desired.position - values[0];
-    const velocityError = desired.velocity - values[1];
-    const torque = clamp(parameters.kp * error + parameters.kd * velocityError + parameters.ki * values[2], -1.5, 1.5);
-    return { desired, error, torque };
-  }
-
-  function derivative(values, time) {
-    const command = control(values, time);
-    const integralDrive = Math.abs(values[2]) >= 1.5 && Math.sign(values[2]) === Math.sign(command.error) ? 0 : command.error;
-    const acceleration = (command.torque - 0.65 * Math.sin(values[0]) - 0.12 * values[1]) / 0.32;
-    return [values[1], acceleration, integralDrive];
-  }
-
-  return integrateRecorded({
-    initialState: [0, 0, parameters.integralInitial],
-    duration,
-    stateStride: 3,
-    dt: 0.002,
-    derivative,
-    observe(values, time) { const command = control(values, time); return { reference: command.desired.position, effort: command.torque }; },
-    metrics: { primaryIndex: 0, primaryAngular: true, primaryUnit: "rad", effortUnit: "N·m" },
-  });
-}
-
-function simulateCopter2(parameters, duration) {
-  const thrustCoefficient = 0.000015;
-  const dragCoefficient = 0.00000025;
-  const rotorInertia = 0.00006;
-  const rotorViscousFriction = 0.0005;
-  const motorTimeConstant = 0.003;
-  const maximumMotorEffort = 1.5;
-  const maximumMotorPower = 300;
-  const motorPowerVelocityFloor = 30;
-  const yawInertia = 4.07;
-  const rollInertia = 0.07;
-  const yawTargetAt = (time) => sampleCubicTrajectory(time, 14, [0, Math.PI / 2, 3 * Math.PI / 2, 0, 0]);
-
-  function control(values, time) {
-    const yawTargetState = yawTargetAt(time);
-    const yawReference = yawTargetState.position;
-    const yawError = yawReference - values[0];
-    const yawVelocityError = yawTargetState.velocity - values[4];
-    const yawIntegral = clamp(values[8], -parameters.yawIntegralLimit, parameters.yawIntegralLimit);
-    const collectiveEffort = parameters.yawKp * yawError + parameters.yawKd * yawVelocityError + yawIntegral;
-    const rollReference = clamp(-collectiveEffort, parameters.rollReferenceMin, parameters.rollReferenceMax);
-    const rollError = rollReference - values[1];
-    const rollVelocityError = -values[5];
-    const rollIntegral = clamp(values[9], -parameters.rollIntegralLimit, parameters.rollIntegralLimit);
-    const differentialEffort = parameters.rollKp * rollError + parameters.rollKd * rollVelocityError + rollIntegral;
-    const leftMotorEffort = clamp(Math.abs(0.9 * collectiveEffort) + differentialEffort, 0, maximumMotorEffort);
-    const rightMotorEffort = -clamp(Math.abs(0.9 * collectiveEffort) - differentialEffort, 0, maximumMotorEffort);
-    return {
-      yawReference,
-      yawError,
-      yawVelocityError,
-      rollReference,
-      rollError,
-      rollVelocityError,
-      leftMotorEffort,
-      rightMotorEffort,
-    };
-  }
-
-  function derivative(values, time) {
-    const command = control(values, time);
-    const leftPowerLimit = maximumMotorPower / Math.max(Math.abs(values[6]), motorPowerVelocityFloor);
-    const rightPowerLimit = maximumMotorPower / Math.max(Math.abs(values[7]), motorPowerVelocityFloor);
-    const leftEffortTarget = clamp(command.leftMotorEffort, -leftPowerLimit, leftPowerLimit);
-    const rightEffortTarget = clamp(command.rightMotorEffort, -rightPowerLimit, rightPowerLimit);
-    const leftAppliedEffort = values[10];
-    const rightAppliedEffort = values[11];
-    const leftRotorDrag = dragCoefficient * values[6] * Math.abs(values[6]);
-    const rightRotorDrag = dragCoefficient * values[7] * Math.abs(values[7]);
-    const leftRotorAcceleration = (leftAppliedEffort - rotorViscousFriction * values[6] - leftRotorDrag) / rotorInertia;
-    const rightRotorAcceleration = (rightAppliedEffort - rotorViscousFriction * values[7] - rightRotorDrag) / rotorInertia;
-    const leftThrust = thrustCoefficient * values[6] * values[6];
-    const rightThrust = thrustCoefficient * values[7] * values[7];
-    const yawAerodynamicMoment = -1.5 * (leftThrust + rightThrust) * Math.sin(values[1]);
-    const rotorReactionMoment = Math.cos(values[1]) * (-leftRotorDrag - rightRotorDrag);
-    const yawAcceleration = (yawAerodynamicMoment + rotorReactionMoment - 0.1 * values[4]) / yawInertia;
-    const rollAcceleration = (0.5 * (leftThrust - rightThrust) - 0.1 * values[5]) / rollInertia;
-    const yawIntegralDrive = parameters.yawIntegralGain * (
-      parameters.yawIntegralPositionWeight * command.yawError
-      + parameters.yawIntegralVelocityWeight * command.yawVelocityError
-    );
-    const rollIntegralDrive = parameters.rollIntegralGain * (
-      parameters.rollIntegralPositionWeight * command.rollError
-      + parameters.rollIntegralVelocityWeight * command.rollVelocityError
-    );
-    const yawIntegralDerivative = Math.abs(values[8]) >= parameters.yawIntegralLimit
-      && Math.sign(values[8]) === Math.sign(yawIntegralDrive) ? 0 : yawIntegralDrive;
-    const rollIntegralDerivative = Math.abs(values[9]) >= parameters.rollIntegralLimit
-      && Math.sign(values[9]) === Math.sign(rollIntegralDrive) ? 0 : rollIntegralDrive;
-    return [
-      values[4],
-      values[5],
-      values[6],
-      values[7],
-      yawAcceleration,
-      rollAcceleration,
-      leftRotorAcceleration,
-      rightRotorAcceleration,
-      yawIntegralDerivative,
-      rollIntegralDerivative,
-      (leftEffortTarget - leftAppliedEffort) / motorTimeConstant,
-      (rightEffortTarget - rightAppliedEffort) / motorTimeConstant,
-    ];
-  }
-
-  return integrateRecorded({
-    initialState: [0, 0, 0, 0, 0, 0, 0, 0, parameters.yawIntegralInitial, parameters.rollIntegralInitial, 0, 0],
-    duration,
-    stateStride: 8,
-    dt: 0.001,
-    derivative,
-    observe(values, time) {
-      const command = control(values, time);
-      return {
-        reference: command.yawReference,
-        secondaryReference: command.rollReference,
-        effort: Math.max(Math.abs(command.leftMotorEffort), Math.abs(command.rightMotorEffort)),
-      };
-    },
-    metrics: { primaryIndex: 0, secondaryIndex: 1, primaryAngular: true, secondaryAngular: true, primaryUnit: "deg", secondaryUnit: "deg", primaryScale: 180 / Math.PI, secondaryScale: 180 / Math.PI, effortUnit: "N·m" },
+    metrics: { primaryIndex: 0, secondaryIndex: 1, primaryAngular: true, secondaryAngular: true, primaryUnit: "rad", secondaryUnit: "rad", effortUnit: "N\u00b7m" },
   });
 }
 
 self.addEventListener("message", (event) => {
   const { requestId, systemId, parameters, duration } = event.data || {};
   try {
+    requireFinite(duration, "Simulation duration");
+    if (duration <= 0 || duration > 30) throw new Error("Simulation duration must be greater than 0 and no more than 30 seconds.");
+    if (!parameters || typeof parameters !== "object") throw new Error("Simulation parameters are required.");
+    for (const [key, value] of Object.entries(parameters)) requireFinite(value, `Parameter ${key}`);
     let result;
     if (systemId === "two_link") result = simulateTwoLink(parameters, duration);
-    else if (systemId === "drone4") result = simulateDrone4(parameters, duration);
-    else if (systemId === "copter1") result = simulateCopter1(parameters, duration);
-    else if (systemId === "copter2") result = simulateCopter2(parameters, duration);
-    else if (systemId === "taxi_drone" || systemId === "drone6") result = DynamicsForgeLevel4.simulate(systemId, parameters, duration);
+    else if (["copter1", "copter2", "drone4", "drone6", "taxi_drone"].includes(systemId)) result = DynamicsForgeLevel4.simulate(systemId, parameters, duration);
     else throw new Error(`Unknown system: ${systemId}`);
     result.requestId = requestId;
     result.systemId = systemId;

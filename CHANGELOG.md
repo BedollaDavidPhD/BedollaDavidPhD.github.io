@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 2.25 - Unified Articulated Rotor Dynamics
+
+- Moved Drone4, Copter1, and Copter2 onto the Featherstone articulated-body simulation path already used by Drone6 and TaxiDrone
+- Applied rotor thrust and drag, motor delay, effort and power limits, encoder quantization, and state estimation to all five rotor systems
+- Removed rotor-count normalization from multirotor allocation and tuned TaxiDrone gains for its direct 18-rotor mixer
+- Standardized every interactive simulation to 10 seconds
+- Added request, RK4-stage, estimator, output-buffer, and metric checks that reject NaN, Infinity, and numerical blow-up
+
 ## Version 2.24 - One-Line CV Contact Header
 
 - Arranged My page, LinkedIn, email, and Montréal location on one line in the CV header

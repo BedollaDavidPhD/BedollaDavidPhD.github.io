@@ -608,6 +608,17 @@
     return parameters;
   }
 
+  function validSimulationResult(result) {
+    if (!result || !result.time || !result.states || !result.reference || !result.secondaryReference || !result.effort || !result.metrics) return false;
+    for (const values of [result.time, result.states, result.reference, result.effort]) {
+      for (const value of values) if (!Number.isFinite(value)) return false;
+    }
+    for (const value of result.secondaryReference) if (!Number.isFinite(value) && !Number.isNaN(value)) return false;
+    const metrics = result.metrics;
+    if (!Number.isFinite(metrics.rmsError) || !Number.isFinite(metrics.peakEffort)) return false;
+    return metrics.secondaryRms === null || Number.isFinite(metrics.secondaryRms);
+  }
+
   function markParametersDirty() {
     state.parametersDirty = true;
     ui.run.textContent = "Run simulation";
@@ -788,12 +799,13 @@
       const payload = await response.json();
       if (!Array.isArray(payload.systems) || payload.systems.length === 0) throw new Error("No systems configured");
       state.systems = [...payload.systems].sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER));
-      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260801-level4-1");
+      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260801-level4-all1");
       state.worker.addEventListener("message", (event) => {
         const result = event.data;
         if (result.requestId !== state.requestId || result.systemId !== state.systems[state.activeIndex]?.id) return;
         state.running = false; setControlsDisabled(false);
         if (result.error) { state.parametersDirty = true; ui.run.textContent = "Run simulation"; ui.status.textContent = `Simulation error: ${result.error}`; root.classList.add("forge-load-error"); renderAll(); return; }
+        if (!validSimulationResult(result)) { state.parametersDirty = true; ui.run.textContent = "Run simulation"; ui.status.textContent = "Simulation error: a non-finite result was rejected for numerical safety."; root.classList.add("forge-load-error"); renderAll(); return; }
         state.result = result; state.playback = 0; state.parametersDirty = false; buildTrail(); resetVisualization(); setPlaybackEnabled(true);
         ui.rms.textContent = `${result.metrics.rmsError.toFixed(3)} ${result.metrics.metricUnit}`;
         if (Number.isFinite(result.metrics.secondaryRms)) ui.secondaryRms.textContent = `${result.metrics.secondaryRms.toFixed(3)} ${result.metrics.secondaryUnit}`;

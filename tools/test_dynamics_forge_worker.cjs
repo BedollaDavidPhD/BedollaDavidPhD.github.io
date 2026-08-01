@@ -51,7 +51,19 @@ function simulate(systemId, overrides = {}, duration = 3) {
   assert.equal(result.error, undefined, `${systemId}: ${result.error}`);
   assert(result.states.length > 0, `${systemId} returned no states`);
   for (const value of result.states) assert(Number.isFinite(value), `${systemId} returned a non-finite state`);
+  for (const value of result.reference) assert(Number.isFinite(value), `${systemId} returned a non-finite reference`);
+  for (const value of result.effort) assert(Number.isFinite(value), `${systemId} returned a non-finite effort`);
+  assert(Number.isFinite(result.metrics.rmsError), `${systemId} returned a non-finite RMS metric`);
+  assert(Number.isFinite(result.metrics.peakEffort), `${systemId} returned a non-finite peak-effort metric`);
   return result;
+}
+
+function requestError(systemId, parameters, duration) {
+  messages.length = 0;
+  context.workerListener({ data: { requestId: 99, systemId, parameters, duration } });
+  const result = messages[0];
+  assert(result?.error, `${systemId} should have rejected the invalid request`);
+  return result.error;
 }
 
 function peakAbsolute(result, stateIndex) {
@@ -76,6 +88,26 @@ for (const systemId of ["drone6", "taxi_drone"]) {
   assert(peakAbsolute(result, 6) > 0.02, `${systemId} did not track roll`);
   assert(peakAbsolute(result, 7) > 0.02, `${systemId} did not track pitch`);
 }
+
+for (const system of catalogue.systems) {
+  assert.equal(system.duration, 10, `${system.id} must use the common 10-second simulation window`);
+  const result = simulate(system.id, {}, system.duration);
+  assert.equal(result.time.length, 601, `${system.id} must return 60 Hz samples for 10 seconds`);
+}
+
+for (const systemId of ["copter1", "copter2", "drone4"]) {
+  const source = fs.readFileSync(path.join(workerRoot, "dynamics-forge-worker.js"), "utf8");
+  assert(source.includes(`["copter1", "copter2", "drone4", "drone6", "taxi_drone"]`), `${systemId} is not dispatched through the articulated-body engine`);
+}
+
+const level4Source = fs.readFileSync(path.join(workerRoot, "dynamics-forge-level4.js"), "utf8");
+assert.equal(level4Source.includes("allocationScale"), false, "Rotor allocation must not be normalized by rotor count");
+assert.equal(level4Source.includes("collectiveScale"), false, "Collective effort must not be normalized by rotor count");
+
+const drone4Defaults = defaultsFor("drone4");
+assert.match(requestError("drone4", { ...drone4Defaults, zKp: Number.NaN }, 10), /finite number/i);
+assert.match(requestError("drone4", drone4Defaults, Number.NaN), /finite number/i);
+assert.match(requestError("drone4", { ...drone4Defaults, zKp: Number.POSITIVE_INFINITY }, 10), /finite number/i);
 
 const gainKey = (key) => (
   /(^|[A-Z0-9])Kp(?:\d+)?$/i.test(key)

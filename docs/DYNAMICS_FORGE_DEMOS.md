@@ -19,12 +19,12 @@ Rotor frame transforms remain animated independently of the CAD layer. Hiding CA
 
 The manipulator and Copter2 frame trees use the modified-DH convention; they are not imported from URDF. Revolute coordinates therefore rotate about each modified-DH frame's local Z axis. Copter2 uses frame order `[1, 3, 4, 5]` for yaw, roll, left rotor, and right rotor, including the configured offsets and rotor directions.
 
-Copter1 and Copter2 use configured cubic trajectories. Copter1 follows `[0, 0.5, -0.5, -1.57]` radians over 10 seconds. Copter2 follows `[0, π/2, 3π/2, 0, 0]` radians over 14 seconds. Segment durations are equal and endpoint velocities are zero. Other browser demos retain editable targets.
+Copter1 and Copter2 use configured cubic trajectories. Copter1 follows `[0, 0.5, -0.5, -1.57]` radians over 10 seconds. Copter2 follows `[0, π/2, 3π/2, 0, 0]` radians over 10 seconds. Segment durations are equal and endpoint velocities are zero. Every interactive system uses the same 10-second simulation window.
 
 ## Architecture
 
 - `assets/data/dynamics-forge-demos.json` defines systems, editable gains and targets, integral initial values, bounds, camera views, and CAD references.
-- `assets/js/dynamics-forge-level4.js` contains the static-browser multirotor plant, model tables, articulated-body forward dynamics, rotor forces, motor pipeline, encoder quantization, and state estimator.
+- `assets/js/dynamics-forge-level4.js` contains the static-browser articulated plants, model tables, Featherstone forward dynamics, rotor forces, motor pipeline, encoder quantization, and state estimator.
 - `assets/js/dynamics-forge-worker.js` integrates the selected nonlinear plant and controller equations away from the main UI thread.
 - `assets/js/dynamics-forge-demos.js` manages Run/Replay state, rate allowance, controls, STL loading, Canvas rendering, playback, views, and plots.
 - `assets/models/dynamics-forge/` contains the selected STL files copied from the main Dynamics Forge project.
@@ -33,7 +33,9 @@ The page remains a static GitHub Pages project. It does not need Python, FastAPI
 
 ## Reliability boundary
 
-This is a selected static-browser subset, not a build of the complete C++ application. It is appropriate for an interactive portfolio demonstration because the equations execute deterministically in a dedicated browser worker and the UI remains responsive. Drone6 and TaxiDrone use configured modified-DH trees, masses, inertias, rotor locations and directions, thrust/drag coefficients, Featherstone articulated-body forward dynamics, RK4 plant integration, effort and power limits, motor lag, encoder quantization, and state estimation. TaxiDrone normalizes collective and attitude allocation for its 18 rotors so its browser demo retains the same per-vehicle command scale as Drone6. Copter2 separately uses its configured topology and controller pipeline. The full Dynamics Forge C++ application remains authoritative for the complete model catalogue, controller generation, reinforcement learning, and research validation.
+This is a selected static-browser subset, not a build of the complete C++ application. It is appropriate for an interactive portfolio demonstration because the equations execute deterministically in a dedicated browser worker and the UI remains responsive. Copter1, Copter2, Drone4, Drone6, and TaxiDrone use their configured modified-DH trees, masses, inertias, rotor locations and directions, thrust/drag coefficients, Featherstone articulated-body forward dynamics, RK4 plant integration, effort and power limits, motor lag, encoder quantization, and state estimation. Rotor commands are mixed directly per configured rotor group without rotor-count normalization. The full Dynamics Forge C++ application remains authoritative for the complete model catalogue, controller generation, reinforcement learning, and research validation.
+
+Every worker request validates duration and controller inputs before integration. RK4 stages, articulated accelerations, actuator efforts, estimator states, recorded buffers, and metrics are checked for finite values and bounded magnitude. A NaN, Infinity, or numerical blow-up stops the run and returns a visible simulation error; invalid values are never substituted with zeros.
 
 Do not describe these demos as the complete backend or as WebAssembly. The multirotor path is a JavaScript port of the selected native model and simulation behavior required by the portfolio.
 
