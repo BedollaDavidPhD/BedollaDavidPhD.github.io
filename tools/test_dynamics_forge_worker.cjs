@@ -6,6 +6,26 @@ const vm = require("node:vm");
 const projectRoot = path.resolve(__dirname, "..");
 const workerRoot = path.join(projectRoot, "assets", "js");
 const catalogue = JSON.parse(fs.readFileSync(path.join(projectRoot, "assets", "data", "dynamics-forge-demos.json"), "utf8"));
+const translations = JSON.parse(fs.readFileSync(path.join(projectRoot, "assets", "data", "i18n.json"), "utf8"));
+const demoRenderer = fs.readFileSync(path.join(workerRoot, "dynamics-forge-demos.js"), "utf8");
+const plotLabels = new Set();
+for (const system of catalogue.systems) {
+  assert.equal(typeof system.primaryPlotLabel, "string", `${system.id} needs a primary plot label`);
+  assert.ok(system.primaryPlotLabel.trim(), `${system.id} primary plot label cannot be empty`);
+  plotLabels.add(system.primaryPlotLabel);
+  if (Number.isInteger(system.secondaryPlotStateIndex)) {
+    assert.equal(typeof system.secondaryPlotLabel, "string", `${system.id} needs a secondary plot label`);
+    assert.ok(system.secondaryPlotLabel.trim(), `${system.id} secondary plot label cannot be empty`);
+    plotLabels.add(system.secondaryPlotLabel);
+  }
+}
+for (const language of ["es", "fr"]) {
+  for (const label of plotLabels) assert.ok(translations.translations[language][label], `${language} needs ${label}`);
+}
+assert.match(demoRenderer, /system\.primaryPlotLabel/);
+assert.match(demoRenderer, /system\.secondaryPlotLabel/);
+assert.doesNotMatch(demoRenderer, /tr\("primary"\)/);
+assert.doesNotMatch(demoRenderer, /tr\("secondary"\)/);
 const messages = [];
 const context = {
   console,

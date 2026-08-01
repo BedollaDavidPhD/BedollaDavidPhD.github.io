@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "meta": {
     "en": {
       "title": "David Bedolla, PhD | Robotics Software Engineer",
@@ -163,6 +163,12 @@
       "Simulation results": "Resultados de la simulación",
       "Primary RMS": "RMS primario",
       "Secondary RMS": "RMS secundario",
+      "Joint 1 angle": "Ángulo de la articulación 1",
+      "Joint 2 angle": "Ángulo de la articulación 2",
+      "Altitude": "Altitud",
+      "Yaw": "Guiñada",
+      "Arm angle": "Ángulo del brazo",
+      "Roll": "Alabeo",
       "Peak effort": "Esfuerzo máximo",
       "Enable JavaScript to run the interactive robotics demos.": "Habilite JavaScript para ejecutar las demostraciones robóticas interactivas.",
       "Parameters changed — run the simulation to apply them.": "Los parámetros cambiaron; ejecute la simulación para aplicarlos.",
@@ -460,6 +466,12 @@
       "Simulation results": "Résultats de la simulation",
       "Primary RMS": "RMS principal",
       "Secondary RMS": "RMS secondaire",
+      "Joint 1 angle": "Angle de l’articulation 1",
+      "Joint 2 angle": "Angle de l’articulation 2",
+      "Altitude": "Altitude",
+      "Yaw": "Lacet",
+      "Arm angle": "Angle du bras",
+      "Roll": "Roulis",
       "Peak effort": "Effort maximal",
       "Enable JavaScript to run the interactive robotics demos.": "Activez JavaScript pour exécuter les démonstrations robotiques interactives.",
       "Parameters changed — run the simulation to apply them.": "Les paramètres ont changé; lancez la simulation pour les appliquer.",

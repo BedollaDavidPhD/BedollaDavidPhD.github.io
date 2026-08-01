@@ -571,8 +571,13 @@
     if (hasSecondary) { drawSeries(secondaryDesired, secondaryReferenceColor, true, secondaryYAt); drawSeries(secondaryActual, secondaryColor, false, secondaryYAt); }
     const cursorX = pad.x + (state.playback / system.duration) * (width - 2 * pad.x);
     context.strokeStyle = css("--forge-plot-cursor") || "rgba(255,255,255,.65)"; context.beginPath(); context.moveTo(cursorX, pad.top); context.lineTo(cursorX, height - pad.bottom); context.stroke();
-    context.fillStyle = primaryColor; context.font = "600 10px system-ui"; context.textAlign = "left"; context.fillText(tr("primary"), 12, height - 5);
-    if (hasSecondary) { context.fillStyle = secondaryColor; context.fillText(tr("secondary"), 58, height - 5); }
+    const primaryLabel = tr(system.primaryPlotLabel || `q${plotIndex + 1}`);
+    context.fillStyle = primaryColor; context.font = "600 10px system-ui"; context.textAlign = "left"; context.fillText(primaryLabel, 12, height - 5);
+    if (hasSecondary) {
+      const secondaryLabel = tr(system.secondaryPlotLabel || `q${system.secondaryPlotStateIndex + 1}`);
+      const secondaryX = 12 + context.measureText(primaryLabel).width + 18;
+      context.fillStyle = secondaryColor; context.fillText(secondaryLabel, secondaryX, height - 5);
+    }
   }
 
   function renderAll() { render(); renderPlot(); }
