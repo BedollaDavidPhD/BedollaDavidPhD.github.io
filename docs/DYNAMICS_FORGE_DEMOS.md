@@ -24,6 +24,7 @@ Copter1 and Copter2 use the original model-default cubic trajectories from their
 ## Architecture
 
 - `assets/data/dynamics-forge-demos.json` defines systems, editable gains and targets, integral initial values, bounds, camera views, and CAD references.
+- `assets/js/dynamics-forge-level4.js` contains the static-browser multirotor plant, model tables, articulated-body forward dynamics, rotor forces, motor pipeline, encoder quantization, and state estimator.
 - `assets/js/dynamics-forge-worker.js` integrates the selected nonlinear plant and controller equations away from the main UI thread.
 - `assets/js/dynamics-forge-demos.js` manages Run/Replay state, rate allowance, controls, STL loading, Canvas rendering, playback, views, and plots.
 - `assets/models/dynamics-forge/` contains the selected STL files copied from the main Dynamics Forge project.
@@ -32,9 +33,9 @@ The page remains a static GitHub Pages project. It does not need Python, FastAPI
 
 ## Reliability boundary
 
-This is a selected browser demo subset, not a build of the complete C++ backend. It is appropriate for an interactive portfolio demonstration because the equations execute deterministically in a dedicated browser worker and the UI remains responsive. Copter2 ports the validated DFM modified-DH topology, controller gains, weighted integral terms, roll-reference saturation, rotor mixer, effort/power limits, motor lag, friction, and thrust/drag coefficients. TaxiDrone ports the six-axis DFM pose chain plus all 18 rotor locations and directions, then applies the same compact XYZ and roll/pitch/yaw browser controller used by Drone6. Their browser plants are reduced-order models rather than the complete Featherstone solver. The full Dynamics Forge C++ application remains the authoritative environment for research results, all model families, controller generation, reinforcement learning, and high-fidelity validation.
+This is a selected static-browser subset, not a build of the complete C++ application. It is appropriate for an interactive portfolio demonstration because the equations execute deterministically in a dedicated browser worker and the UI remains responsive. Drone6 and TaxiDrone use their DFM modified-DH trees, masses, inertias, rotor locations and directions, thrust/drag coefficients, Featherstone articulated-body forward dynamics, RK4 plant integration, effort and power limits, motor lag, encoder quantization, and state estimation. TaxiDrone normalizes collective and attitude allocation for its 18 rotors so its browser demo retains the same per-vehicle command scale as Drone6. Copter2 separately ports its validated DFM topology and controller pipeline. The full Dynamics Forge C++ application remains authoritative for the complete model catalogue, controller generation, reinforcement learning, and research validation.
 
-Do not describe these demos as the complete backend or as WebAssembly. A future C++/WebAssembly build would require separating the pybind11-facing simulator interface from the portable dynamics core and adding Emscripten bindings.
+Do not describe these demos as the complete backend or as WebAssembly. The multirotor path is a JavaScript port of the selected native model and simulation behavior required by the portfolio.
 
 ## Edit a demo
 

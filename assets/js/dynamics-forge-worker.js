@@ -1,3 +1,5 @@
+importScripts("dynamics-forge-level4.js?v=20260801-level4-1");
+
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
 const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
 const degreesToRadians = (degrees) => degrees * Math.PI / 180;
@@ -341,124 +343,6 @@ function simulateCopter2(parameters, duration) {
   });
 }
 
-function simulateTaxiDrone(parameters, duration) {
-  const gravity = 9.81;
-  const mass = 1.5;
-  const positionTarget = [parameters.targetX, parameters.targetY, parameters.targetZ];
-  const attitudeTarget = [parameters.targetRoll, parameters.targetPitch, parameters.targetYaw].map(degreesToRadians);
-  const references = (time) => ({
-    position: time < 0.75 ? [0, 0, 1] : positionTarget,
-    attitude: time < 1 ? [0, 0, 0] : attitudeTarget,
-  });
-
-  function control(values, time) {
-    const desired = references(time);
-    const accelerations = [0, 1, 2].map((axis) => clamp(
-      parameters.positionKp * (desired.position[axis] - values[axis]) - parameters.positionKd * values[axis + 3] + parameters.positionKi * values[axis + 12],
-      -5,
-      5,
-    ));
-    const angularAccelerations = [0, 1, 2].map((axis) => clamp(
-      parameters.attitudeKp * wrapAngle(desired.attitude[axis] - values[axis + 6]) - parameters.attitudeKd * values[axis + 9] + parameters.attitudeKi * values[axis + 15],
-      -6,
-      6,
-    ));
-    return { desired, accelerations, angularAccelerations };
-  }
-
-  function derivative(values, time) {
-    const command = control(values, time);
-    const output = [
-      values[3], values[4], values[5],
-      command.accelerations[0] - 0.13 * values[3],
-      command.accelerations[1] - 0.13 * values[4],
-      command.accelerations[2] - 0.2 * values[5],
-      values[9], values[10], values[11],
-      command.angularAccelerations[0] - 0.4 * values[9],
-      command.angularAccelerations[1] - 0.4 * values[10],
-      command.angularAccelerations[2] - 0.4 * values[11],
-    ];
-    for (let axis = 0; axis < 3; axis += 1) {
-      const error = command.desired.position[axis] - values[axis];
-      output.push(Math.abs(values[axis + 12]) >= 1 && Math.sign(values[axis + 12]) === Math.sign(error) ? 0 : error);
-    }
-    for (let axis = 0; axis < 3; axis += 1) {
-      const error = wrapAngle(command.desired.attitude[axis] - values[axis + 6]);
-      output.push(Math.abs(values[axis + 15]) >= 1 && Math.sign(values[axis + 15]) === Math.sign(error) ? 0 : error);
-    }
-    return output;
-  }
-
-  const positionIntegral = parameters.positionIntegralInitial;
-  const attitudeIntegral = parameters.attitudeIntegralInitial;
-  return integrateRecorded({
-    initialState: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, positionIntegral, positionIntegral, positionIntegral, attitudeIntegral, attitudeIntegral, attitudeIntegral],
-    duration,
-    stateStride: 12,
-    dt: 0.002,
-    derivative,
-    observe(values, time) {
-      const command = control(values, time);
-      const thrust = mass * (gravity + command.accelerations[2]);
-      return { reference: command.desired.position[2], secondaryReference: command.desired.attitude[2], effort: thrust };
-    },
-    metrics: { primaryIndex: 2, secondaryIndex: 8, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / Math.PI, effortUnit: "N" },
-  });
-}
-
-function simulateDrone6(parameters, duration) {
-  const gravity = 9.81;
-  const mass = 1.5;
-  const positionTarget = [parameters.targetX, parameters.targetY, parameters.targetZ];
-  const attitudeTarget = [parameters.targetRoll, parameters.targetPitch, parameters.targetYaw].map(degreesToRadians);
-  const references = (time) => ({ position: time < 0.75 ? [0, 0, 0.3] : positionTarget, attitude: time < 1 ? [0, 0, 0] : attitudeTarget });
-
-  function control(values, time) {
-    const desired = references(time);
-    const accelerations = [0, 1, 2].map((axis) => clamp(
-      parameters.positionKp * (desired.position[axis] - values[axis]) - parameters.positionKd * values[axis + 3] + parameters.positionKi * values[axis + 12],
-      -5,
-      5,
-    ));
-    const angularAccelerations = [0, 1, 2].map((axis) => clamp(
-      parameters.attitudeKp * wrapAngle(desired.attitude[axis] - values[axis + 6]) - parameters.attitudeKd * values[axis + 9] + parameters.attitudeKi * values[axis + 15],
-      -6,
-      6,
-    ));
-    return { desired, accelerations, angularAccelerations };
-  }
-
-  function derivative(values, time) {
-    const command = control(values, time);
-    const output = [values[3], values[4], values[5], command.accelerations[0] - 0.15 * values[3], command.accelerations[1] - 0.15 * values[4], command.accelerations[2] - 0.22 * values[5], values[9], values[10], values[11], command.angularAccelerations[0] - 0.45 * values[9], command.angularAccelerations[1] - 0.45 * values[10], command.angularAccelerations[2] - 0.45 * values[11]];
-    for (let axis = 0; axis < 3; axis += 1) {
-      const error = command.desired.position[axis] - values[axis];
-      output.push(Math.abs(values[axis + 12]) >= 1 && Math.sign(values[axis + 12]) === Math.sign(error) ? 0 : error);
-    }
-    for (let axis = 0; axis < 3; axis += 1) {
-      const error = wrapAngle(command.desired.attitude[axis] - values[axis + 6]);
-      output.push(Math.abs(values[axis + 15]) >= 1 && Math.sign(values[axis + 15]) === Math.sign(error) ? 0 : error);
-    }
-    return output;
-  }
-
-  const positionIntegral = parameters.positionIntegralInitial;
-  const attitudeIntegral = parameters.attitudeIntegralInitial;
-  return integrateRecorded({
-    initialState: [0, 0, 0.3, 0, 0, 0, 0, 0, 0, 0, 0, 0, positionIntegral, positionIntegral, positionIntegral, attitudeIntegral, attitudeIntegral, attitudeIntegral],
-    duration,
-    stateStride: 12,
-    dt: 0.002,
-    derivative,
-    observe(values, time) {
-      const command = control(values, time);
-      const thrust = mass * (gravity + command.accelerations[2]);
-      return { reference: command.desired.position[2], secondaryReference: command.desired.attitude[2], effort: thrust };
-    },
-    metrics: { primaryIndex: 2, secondaryIndex: 8, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / Math.PI, effortUnit: "N" },
-  });
-}
-
 self.addEventListener("message", (event) => {
   const { requestId, systemId, parameters, duration } = event.data || {};
   try {
@@ -467,8 +351,7 @@ self.addEventListener("message", (event) => {
     else if (systemId === "drone4") result = simulateDrone4(parameters, duration);
     else if (systemId === "copter1") result = simulateCopter1(parameters, duration);
     else if (systemId === "copter2") result = simulateCopter2(parameters, duration);
-    else if (systemId === "taxi_drone") result = simulateTaxiDrone(parameters, duration);
-    else if (systemId === "drone6") result = simulateDrone6(parameters, duration);
+    else if (systemId === "taxi_drone" || systemId === "drone6") result = DynamicsForgeLevel4.simulate(systemId, parameters, duration);
     else throw new Error(`Unknown system: ${systemId}`);
     result.requestId = requestId;
     result.systemId = systemId;

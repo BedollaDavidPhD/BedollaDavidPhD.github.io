@@ -617,19 +617,44 @@
     ui.status.textContent = "Parameters changed — run the simulation to apply them.";
   }
 
+  function gainHelp(control) {
+    if (/(^|[A-Z0-9])Kp(?:\d+)?$/i.test(control.key) || /^kp\d*$/i.test(control.key)) {
+      return "Proportional gain: increases correction from the current tracking error.";
+    }
+    if (/(^|[A-Z0-9])Kd(?:\d+)?$/i.test(control.key) || /^kd\d*$/i.test(control.key)) {
+      return "Derivative gain: adds damping from velocity or error-rate feedback.";
+    }
+    if (/(^|[A-Z0-9])Ki(?:\d+)?$/i.test(control.key) || /^ki\d*$/i.test(control.key) || /IntegralGain$/i.test(control.key)) {
+      return "Integral gain: removes persistent error by accumulating tracking error over time.";
+    }
+    return "";
+  }
+
   function buildControls(system) {
     ui.gains.replaceChildren();
     for (const control of system.controls) {
-      const label = document.createElement("label");
-      const heading = document.createElement("span");
-      heading.textContent = control.label;
+      const controlWrap = document.createElement("div"); controlWrap.className = "forge-control";
+      const headingRow = document.createElement("span"); headingRow.className = "forge-control-label";
+      const heading = document.createElement("label"); heading.textContent = control.label;
+      const help = gainHelp(control);
+      if (help) {
+        const helpWrap = document.createElement("span"); helpWrap.className = "forge-gain-help";
+        const helpButton = document.createElement("button"); helpButton.type = "button"; helpButton.className = "forge-info-button";
+        helpButton.textContent = "i"; helpButton.setAttribute("aria-label", `About ${control.label}`); helpButton.setAttribute("aria-describedby", `forge-help-${system.id}-${control.key}`);
+        const tooltip = document.createElement("span"); tooltip.id = `forge-help-${system.id}-${control.key}`; tooltip.className = "forge-gain-tooltip"; tooltip.setAttribute("role", "tooltip"); tooltip.textContent = help;
+        helpButton.addEventListener("click", () => helpWrap.classList.toggle("is-open"));
+        helpButton.addEventListener("blur", () => helpWrap.classList.remove("is-open"));
+        helpButton.addEventListener("keydown", (event) => { if (event.key === "Escape") { helpWrap.classList.remove("is-open"); helpButton.blur(); } });
+        helpWrap.append(helpButton, tooltip); headingRow.appendChild(helpWrap);
+      }
       const field = document.createElement("span"); field.className = "forge-number-field";
       const input = document.createElement("input");
-      input.type = "number"; input.name = control.key; input.value = control.default; input.min = control.min; input.max = control.max; input.step = control.step; input.inputMode = "decimal";
+      input.type = "number"; input.id = `forge-control-${system.id}-${control.key}`; input.name = control.key; input.value = control.default; input.min = control.min; input.max = control.max; input.step = control.step; input.inputMode = "decimal";
+      heading.htmlFor = input.id; headingRow.prepend(heading);
       input.addEventListener("input", markParametersDirty);
       field.appendChild(input);
       if (control.unit) { const unit = document.createElement("small"); unit.textContent = control.unit; field.appendChild(unit); }
-      label.append(heading, field); ui.gains.appendChild(label);
+      controlWrap.append(headingRow, field); ui.gains.appendChild(controlWrap);
     }
   }
 
@@ -766,7 +791,7 @@
       const payload = await response.json();
       if (!Array.isArray(payload.systems) || payload.systems.length === 0) throw new Error("No systems configured");
       state.systems = [...payload.systems].sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER));
-      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260731-taxi2");
+      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260801-level4-1");
       state.worker.addEventListener("message", (event) => {
         const result = event.data;
         if (result.requestId !== state.requestId || result.systemId !== state.systems[state.activeIndex]?.id) return;

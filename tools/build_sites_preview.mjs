@@ -22,6 +22,7 @@ const siteFiles = [
   "assets/data/dynamics-forge-demos.json",
   "assets/data/project-media.json",
   "assets/js/dynamics-forge-demos.js",
+  "assets/js/dynamics-forge-level4.js",
   "assets/js/dynamics-forge-worker.js",
   "assets/js/i18n.js",
   "assets/js/main.js",

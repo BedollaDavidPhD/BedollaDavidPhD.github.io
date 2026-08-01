@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "meta": {
     "en": {
       "title": "David Bedolla, PhD | Robotics Software Engineer",
@@ -154,6 +154,9 @@
       "Frames": "Marcos",
       "Labels": "Etiquetas",
       "Controller parameters": "Parámetros del controlador",
+      "Proportional gain: increases correction from the current tracking error.": "Ganancia proporcional: aumenta la corrección basada en el error de seguimiento actual.",
+      "Derivative gain: adds damping from velocity or error-rate feedback.": "Ganancia derivativa: añade amortiguamiento mediante la realimentación de velocidad o de la tasa de cambio del error.",
+      "Integral gain: removes persistent error by accumulating tracking error over time.": "Ganancia integral: elimina el error persistente acumulando el error de seguimiento a lo largo del tiempo.",
       "Reset": "Restablecer",
       "Run simulation": "Ejecutar simulación",
       "Replay": "Repetir",
@@ -448,6 +451,9 @@
       "Frames": "Repères",
       "Labels": "Étiquettes",
       "Controller parameters": "Paramètres du contrôleur",
+      "Proportional gain: increases correction from the current tracking error.": "Gain proportionnel : augmente la correction en fonction de l'erreur de suivi instantanée.",
+      "Derivative gain: adds damping from velocity or error-rate feedback.": "Gain dérivé : ajoute de l'amortissement à partir de la vitesse ou de la variation de l'erreur.",
+      "Integral gain: removes persistent error by accumulating tracking error over time.": "Gain intégral : élimine l'erreur persistante en cumulant l'erreur de suivi dans le temps.",
       "Reset": "Réinitialiser",
       "Run simulation": "Lancer la simulation",
       "Replay": "Revoir",

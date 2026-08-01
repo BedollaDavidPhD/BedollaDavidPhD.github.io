@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 2.20 - Multirotor Dynamics Fidelity
+
+- Replaced the decoupled Drone6 and TaxiDrone browser plants with DFM-based articulated-body dynamics, rotor thrust and drag, RK4 integration, motor delay, effort and power limits, encoder quantization, and state estimation
+- Restored physical attitude-to-translation coupling so roll and pitch redirect thrust and produce lateral motion
+- Normalized the TaxiDrone allocator across its 18 rotors and retuned stable editable defaults for the higher-fidelity plant
+- Added accessible, translated information controls only beside proportional, integral, and derivative gains
+
 ## Version 2.19 - Trilingual Engineering Portfolio
 
 - Added a persistent English, Spanish, and French language selector to the site header

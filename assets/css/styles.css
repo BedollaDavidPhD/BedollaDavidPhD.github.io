@@ -493,8 +493,47 @@ button, a { -webkit-tap-highlight-color: transparent; }
   cursor: pointer;
 }
 .forge-gain-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
-.forge-gain-grid > label { min-width: 0; color: var(--muted); font-size: 0.68rem; font-weight: 720; }
-.forge-gain-grid > label > span:first-child { display: block; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.forge-control { min-width: 0; color: var(--muted); font-size: 0.68rem; font-weight: 720; }
+.forge-control-label { display: flex; align-items: center; min-height: 22px; gap: 5px; margin-bottom: 3px; }
+.forge-control-label > label:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.forge-gain-help { position: relative; flex: 0 0 auto; }
+.forge-info-button {
+  display: grid;
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  place-items: center;
+  color: #315f98;
+  background: #edf5ff;
+  border: 1px solid #9db7d7;
+  border-radius: 50%;
+  font: 800 0.62rem/1 system-ui, sans-serif;
+  cursor: help;
+}
+.forge-info-button:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+.forge-gain-tooltip {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  width: min(220px, 58vw);
+  padding: 7px 8px;
+  color: #edf6ff;
+  background: #102033;
+  border: 1px solid #35506e;
+  border-radius: 7px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 3px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+.forge-gain-help:hover .forge-gain-tooltip,
+.forge-gain-help:focus-within .forge-gain-tooltip,
+.forge-gain-help.is-open .forge-gain-tooltip { opacity: 1; transform: translate(-50%, 0); }
 .forge-number-field { display: flex; align-items: center; min-height: 35px; overflow: hidden; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; }
 .forge-number-field input { width: 100%; min-width: 0; padding: 7px 8px; color: var(--ink); background: transparent; border: 0; outline: none; font: inherit; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
 .forge-number-field:focus-within { border-color: #60a5fa; box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.14); }
@@ -682,7 +721,8 @@ html[data-theme="dark"] .forge-layer-controls legend { color: #89b7f9; }
 html[data-theme="dark"] .forge-layer-controls label { color: #c9d6e7; }
 html[data-theme="dark"] .forge-gains-heading h5 { color: #eef5ff; }
 html[data-theme="dark"] .forge-gains-heading button { color: #bcd0e8; border-color: #3a506c; }
-html[data-theme="dark"] .forge-gain-grid > label { color: #aebfd4; }
+html[data-theme="dark"] .forge-control { color: #aebfd4; }
+html[data-theme="dark"] .forge-info-button { color: #dbeafe; background: #1e3a5f; border-color: #4f7199; }
 html[data-theme="dark"] .forge-number-field { background: #0a1728; border-color: #30445f; }
 html[data-theme="dark"] .forge-number-field input { color: #f1f6fd; }
 html[data-theme="dark"] .forge-number-field small { color: #7590b0; }

@@ -57,12 +57,14 @@ Open `http://localhost:8000` in a browser.
 - `assets/data/project-media.json`: project-to-YouTube URL mapping; blank URLs keep the current illustrations
 - `assets/data/dynamics-forge-demos.json`: editable web-demo systems, controls, camera views, and CAD references
 - `assets/js/dynamics-forge-demos.js`: interactive CAD viewer, controls, playback, and plots
-- `assets/js/dynamics-forge-worker.js`: browser-side nonlinear simulation subset
+- `assets/js/dynamics-forge-level4.js`: static-browser multirotor model, articulated-body dynamics, actuator, encoder, and estimator pipeline
+- `assets/js/dynamics-forge-worker.js`: browser-side simulation worker and demo dispatcher
 - `assets/models/dynamics-forge/`: CAD exported from the Dynamics Forge project
 - `documents/David_Bedolla_CV.pdf`: downloadable CV
 - `tools/create_cv_pdf.py`: editable CV PDF generation source
 - `tools/sync_dynamics_forge_web_assets.py`: refreshes the selected CAD from Dynamics Forge
 - `tools/build_sites_preview.mjs`: private preview packaging helper
+- `tools/test_dynamics_forge_worker.cjs`: deterministic worker and attitude-to-translation coupling checks
 - `docs/PROFILE_CONSISTENCY_REVIEW.md`: decisions needed to align the website and CV
 - `docs/DYNAMICS_FORGE_DEMOS.md`: browser-demo architecture, reliability boundary, and update instructions
 - `source-materials/overleaf-projects/`: private editable LaTeX sources, excluded from Git and public deployment

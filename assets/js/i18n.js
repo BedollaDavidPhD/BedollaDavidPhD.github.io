@@ -33,6 +33,7 @@
         dark: 'oscuro',
         switchTheme: 'Cambiar al tema {theme}',
         video: 'Video de {title}',
+        about: 'Información sobre {label}',
         rateLimit: 'Hay dos simulaciones nuevas disponibles por minuto. La repetición es ilimitada; el siguiente cálculo estará disponible en {seconds} s.',
         simulationError: 'Error de simulación: {error}'
       },
@@ -41,6 +42,7 @@
         dark: 'sombre',
         switchTheme: 'Passer au thème {theme}',
         video: 'Vidéo de {title}',
+        about: 'Informations sur {label}',
         rateLimit: 'Deux nouvelles simulations sont disponibles par minute. La relecture est illimitée; le prochain calcul sera disponible dans {seconds} s.',
         simulationError: 'Erreur de simulation : {error}'
       }
@@ -53,6 +55,12 @@
 
     const videoMatch = source.match(/^(.+) video$/);
     if (videoMatch) return interpolate(dictionary.video, { title: videoMatch[1] });
+
+    const aboutMatch = source.match(/^About (.+)$/);
+    if (aboutMatch) {
+      const label = catalogue.translations?.[language]?.[aboutMatch[1]] || aboutMatch[1];
+      return interpolate(dictionary.about, { label });
+    }
 
     const rateLimitMatch = source.match(/^Two new simulations are available per minute\. Replay is unlimited; the next recalculation is available in (\d+) s\.$/);
     if (rateLimitMatch) return interpolate(dictionary.rateLimit, { seconds: rateLimitMatch[1] });
@@ -184,7 +192,7 @@
     document.dispatchEvent(new CustomEvent('portfolio-language-change', { detail: { language: currentLanguage } }));
   };
 
-  const ready = fetch('assets/data/i18n.json?v=20260801-trilingual1')
+  const ready = fetch('assets/data/i18n.json?v=20260801-level4-1')
     .then((response) => {
       if (!response.ok) throw new Error('Translation catalogue could not be loaded.');
       return response.json();
