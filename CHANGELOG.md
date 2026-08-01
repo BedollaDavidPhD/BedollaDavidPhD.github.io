@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.18 - Portfolio Link in CV
+
+- Added the live GitHub Pages portfolio as a clickable contact link in the CV PDF
+- Refreshed the website's CV links so browsers load the updated document
+
 ## Version 2.17 - Public GitHub Pages Repository
 
 - Removed the generic case-study promise from the portfolio heading
