@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 2.23 - CV Contact Links
+
+- Replaced the displayed portfolio URL in the CV with a natural "My page" hyperlink
+- Removed GitHub and ORCID from the CV contact block
+- Simplified the LinkedIn label while retaining its destination
+
 ## Version 2.22 - Direct Simulator Copy
 
 - Rewrote simulator descriptions as concise engineering summaries

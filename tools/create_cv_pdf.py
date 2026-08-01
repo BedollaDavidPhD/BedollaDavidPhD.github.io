@@ -63,11 +63,9 @@ story.append(Paragraph('David Bedolla, PhD', styles['Name']))
 story.append(Paragraph('Robotics Software Engineer | Real-Time Control | Motion | Hardware Deployment', styles['Role']))
 story.append(Paragraph(
     'Montréal, QC, Canada &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="mailto:davidbedollamartinez@outlook.es" color="#536174">davidbedollamartinez@outlook.es</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="https://www.linkedin.com/in/-davidbedolla" color="#536174">linkedin.com/in/-davidbedolla</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="https://github.com/BedollaDavidPhD" color="#536174">github.com/BedollaDavidPhD</a><br/>'
-    '<a href="https://bedolladavidphd.github.io/" color="#536174">bedolladavidphd.github.io</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
-    '<a href="https://orcid.org/0000-0001-8552-6842" color="#536174">orcid.org/0000-0001-8552-6842</a>', styles['Contact']))
+    '<a href="mailto:davidbedollamartinez@outlook.es" color="#536174">davidbedollamartinez@outlook.es</a><br/>'
+    '<a href="https://www.linkedin.com/in/-davidbedolla" color="#536174">LinkedIn</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+    '<a href="https://bedolladavidphd.github.io/" color="#536174">My page</a>', styles['Contact']))
 
 story += section('Profile')
 story.append(Paragraph(
