@@ -158,7 +158,6 @@
       const joint1 = matMultiply(base, modifiedDh(0, 0, q1, 0));
       const joint2 = matMultiply(joint1, modifiedDh(0, 0.296, q2, 0.05));
       const tip = matMultiply(joint2, translate(0.2, 0, 0));
-      meshes.push({ key: "cylinder", transform: matMultiply(translate(0, 0, 0.04), scaleMatrix(0.18, 0.18, 0.08)), color: "#475569" });
       meshes.push({ key: "forearm", transform: joint1, color: "#8b5cf6" });
       meshes.push({ key: "link", transform: joint2, color: "#22d3ee" });
       links.push({ a: matrixPoint(joint1), b: matrixPoint(joint2), actuated: true }, { a: matrixPoint(joint2), b: matrixPoint(tip), actuated: true });
@@ -196,7 +195,6 @@
       const arm = matMultiply(pivot, rotY(-angle));
       const tip = matMultiply(arm, translate(1, 0, 0));
       const rotorFrame = matMultiply(tip, rotZ(time * 40));
-      meshes.push({ key: "cylinder", transform: matMultiply(translate(0, 0, 0.07), scaleMatrix(0.2, 0.2, 0.14)), color: "#475569" });
       meshes.push({ key: "box", transform: matMultiply(arm, matMultiply(translate(0.5, 0, 0), scaleMatrix(1, 0.08, 0.08))), color: "#38bdf8" });
       meshes.push({ key: "prop_ccw", transform: matMultiply(rotorFrame, scaleMatrix(3)), color: "#22d3ee" });
       links.push({ a: matrixPoint(pivot), b: matrixPoint(tip), actuated: true });
@@ -215,7 +213,6 @@
       const frame3 = matMultiply(frame1, modifiedDh(Math.PI / 2, 0, roll, 1.5));
       const frame4 = matMultiply(frame3, modifiedDh(-Math.PI / 2, 0.5, leftRotorAngle - Math.PI / 2, 0));
       const frame5 = matMultiply(frame3, modifiedDh(-Math.PI / 2, -0.5, rightRotorAngle - Math.PI / 2, 0));
-      meshes.push({ key: "cylinder", transform: matMultiply(frame0, scaleMatrix(0.16, 0.16, 0.12)), color: "#475569" });
       meshes.push({ key: "prop_ccw", transform: matMultiply(frame4, scaleMatrix(3)), color: "#22d3ee" });
       meshes.push({ key: "prop_cw", transform: matMultiply(frame5, scaleMatrix(3)), color: "#fb923c" });
       links.push(

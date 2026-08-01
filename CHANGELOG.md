@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.21 - Clean Model Geometry
+
+- Removed visualization-only pedestal cylinders from the manipulator, Copter1, and Copter2 demos
+- Preserved the original CAD links, kinematic links, frames, centers of mass, and motion
+
 ## Version 2.20 - Multirotor Dynamics Fidelity
 
 - Replaced the decoupled Drone6 and TaxiDrone browser plants with DFM-based articulated-body dynamics, rotor thrust and drag, RK4 integration, motor delay, effort and power limits, encoder quantization, and state estimation
