@@ -20,7 +20,7 @@ The optional `tools/build_sites_preview.mjs` script packages the same static fil
 - A project illustration can be replaced with a YouTube embed by pasting its URL into `assets/data/project-media.json`.
 - Embedded project demonstrations start muted when they enter the viewport and pause after leaving it.
 - The portfolio case studies now include verified software architecture, real-time control, planning, reinforcement-learning, and hardware evidence.
-- Six Dynamics Forge Web Demos cover a manipulator, Copter1, Copter2, Drone4, full-pose Drone6, and full-pose 18-rotor TaxiDrone in a browser worker with editable controller gains, CAD, links, coordinate frames, DFM center-of-mass markers, multiple views, and response plots. Copter1 and Copter2 use their original DFM cubic trajectories, and the DFM-derived visualization trees are not imported from URDF.
+- Six Dynamics Forge Web Demos cover a manipulator, Copter1, Copter2, Drone4, full-pose Drone6, and full-pose 18-rotor TaxiDrone in a browser worker with editable controller gains, CAD, links, coordinate frames, center-of-mass markers, multiple views, and response plots. Copter1 and Copter2 use configured cubic trajectories, and the visualization trees are not imported from URDF.
 - Private Overleaf source material is stored locally under `source-materials/` and excluded from Git.
 
 ## Deploy to GitHub Pages

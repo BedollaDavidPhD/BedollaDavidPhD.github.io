@@ -1,6 +1,6 @@
 {
   "version": 6,
-  "source": "Dynamics Forge DFM-derived browser demo subset",
+  "source": "Dynamics Forge browser demo subset",
   "systems": [
     {
       "id": "two_link",
@@ -72,7 +72,7 @@
       "shortTitle": "Copter1",
       "title": "Copter1 model trajectory tracking",
       "category": "Aerial control · 1 DoF",
-      "description": "A single rotor follows the original 10-second DFM cubic trajectory: 0, 0.5, -0.5, and -1.57 radians, with zero velocity at each waypoint.",
+      "description": "A single rotor tracks a 10-second cubic trajectory through 0, 0.5, -0.5, and -1.57 radians, with zero velocity at each waypoint.",
       "controller": "Arm-angle PID",
       "duration": 10,
       "stateStride": 3,
@@ -96,8 +96,8 @@
       "shortTitle": "Copter2",
       "title": "Copter2 cascaded yaw and roll control",
       "category": "Tethered rotor control · 2 DoF",
-      "description": "The validated DFM yaw loop follows its original 14-second cubic sequence—0, π/2, 3π/2, 0, 0 radians—and generates the bounded reference for the inner roll loop.",
-      "controller": "DFM cascaded yaw-to-roll torque reference",
+      "description": "A cascaded yaw controller tracks a 14-second cubic sequence—0, π/2, 3π/2, 0, 0 radians—and generates a bounded reference for the inner roll loop.",
+      "controller": "Cascaded yaw-to-roll torque reference",
       "duration": 14,
       "stateStride": 8,
       "plotStateIndex": 0,
@@ -175,7 +175,7 @@
       "shortTitle": "TaxiDrone",
       "title": "TaxiDrone full-pose 18-rotor control",
       "category": "Heavy-lift aerial robotics · 18 rotors",
-      "description": "The Drone Taxi tracks editable XYZ position and roll, pitch, and yaw targets with the same full-pose control surface as Drone6 across all 18 DFM rotor frames and directions.",
+      "description": "The Drone Taxi tracks editable XYZ position and roll, pitch, and yaw targets through all 18 rotor frames and configured directions.",
       "controller": "XYZ + roll/pitch/yaw · 18-rotor allocation",
       "duration": 16,
       "stateStride": 12,

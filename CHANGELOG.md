@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.22 - Direct Simulator Copy
+
+- Rewrote simulator descriptions as concise engineering summaries
+- Removed internal model-format terminology and validation-process language from public content
+
 ## Version 2.21 - Clean Model Geometry
 
 - Removed visualization-only pedestal cylinders from the manipulator, Copter1, and Copter2 demos
@@ -7,7 +12,7 @@
 
 ## Version 2.20 - Multirotor Dynamics Fidelity
 
-- Replaced the decoupled Drone6 and TaxiDrone browser plants with DFM-based articulated-body dynamics, rotor thrust and drag, RK4 integration, motor delay, effort and power limits, encoder quantization, and state estimation
+- Replaced the decoupled Drone6 and TaxiDrone browser plants with articulated-body dynamics, rotor thrust and drag, RK4 integration, motor delay, effort and power limits, encoder quantization, and state estimation
 - Restored physical attitude-to-translation coupling so roll and pitch redirect thrust and produce lateral motion
 - Normalized the TaxiDrone allocator across its 18 rotors and retuned stable editable defaults for the higher-fidelity plant
 - Added accessible, translated information controls only beside proportional, integral, and derivative gains
@@ -89,7 +94,7 @@
 
 ## Version 2.7 - Project Videos and Center-of-Mass Layer
 
-- Added a dedicated COM viewer layer with DFM-derived mass locations for all six interactive systems
+- Added a dedicated COM viewer layer with configured mass locations for all six interactive systems
 - Doubled the displayed INIT Robots logo from 24 px to 48 px
 - Removed the separate video-portfolio gallery from the page
 - Added `assets/data/project-media.json` so a full YouTube URL can replace any Research and engineering work illustration while blank URLs retain the original art
@@ -120,15 +125,15 @@
 - Made the simulator, video portfolio, and experience sections light in light mode while preserving their dark-theme treatments
 - Kept the contact section intentionally colored in both themes as the final call to action
 - Reordered the simulator tabs to Arm, Copter1, Copter2, Drone4, Drone6, and TaxiDrone
-- Added TaxiDrone with all 18 DFM rotor locations and configured motor directions
-- Restored the original model-default cubic trajectories for Copter1 and Copter2
+- Added TaxiDrone with all 18 rotor locations and configured motor directions
+- Configured cubic trajectories for Copter1 and Copter2
 
-## Version 2.2 - DFM Frame and Copter2 Alignment
+## Version 2.2 - Frame and Copter2 Alignment
 
 - Corrected the 2-DoF manipulator viewer to use the model's modified-DH local Z joint axes instead of hand-authored Y rotations
-- Rebuilt Copter2's frames, offsets, parent links, rotor joints, and rotor directions from `Copter2DoF.dfm`
-- Replaced the independent yaw/roll approximation with the validated cascaded yaw-to-roll reference controller and DFM default gains
-- Added DFM motor lag, effort/power limits, friction, rotor thrust, and drag terms to the lightweight Copter2 browser plant
+- Rebuilt Copter2's frames, offsets, parent links, rotor joints, and rotor directions from the source model
+- Replaced the independent yaw/roll approximation with a cascaded yaw-to-roll reference controller and configured gains
+- Added motor lag, effort/power limits, friction, rotor thrust, and drag terms to the lightweight Copter2 browser plant
 - Removed the independent Copter2 roll target and plotted the generated roll reference against measured roll
 - Updated asset version identifiers so a refresh loads the corrected scripts and configuration
 

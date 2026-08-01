@@ -13,13 +13,13 @@ Each demo calculates a new result when a controller value or target changes. Aft
 
 ## Visualization
 
-CAD, links, coordinate frames, frame labels, and center-of-mass markers are independent layers. Yellow `COM` markers use the local mass locations from the validated DFM models; massless rotor frames do not receive a marker. The view selector provides full 3D, top, front, and side views. Every new calculation and replay resets the camera, pan, zoom, plot scale, trail, and configured model limits before visualization begins.
+CAD, links, coordinate frames, frame labels, and center-of-mass markers are independent layers. Yellow `COM` markers use the configured local mass locations; massless rotor frames do not receive a marker. The view selector provides full 3D, top, front, and side views. Every new calculation and replay resets the camera, pan, zoom, plot scale, trail, and configured model limits before visualization begins.
 
 Rotor frame transforms remain animated independently of the CAD layer. Hiding CAD on Copter1, Drone4, Drone6, or TaxiDrone therefore leaves the rotating rotor X/Y axes visible while the body and hub frames retain their own motion.
 
-The manipulator and Copter2 frame trees come from their Dynamics Forge `.dfm` files using the modified-DH convention; they are not imported from URDF. Revolute coordinates therefore rotate about each modified-DH frame's local Z axis. Copter2 uses the DFM frame order `[1, 3, 4, 5]` for yaw, roll, left rotor, and right rotor, including the configured offsets and rotor directions.
+The manipulator and Copter2 frame trees use the modified-DH convention; they are not imported from URDF. Revolute coordinates therefore rotate about each modified-DH frame's local Z axis. Copter2 uses frame order `[1, 3, 4, 5]` for yaw, roll, left rotor, and right rotor, including the configured offsets and rotor directions.
 
-Copter1 and Copter2 use the original model-default cubic trajectories from their DFM files. Copter1 follows `[0, 0.5, -0.5, -1.57]` radians over 10 seconds. Copter2 follows `[0, π/2, 3π/2, 0, 0]` radians over 14 seconds. Segment durations are equal and endpoint velocities are zero, matching the native sampler. Other browser demos retain editable targets.
+Copter1 and Copter2 use configured cubic trajectories. Copter1 follows `[0, 0.5, -0.5, -1.57]` radians over 10 seconds. Copter2 follows `[0, π/2, 3π/2, 0, 0]` radians over 14 seconds. Segment durations are equal and endpoint velocities are zero. Other browser demos retain editable targets.
 
 ## Architecture
 
@@ -33,7 +33,7 @@ The page remains a static GitHub Pages project. It does not need Python, FastAPI
 
 ## Reliability boundary
 
-This is a selected static-browser subset, not a build of the complete C++ application. It is appropriate for an interactive portfolio demonstration because the equations execute deterministically in a dedicated browser worker and the UI remains responsive. Drone6 and TaxiDrone use their DFM modified-DH trees, masses, inertias, rotor locations and directions, thrust/drag coefficients, Featherstone articulated-body forward dynamics, RK4 plant integration, effort and power limits, motor lag, encoder quantization, and state estimation. TaxiDrone normalizes collective and attitude allocation for its 18 rotors so its browser demo retains the same per-vehicle command scale as Drone6. Copter2 separately ports its validated DFM topology and controller pipeline. The full Dynamics Forge C++ application remains authoritative for the complete model catalogue, controller generation, reinforcement learning, and research validation.
+This is a selected static-browser subset, not a build of the complete C++ application. It is appropriate for an interactive portfolio demonstration because the equations execute deterministically in a dedicated browser worker and the UI remains responsive. Drone6 and TaxiDrone use configured modified-DH trees, masses, inertias, rotor locations and directions, thrust/drag coefficients, Featherstone articulated-body forward dynamics, RK4 plant integration, effort and power limits, motor lag, encoder quantization, and state estimation. TaxiDrone normalizes collective and attitude allocation for its 18 rotors so its browser demo retains the same per-vehicle command scale as Drone6. Copter2 separately uses its configured topology and controller pipeline. The full Dynamics Forge C++ application remains authoritative for the complete model catalogue, controller generation, reinforcement learning, and research validation.
 
 Do not describe these demos as the complete backend or as WebAssembly. The multirotor path is a JavaScript port of the selected native model and simulation behavior required by the portfolio.
 
