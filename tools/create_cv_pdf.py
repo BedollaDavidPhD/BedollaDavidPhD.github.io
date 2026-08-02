@@ -17,7 +17,7 @@ styles = getSampleStyleSheet()
 styles.add(ParagraphStyle(name='Name', parent=styles['Title'], fontName='Helvetica-Bold', fontSize=25, leading=28, textColor=NAVY, spaceAfter=2))
 styles.add(ParagraphStyle(name='Role', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=11.5, leading=15, textColor=BLUE, spaceAfter=8))
 styles.add(ParagraphStyle(name='Contact', parent=styles['Normal'], fontSize=8.7, leading=12, textColor=MUTED, spaceAfter=10))
-styles.add(ParagraphStyle(name='Section', parent=styles['Heading2'], fontName='Helvetica-Bold', fontSize=12.5, leading=15, textColor=NAVY, spaceBefore=7, spaceAfter=5, borderWidth=0, borderPadding=0))
+styles.add(ParagraphStyle(name='Section', parent=styles['Heading2'], fontName='Helvetica-Bold', fontSize=12.5, leading=15, textColor=NAVY, spaceBefore=6, spaceAfter=4, borderWidth=0, borderPadding=0))
 styles.add(ParagraphStyle(name='BodySmall', parent=styles['BodyText'], fontSize=8.8, leading=12, textColor=colors.HexColor('#263244'), spaceAfter=5))
 styles.add(ParagraphStyle(name='JobTitle', parent=styles['BodyText'], fontName='Helvetica-Bold', fontSize=9.7, leading=12, textColor=NAVY, spaceAfter=1))
 styles.add(ParagraphStyle(name='Meta', parent=styles['BodyText'], fontSize=8.2, leading=10.5, textColor=BLUE, spaceAfter=3))
@@ -27,7 +27,7 @@ styles.add(ParagraphStyle(name='SkillCell', parent=styles['BodyText'], fontSize=
 
 
 def section(title):
-    return [Paragraph(title.upper(), styles['Section']), Table([['']], colWidths=[7.1*inch], rowHeights=[0.012*inch], style=TableStyle([('BACKGROUND',(0,0),(-1,-1),LIGHT),('LINEABOVE',(0,0),(-1,-1),0.6,BLUE)])), Spacer(1, 4)]
+    return [Paragraph(title.upper(), styles['Section']), Table([['']], colWidths=[7.1*inch], rowHeights=[0.012*inch], style=TableStyle([('BACKGROUND',(0,0),(-1,-1),LIGHT),('LINEABOVE',(0,0),(-1,-1),0.6,BLUE)])), Spacer(1, 3)]
 
 
 def bullet(text):
@@ -37,7 +37,7 @@ def bullet(text):
 def job(date, title, place, bullets):
     items = [Paragraph(title, styles['JobTitle']), Paragraph(f'{date} | {place}', styles['Meta'])]
     items += [bullet(x) for x in bullets]
-    return KeepTogether(items + [Spacer(1, 4)])
+    return [KeepTogether(items[:3]), *items[3:], Spacer(1, 2)]
 
 
 def footer(canvas, doc):
@@ -62,7 +62,7 @@ story = []
 story.append(Paragraph('David Bedolla, PhD', styles['Name']))
 story.append(Paragraph('Robotics Software Engineer | Real-Time Control | Motion | Hardware Deployment', styles['Role']))
 story.append(Paragraph(
-    '<a href="https://bedolladavidphd.github.io/" color="#536174">My page</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+    '<a href="https://bedolladavidphd.github.io/" color="#536174">Portfolio</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
     '<a href="https://www.linkedin.com/in/-davidbedolla" color="#536174">LinkedIn</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
     '<a href="mailto:davidbedollamartinez@outlook.es" color="#536174">davidbedollamartinez@outlook.es</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
     'Montréal, QC, Canada', styles['Contact']))
@@ -72,38 +72,38 @@ story.append(Paragraph(
     'Robotics software engineer with applied R&amp;D experience in real-time control, robot dynamics, high-degree-of-freedom systems, and hardware deployment. Experience includes ROS 2 and C++ control systems, redundancy resolution, inverse kinematics, rehabilitation exoskeleton controllers, symbolic modeling, and sensor-based motion generation using IMU, EMG, and depth-camera data. Work connects software architecture, dynamic modeling, motion control, hardware integration, and physical validation for assistive robotics and mobile manipulation.', styles['BodySmall']))
 
 story += section('Professional Experience')
-story.append(job('2026-Present', 'Associate Researcher', 'Lab INIT Robots, Montréal', [
-    'Deployed a 400 Hz whole-body control system for a 10-DoF mobile manipulator with joystick-based commands.',
-    'Implemented Kinova Gen3 redundancy resolution with approximately 3 microseconds runtime on an Intel i7 processor.',
-    'Integrated the method into a real-time ROS 2 and C++ pipeline using Pinocchio.',
-    'Improved Cartesian tracking with a super-twisting controller and safety-oriented command logic.'
-]))
-story.append(job('2025', 'Postdoctoral Researcher', 'ÉTS, Montréal', [
+story += job('2026-Present', 'Associate Researcher', 'Lab INIT Robots, Montréal', [
+    'Deployed 400 Hz whole-body control for an AgileX mobile base and Kinova Gen3 arm, with PS4 commands and validation on the physical system.',
+    'Implemented analytical redundancy resolution for position-level configuration targets in approximately 3 microseconds on an Intel i7 processor.',
+    'Used a Pinocchio-based Jacobian solver and numerical optimization to generate real-time joint-velocity commands for Cartesian tracking and elbow reconfiguration.',
+    'Integrated robot-state feedback, world-frame tracking, joint limits, coordinated base and arm motion, and safety-oriented command logic in ROS 2 and C++.'
+])
+story += job('2025', 'Postdoctoral Researcher', 'ÉTS, Montréal', [
     'Reduced lower-limb robot control latency by 30 times, enabling torque-based control and lower tracking error.',
     'Improved ROS and Python real-time scheduling for autonomous vehicle control, reducing steering oscillations.',
     'Developed symbolic dynamics and inverse-kinematics GUI tools for rapid robot modeling and validation.',
     'Supported international collaborations on wheelchair-mounted robots and upper-limb rehabilitation systems.'
-]))
-story.append(job('2024', 'Research Professor', 'Universidad Tecnológica de la Mixteca, Mexico', [
+])
+story += job('2024', 'Research Professor', 'Universidad Tecnológica de la Mixteca, Mexico', [
     'Developed and tested an optimization strategy for a 7-DoF robot, improving tracking performance by 20 percent.',
     'Supported the mechanical design of a three-finger adaptive robotic gripper for activities of daily living.',
     'Led a national student race-vehicle project through design, construction, testing, and competition.'
-]))
-story.append(job('2020-2023', 'Research Assistant', 'ÉTS, Montréal', [
+])
+story += job('2020-2023', 'Research Assistant', 'ÉTS, Montréal', [
     'Deployed closed-form inverse kinematics in approximately 5 microseconds and learning-based inverse kinematics in approximately 43 microseconds.',
     'Developed a 1 to 4 kHz hard real-time motion-control stack and deployed learning-based predictive control in approximately 387 microseconds.',
     'Reduced symbolic model-expression size by approximately 90 percent and computed feedforward torque in approximately 210 microseconds.',
     'Built LabVIEW and Simscape digital twins and integrated EMG, IMU, and depth-camera sensing.',
     'Designed an EMG and IMU mirror-rehabilitation system for upper-limb therapy.'
-]))
-story.append(job('2019', 'Research Professor', 'Universidad de la Sierra Juárez, Mexico', [
+])
+story += job('2019', 'Research Professor', 'Universidad de la Sierra Juárez, Mexico', [
     'Implemented neural-network inverse kinematics for a 6-DoF PUMA robot.',
     'Developed a MATLAB convolutional neural network for wildlife detection in camera-trap datasets.'
-]))
-story.append(job('2017-2018', 'Professor', 'Tecnológico Nacional de México, Mexico', [
+])
+story += job('2017-2018', 'Professor', 'Tecnológico Nacional de México, Mexico', [
     'Deployed a real-time robotic manipulator emulator on a TI microcontroller with a 10 microsecond sampling period.',
     'Implemented an FPGA-based voice-processing system using linear predictive coding.'
-]))
+])
 
 story += section('Education')
 edu = [
@@ -148,11 +148,11 @@ story += section('Technical Skills')
 skills_data = [
     [Paragraph('<b>Programming</b>', styles['SkillCell']), Paragraph('C, C++, Python, MATLAB, LabVIEW, VHDL', styles['SkillCell'])],
     [Paragraph('<b>Robotics</b>', styles['SkillCell']), Paragraph('ROS 2, Pinocchio, URDF, motion planning, real-time control, mobile manipulation', styles['SkillCell'])],
-    [Paragraph('<b>Modeling and Control</b>', styles['SkillCell']), Paragraph('Kinematics, dynamics, RNEA, MPC, sliding-mode control, reinforcement learning, Gaussian Processes', styles['SkillCell'])],
+    [Paragraph('<b>Modeling and Control</b>', styles['SkillCell']), Paragraph('Kinematics, dynamics, numerical optimization, RNEA, MPC, sliding-mode control, Gaussian Processes', styles['SkillCell'])],
     [Paragraph('<b>Simulation and Hardware</b>', styles['SkillCell']), Paragraph('Simulink, Simscape Multibody, LabVIEW RT and FPGA, DAQ, microcontrollers, IMU, EMG, depth cameras', styles['SkillCell'])]
 ]
 sk = Table(skills_data, colWidths=[1.55*inch, 5.55*inch], hAlign='LEFT')
-sk.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('ROWBACKGROUNDS',(0,0),(-1,-1),[colors.white, colors.HexColor('#F7F9FC')]),('BOX',(0,0),(-1,-1),0.35,LIGHT),('INNERGRID',(0,0),(-1,-1),0.25,LIGHT),('LEFTPADDING',(0,0),(-1,-1),7),('RIGHTPADDING',(0,0),(-1,-1),7),('TOPPADDING',(0,0),(-1,-1),3),('BOTTOMPADDING',(0,0),(-1,-1),3)]))
+sk.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('ROWBACKGROUNDS',(0,0),(-1,-1),[colors.white, colors.HexColor('#F7F9FC')]),('BOX',(0,0),(-1,-1),0.35,LIGHT),('INNERGRID',(0,0),(-1,-1),0.25,LIGHT),('LEFTPADDING',(0,0),(-1,-1),7),('RIGHTPADDING',(0,0),(-1,-1),7),('TOPPADDING',(0,0),(-1,-1),2.5),('BOTTOMPADDING',(0,0),(-1,-1),2.5)]))
 story.append(sk)
 
 doc.build(story, onFirstPage=footer, onLaterPages=footer)

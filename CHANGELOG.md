@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 2.32 - Controller Groups and Transferable Robotics
+
+- Distinguished analytical joint-position solutions from Pinocchio Jacobian based joint-velocity control and limited object-grasp claims to the Isaac Sim demonstration
+- Added evidence-based technology-transfer context for human demonstration capture, imitation learning, Diffusion Policy, and dexterous manipulation
+- Grouped every controller into three-column PID sections with information icons on every parameter
+- Added integral initial values and percentage-based antiwindup limits to every PID loop
+- Removed the former recalculation throttle while preventing concurrent or queued simulations
+- Updated the CV link label, current-role evidence, numerical-optimization skills, translations, and downloadable PDF
+
 ## Version 2.31 - Natural Engineering Translations
 
 - Corrected the simulator, gain guidance, experience, skills, and contact copy in Spanish and French
@@ -16,7 +25,7 @@
 
 - Replaced generic gain tooltips with loop-specific P, I, and D guidance for every robot while keeping the visible gain names compact
 - Rewrote simulator descriptions around the controlled variables and gain tuning, without conversational implementation notes
-- Documented the 10-second simulation conditions, numerical integration, controller rates, rotor physics, actuator limits, sensing, estimation, and allocation at the top of the simulator
+- Documented numerical integration, controller rates, rotor physics, actuator limits, sensing, estimation, and allocation at the top of the simulator
 - Added a red XYZ target point to the 3D view for Drone 6, Drone 8, and TaxiDrone
 - Moved Run simulation above the gain fields and placed viewer layers and RMS/effort results below the graphs
 - Removed job-search wording from the contact section and preserved standard acronyms plus the terms `stack` and `R&D` in the Spanish and French copy
@@ -44,20 +53,20 @@
 
 ## Version 2.25 - Unified Articulated Rotor Dynamics
 
-- Moved Drone4, Copter1, and Copter2 onto the Featherstone articulated-body simulation path already used by Drone6 and TaxiDrone
+- Moved Drone4, Copter1, and Copter2 onto the articulated-body simulation path already used by Drone6 and TaxiDrone
 - Applied rotor thrust and drag, motor delay, effort and power limits, encoder quantization, and state estimation to all five rotor systems
 - Removed rotor-count normalization from multirotor allocation and tuned TaxiDrone gains for its direct 18-rotor mixer
-- Standardized every interactive simulation to 10 seconds
+- Standardized the finite simulation horizon across all interactive systems
 - Added request, RK4-stage, estimator, output-buffer, and metric checks that reject NaN, Infinity, and numerical blow-up
 
 ## Version 2.24 - One-Line CV Contact Header
 
-- Arranged My page, LinkedIn, email, and Montréal location on one line in the CV header
+- Arranged Portfolio, LinkedIn, email, and Montréal location on one line in the CV header
 - Preserved clickable portfolio, LinkedIn, and email links
 
 ## Version 2.23 - CV Contact Links
 
-- Replaced the displayed portfolio URL in the CV with a natural "My page" hyperlink
+- Replaced the displayed portfolio URL in the CV with a natural "Portfolio" hyperlink
 - Removed GitHub and ORCID from the CV contact block
 - Simplified the LinkedIn label while retaining its destination
 
@@ -205,7 +214,7 @@
 - Replaced cart-pole with Drone6 full XYZ and roll/pitch/yaw control
 - Added full 3D, top, front, and side views that reset to the configured full limits for every run and replay
 - Changed the main action to Replay after a completed result and back to Run simulation only after a parameter changes
-- Allowed two new numerical recalculations per rolling minute while keeping Replay unlimited
+- Added a numerical recalculation throttle while keeping Replay unlimited
 
 ## Version 2.0 - Live Dynamics Forge Simulations
 

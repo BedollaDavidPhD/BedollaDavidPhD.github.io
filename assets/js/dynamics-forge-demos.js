@@ -60,8 +60,6 @@
     meshes: new Map(),
     trail: [],
     parametersDirty: false,
-    manualRunTimestamps: [],
-    rateLimitTimer: null,
     pendingParameters: null,
     appliedParameters: null,
   };
@@ -765,60 +763,67 @@
   function markParametersDirty() {
     state.parametersDirty = true;
     ui.run.textContent = "Run simulation";
-    ui.status.textContent = "Parameters changed — run the simulation to apply them.";
+    ui.status.textContent = "Parameters changed. Run the simulation to apply them.";
   }
 
-  function gainLoop(system, control) {
-    const key = control.key;
-    if (system.id === "two_link") return /1$/.test(key) ? "Joint 1 position loop" : "Joint 2 position loop";
-    if (system.id === "drone4") return key.startsWith("z") ? "Altitude loop (collective rotor effort)" : "Yaw loop (differential rotor effort)";
-    if (system.id === "copter1") return "Arm-angle loop (single-rotor effort)";
-    if (system.id === "copter2") return key.startsWith("yaw") ? "Outer yaw loop (roll-reference generation)" : "Inner roll loop (differential rotor effort)";
-    if (system.id === "copter3") {
-      if (key.startsWith("pitch")) return "Pitch loop (collective rotor effort)";
-      if (key.startsWith("roll")) return "Roll-stabilization loop (differential rotor effort)";
-      return "Yaw loop (differential rotor effort)";
-    }
-    if (["drone6", "drone8", "taxi_drone"].includes(system.id)) {
-      return key.startsWith("position")
-        ? "Shared XYZ position loop (collective thrust and attitude-reference generation)"
-        : "Shared roll/pitch/yaw attitude loop (rotor mixing)";
-    }
-    return "Controller loop";
-  }
-
-  function gainHelp(control, system) {
+  function parameterHelp(control) {
     let explanation = "";
     if (/(^|[A-Z0-9])Kp(?:\d+)?$/i.test(control.key) || /^kp\d*$/i.test(control.key)) {
-      explanation = "P gain scales the current tracking error. Increasing it strengthens immediate correction; excessive values can excite oscillation.";
+      explanation = "P gain acts on the current position or angle error for this controller. Increasing it strengthens immediate correction. Excessive values can cause oscillation.";
     } else if (/(^|[A-Z0-9])Kd(?:\d+)?$/i.test(control.key) || /^kd\d*$/i.test(control.key)) {
-      explanation = "D gain acts on velocity or error rate to add damping. Excessive values can amplify encoder and estimator noise.";
+      explanation = "D gain acts on velocity or error rate to add damping. Excessive values can amplify measurement and estimation noise.";
     } else if (/(^|[A-Z0-9])Ki(?:\d+)?$/i.test(control.key) || /^ki\d*$/i.test(control.key) || /IntegralGain$/i.test(control.key)) {
-      explanation = "I gain accumulates tracking error to reject steady-state offset. Excessive values can cause windup and slow oscillation.";
+      explanation = "I gain accumulates controller error to remove steady-state offset. Its contribution is bounded by I max to limit windup.";
+    } else if (/IntegralInitial$/i.test(control.key)) {
+      explanation = "Initial integral contribution at the start of the simulation. It is limited by I max.";
+    } else if (/IntegralMaxPercent$/i.test(control.key)) {
+      explanation = "Antiwindup clamp for the integral contribution, expressed as a percentage of the maximum command handled by this control loop.";
+    } else if (/IntegralPositionWeight$/i.test(control.key)) {
+      explanation = "Weight applied to position error before it enters the integral channel.";
+    } else if (/IntegralVelocityWeight$/i.test(control.key)) {
+      explanation = "Weight applied to velocity error before it enters the integral channel.";
+    } else if (/ReferenceMin$/i.test(control.key)) {
+      explanation = "Minimum reference allowed for the inner control loop.";
+    } else if (/ReferenceMax$/i.test(control.key)) {
+      explanation = "Maximum reference allowed for the inner control loop.";
+    } else if (/Target/i.test(control.key)) {
+      explanation = "Reference value commanded to this control loop.";
+    } else if (/Amplitude/i.test(control.key)) {
+      explanation = "Amplitude applied to the generated motion reference.";
+    } else {
+      explanation = "Editable parameter for this control loop.";
     }
-    return explanation ? { loop: gainLoop(system, control), explanation } : null;
+    return { loop: control.group || "Controller", explanation };
   }
 
   function buildControls(system) {
     ui.gains.replaceChildren();
+    const groups = new Map();
     for (const control of system.controls) {
+      const groupName = control.group || "Controller";
+      if (!groups.has(groupName)) groups.set(groupName, []);
+      groups.get(groupName).push(control);
+    }
+    for (const [groupName, controls] of groups) {
+      const group = document.createElement("section"); group.className = "forge-control-group";
+      const groupHeading = document.createElement("h6"); groupHeading.textContent = groupName;
+      const groupGrid = document.createElement("div"); groupGrid.className = "forge-control-group-grid";
+      for (const control of controls) {
       const controlWrap = document.createElement("div"); controlWrap.className = "forge-control";
       const headingRow = document.createElement("span"); headingRow.className = "forge-control-label";
       const heading = document.createElement("label"); heading.textContent = control.label;
-      const help = gainHelp(control, system);
-      if (help) {
-        const helpWrap = document.createElement("span"); helpWrap.className = "forge-gain-help";
-        const helpButton = document.createElement("button"); helpButton.type = "button"; helpButton.className = "forge-info-button";
-        helpButton.textContent = "i"; helpButton.setAttribute("aria-label", `About ${control.label}`); helpButton.setAttribute("aria-describedby", `forge-help-${system.id}-${control.key}`);
-        const tooltip = document.createElement("span"); tooltip.id = `forge-help-${system.id}-${control.key}`; tooltip.className = "forge-gain-tooltip"; tooltip.setAttribute("role", "tooltip");
-        const loopText = document.createElement("span"); loopText.textContent = help.loop;
-        const explanationText = document.createElement("span"); explanationText.textContent = help.explanation;
-        tooltip.append(loopText, document.createTextNode(" — "), explanationText);
-        helpButton.addEventListener("click", () => helpWrap.classList.toggle("is-open"));
-        helpButton.addEventListener("blur", () => helpWrap.classList.remove("is-open"));
-        helpButton.addEventListener("keydown", (event) => { if (event.key === "Escape") { helpWrap.classList.remove("is-open"); helpButton.blur(); } });
-        helpWrap.append(helpButton, tooltip); headingRow.appendChild(helpWrap);
-      }
+      const help = parameterHelp(control);
+      const helpWrap = document.createElement("span"); helpWrap.className = "forge-gain-help";
+      const helpButton = document.createElement("button"); helpButton.type = "button"; helpButton.className = "forge-info-button";
+      helpButton.textContent = "i"; helpButton.setAttribute("aria-label", `About ${control.label}`); helpButton.setAttribute("aria-describedby", `forge-help-${system.id}-${control.key}`);
+      const tooltip = document.createElement("span"); tooltip.id = `forge-help-${system.id}-${control.key}`; tooltip.className = "forge-gain-tooltip"; tooltip.setAttribute("role", "tooltip");
+      const loopText = document.createElement("span"); loopText.textContent = help.loop;
+      const explanationText = document.createElement("span"); explanationText.textContent = help.explanation;
+      tooltip.append(loopText, document.createTextNode(". "), explanationText);
+      helpButton.addEventListener("click", () => helpWrap.classList.toggle("is-open"));
+      helpButton.addEventListener("blur", () => helpWrap.classList.remove("is-open"));
+      helpButton.addEventListener("keydown", (event) => { if (event.key === "Escape") { helpWrap.classList.remove("is-open"); helpButton.blur(); } });
+      helpWrap.append(helpButton, tooltip); headingRow.appendChild(helpWrap);
       const field = document.createElement("span"); field.className = "forge-number-field";
       const input = document.createElement("input");
       input.type = "number"; input.id = `forge-control-${system.id}-${control.key}`; input.name = control.key; input.value = control.default; input.min = control.min; input.max = control.max; input.step = control.step; input.inputMode = "decimal";
@@ -826,7 +831,9 @@
       input.addEventListener("input", markParametersDirty);
       field.appendChild(input);
       if (control.unit) { const unit = document.createElement("small"); unit.textContent = control.unit; field.appendChild(unit); }
-      controlWrap.append(headingRow, field); ui.gains.appendChild(controlWrap);
+      controlWrap.append(headingRow, field); groupGrid.appendChild(controlWrap);
+      }
+      group.append(groupHeading, groupGrid); ui.gains.appendChild(group);
     }
   }
 
@@ -842,6 +849,7 @@
     ui.run.disabled = disabled;
     ui.resetGains.disabled = disabled;
     for (const input of ui.gains.querySelectorAll("input")) input.disabled = disabled;
+    for (const tab of ui.tabs.querySelectorAll("button")) tab.disabled = disabled;
   }
 
   function setPlaybackEnabled(enabled) {
@@ -893,30 +901,14 @@
     ui.status.textContent = "Replaying the current result. Change a parameter to run a new simulation.";
   }
 
-  function manualRunAllowed() {
-    const now = Date.now();
-    state.manualRunTimestamps = state.manualRunTimestamps.filter((timestamp) => now - timestamp < 60000);
-    if (state.manualRunTimestamps.length < 2) {
-      state.manualRunTimestamps.push(now);
-      return true;
-    }
-    const waitMilliseconds = 60000 - (now - state.manualRunTimestamps[0]);
-    const waitSeconds = Math.max(1, Math.ceil(waitMilliseconds / 1000));
-    ui.status.textContent = `Two new simulations are available per minute. Replay is unlimited; the next recalculation is available in ${waitSeconds} s.`;
-    ui.run.disabled = true;
-    clearTimeout(state.rateLimitTimer);
-    state.rateLimitTimer = setTimeout(() => {
-      if (!state.running) ui.run.disabled = false;
-      if (state.parametersDirty) ui.status.textContent = "A new simulation is available.";
-    }, waitMilliseconds + 50);
-    return false;
-  }
-
-  function runSimulation({ countAgainstLimit = true } = {}) {
+  function runSimulation() {
     const system = state.systems[state.activeIndex];
     if (!system || !state.worker) return;
+    if (state.running) {
+      ui.status.textContent = "A simulation is already running. Wait for it to finish before starting another.";
+      return;
+    }
     if (!state.parametersDirty && state.result) { replaySimulation(); return; }
-    if (countAgainstLimit && !manualRunAllowed()) return;
     stopAnimation(); state.playing = false; state.running = true; state.result = null; state.playback = 0; state.trail = [];
     state.pendingParameters = readParameters();
     const requestId = ++state.requestId;
@@ -924,14 +916,14 @@
     resetVisualization();
     ui.status.textContent = "Running the nonlinear simulation in your browser…";
     ui.run.textContent = "Running…";
-    ui.rms.textContent = "—"; ui.secondaryRms.textContent = "—"; ui.peak.textContent = "—";
+    ui.rms.textContent = "Pending"; ui.secondaryRms.textContent = "Pending"; ui.peak.textContent = "Pending";
     updatePlaybackUi(); renderAll();
     state.worker.postMessage({ requestId, systemId: system.id, parameters: state.pendingParameters, duration: system.duration });
   }
 
   function selectSystem(index) {
     const system = state.systems[index];
-    if (!system) return;
+    if (!system || state.running) return;
     state.activeIndex = index; state.result = null; state.playback = 0; state.trail = []; state.running = false; state.parametersDirty = true; state.pendingParameters = null; state.appliedParameters = null;
     stopAnimation(); state.playing = false;
     ui.category.textContent = system.category; ui.title.textContent = system.title; ui.description.textContent = system.description; ui.controller.textContent = system.controller;
@@ -943,7 +935,7 @@
     ui.run.textContent = "Run simulation";
     buildControls(system); resetVisualization(); setPlaybackEnabled(false); updatePlaybackUi();
     [...ui.tabs.querySelectorAll("button")].forEach((button, buttonIndex) => { const selected = index === buttonIndex; button.classList.toggle("active", selected); button.setAttribute("aria-selected", String(selected)); button.tabIndex = selected ? 0 : -1; });
-    loadMeshes(system); runSimulation({ countAgainstLimit: false });
+    loadMeshes(system); runSimulation();
   }
 
   function buildTabs() {
@@ -964,7 +956,7 @@
       const payload = await response.json();
       if (!Array.isArray(payload.systems) || payload.systems.length === 0) throw new Error("No systems configured");
       state.systems = [...payload.systems].sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER));
-      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260801-eight-systems1");
+      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260802-controller-groups1");
       state.worker.addEventListener("message", (event) => {
         const result = event.data;
         if (result.requestId !== state.requestId || result.systemId !== state.systems[state.activeIndex]?.id) return;
@@ -976,11 +968,18 @@
         if (Number.isFinite(result.metrics.secondaryRms)) ui.secondaryRms.textContent = `${result.metrics.secondaryRms.toFixed(3)} ${result.metrics.secondaryUnit}`;
         ui.peak.textContent = `${result.metrics.peakEffort.toFixed(2)} ${result.metrics.effortUnit}`;
         ui.run.textContent = "Replay";
-        ui.status.textContent = "Simulation complete. Replay is unlimited; change a parameter to calculate a new result.";
+        ui.status.textContent = "Simulation complete. Change a parameter to calculate a new result, or replay the current result.";
         updatePlaybackUi(); renderAll();
         if (!state.userPaused && state.visible) setPlaying(true);
       });
-      state.worker.addEventListener("error", () => { state.running = false; setControlsDisabled(false); ui.status.textContent = "The browser simulator could not start."; });
+      state.worker.addEventListener("error", () => {
+        state.running = false;
+        state.pendingParameters = null;
+        state.parametersDirty = true;
+        setControlsDisabled(false);
+        ui.run.textContent = "Run simulation";
+        ui.status.textContent = "The browser simulator could not start.";
+      });
       buildTabs(); selectSystem(0);
     } catch (error) {
       ui.status.textContent = "The interactive simulator could not be loaded."; root.classList.add("forge-load-error"); render();

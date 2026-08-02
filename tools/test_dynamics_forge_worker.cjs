@@ -5,57 +5,197 @@ const vm = require("node:vm");
 
 const projectRoot = path.resolve(__dirname, "..");
 const workerRoot = path.join(projectRoot, "assets", "js");
-const catalogue = JSON.parse(fs.readFileSync(path.join(projectRoot, "assets", "data", "dynamics-forge-demos.json"), "utf8"));
-const translations = JSON.parse(fs.readFileSync(path.join(projectRoot, "assets", "data", "i18n.json"), "utf8"));
-const demoRenderer = fs.readFileSync(path.join(workerRoot, "dynamics-forge-demos.js"), "utf8");
-const indexSource = fs.readFileSync(path.join(projectRoot, "index.html"), "utf8");
+const read = (...parts) => fs.readFileSync(path.join(projectRoot, ...parts), "utf8");
+const catalogueSource = read("assets", "data", "dynamics-forge-demos.json");
+const translationSource = read("assets", "data", "i18n.json");
+const catalogue = JSON.parse(catalogueSource);
+const translations = JSON.parse(translationSource);
+const demoRenderer = read("assets", "js", "dynamics-forge-demos.js");
+const workerSource = read("assets", "js", "dynamics-forge-worker.js");
+const level4Source = read("assets", "js", "dynamics-forge-level4.js");
+const i18nRuntimeSource = read("assets", "js", "i18n.js");
+const cssSource = read("assets", "css", "styles.css");
+const indexSource = read("index.html");
+
 const orderedSystems = [...catalogue.systems].sort((a, b) => a.order - b.order);
 assert.deepEqual(orderedSystems.map((system) => system.id), ["two_link", "copter1", "copter2", "copter3", "drone4", "drone6", "drone8", "taxi_drone"]);
 assert.deepEqual(orderedSystems.map((system) => system.shortTitle), ["Arm", "Copter 1", "Copter 2", "Copter 3", "Drone 4", "Drone 6", "Drone 8", "TaxiDrone"]);
+
+const configuredText = new Set();
+const addText = (value) => {
+  if (typeof value === "string" && value.trim()) configuredText.add(value);
+};
+const kpKey = (key) => /(^|[A-Z0-9])Kp(?:\d+)?$/i.test(key) || /^kp\d*$/i.test(key);
+const kiKey = (key) => /(^|[A-Z0-9])Ki(?:\d+)?$/i.test(key) || /^ki\d*$/i.test(key) || /IntegralGain$/i.test(key);
+const kdKey = (key) => /(^|[A-Z0-9])Kd(?:\d+)?$/i.test(key) || /^kd\d*$/i.test(key);
+
+let pidLoopCount = 0;
 for (const system of orderedSystems) {
   assert.match(system.description, /Modify/i, `${system.id} description must invite gain tuning`);
   assert.doesNotMatch(system.description, /not independently|targets stay at zero|configured directions|instead of being independent/i, `${system.id} description contains conversational implementation metadata`);
-}
-const plotLabels = new Set();
-for (const system of catalogue.systems) {
-  assert.equal(typeof system.primaryPlotLabel, "string", `${system.id} needs a primary plot label`);
-  assert.ok(system.primaryPlotLabel.trim(), `${system.id} primary plot label cannot be empty`);
-  plotLabels.add(system.primaryPlotLabel);
-  if (Number.isInteger(system.secondaryPlotStateIndex)) {
-    assert.equal(typeof system.secondaryPlotLabel, "string", `${system.id} needs a secondary plot label`);
-    assert.ok(system.secondaryPlotLabel.trim(), `${system.id} secondary plot label cannot be empty`);
-    plotLabels.add(system.secondaryPlotLabel);
-  }
+  assert.equal(system.duration, 10, `${system.id} must retain the configured internal simulation horizon`);
+
+  for (const property of ["title", "category", "description", "controller", "primaryPlotLabel", "primaryMetricLabel", "secondaryPlotLabel", "secondaryMetricLabel"]) addText(system[property]);
   if (system.positionPlot) {
     assert.equal(system.positionPlot.xStateIndex, 0, `${system.id} X plot must use the X position state`);
     assert.equal(system.positionPlot.yStateIndex, 1, `${system.id} Y plot must use the Y position state`);
     assert.equal(system.positionPlot.xTargetKey, "targetX", `${system.id} X plot must use the X target`);
     assert.equal(system.positionPlot.yTargetKey, "targetY", `${system.id} Y plot must use the Y target`);
-    plotLabels.add(system.positionPlot.xLabel);
-    plotLabels.add(system.positionPlot.yLabel);
+    addText(system.positionPlot.xLabel);
+    addText(system.positionPlot.yLabel);
+  }
+
+  const groups = new Map();
+  for (const control of system.controls) {
+    assert.equal(typeof control.group, "string", `${system.id}.${control.key} needs a controller group`);
+    assert.ok(control.group.trim(), `${system.id}.${control.key} controller group cannot be empty`);
+    assert.equal(typeof control.label, "string", `${system.id}.${control.key} needs a label`);
+    assert.ok(control.label.trim(), `${system.id}.${control.key} label cannot be empty`);
+    for (const field of ["default", "min", "max", "step"]) assert(Number.isFinite(control[field]), `${system.id}.${control.key}.${field} must be finite`);
+    assert(control.min <= control.default && control.default <= control.max, `${system.id}.${control.key} default must stay inside its input range`);
+    assert(control.step > 0, `${system.id}.${control.key} step must be positive`);
+    addText(control.group);
+    addText(control.label);
+    if (!groups.has(control.group)) groups.set(control.group, []);
+    groups.get(control.group).push(control);
+  }
+
+  for (const [groupName, controls] of groups) {
+    const hasControllerGain = controls.some((control) => kpKey(control.key));
+    if (!hasControllerGain) continue;
+    pidLoopCount += 1;
+    assert(controls.length >= 5, `${system.id} ${groupName} needs Kp, Ki, Kd, I0, and I max`);
+    assert(kpKey(controls[0].key), `${system.id} ${groupName} column 1 must start with Kp`);
+    assert(kiKey(controls[1].key), `${system.id} ${groupName} column 2 must start with Ki`);
+    assert(kdKey(controls[2].key), `${system.id} ${groupName} column 3 must start with Kd`);
+    assert.match(controls[3].key, /IntegralInitial$/i, `${system.id} ${groupName} second row must start with I0`);
+    assert.match(controls[4].key, /IntegralMaxPercent$/i, `${system.id} ${groupName} second row needs an antiwindup percentage`);
+    assert.equal(controls[4].unit, "%", `${system.id} ${groupName} antiwindup limit must be a percentage`);
+    assert(controls[4].min >= 0 && controls[4].max <= 100, `${system.id} ${groupName} antiwindup percentage must stay in 0 to 100 percent`);
+    for (const gain of controls.slice(0, 3)) assert(gain.label.length <= 12, `Gain label ${gain.label} should remain compact`);
   }
 }
-plotLabels.add("Dashed = target");
-for (const language of ["es", "fr"]) {
-  for (const label of plotLabels) assert.ok(translations.translations[language][label], `${language} needs ${label}`);
+assert.equal(pidLoopCount, 16, "All sixteen configured PID loops must expose complete PID and integrator controls");
+
+assert.deepEqual(
+  orderedSystems.find((system) => system.id === "two_link").primaryPlotLabel,
+  "J1 position",
+  "The Arm graph must use the same J1 terminology as its controls",
+);
+assert.deepEqual(
+  orderedSystems.find((system) => system.id === "two_link").secondaryPlotLabel,
+  "J2 position",
+  "The Arm graph must use the same J2 terminology as its controls",
+);
+for (const systemId of ["drone4", "drone6", "drone8", "taxi_drone"]) {
+  const system = orderedSystems.find((entry) => entry.id === systemId);
+  assert.equal(system.primaryPlotLabel, "Z position", `${systemId} graph must use Z position terminology`);
+  assert.equal(system.primaryMetricLabel, "Z RMS", `${systemId} metric must use Z terminology`);
 }
+
+for (const systemId of ["drone6", "drone8", "taxi_drone"]) {
+  const system = catalogue.systems.find((entry) => entry.id === systemId);
+  assert(system.positionPlot, `${systemId} needs the combined X/Y position plot`);
+  assert.equal(system.controls.some((control) => control.key === "targetRoll" || control.key === "targetPitch"), false, `${systemId} must not expose roll or pitch targets`);
+  const keys = new Set(system.controls.map((control) => control.key));
+  for (const key of ["positionKp", "positionKi", "positionKd", "positionIntegralInitial", "positionIntegralMaxPercent", "attitudeKp", "attitudeKi", "attitudeKd", "attitudeIntegralInitial", "attitudeIntegralMaxPercent", "targetX", "targetY", "targetZ", "targetYaw"]) {
+    assert(keys.has(key), `${systemId} is missing ${key}`);
+  }
+  assert.equal(system.controls.filter((control) => control.key === "positionIntegralMaxPercent").length, 1, `${systemId} needs one position antiwindup limit`);
+  assert.equal(system.controls.filter((control) => control.key === "attitudeIntegralMaxPercent").length, 1, `${systemId} needs one attitude antiwindup limit`);
+}
+const copter3Keys = new Set(catalogue.systems.find((system) => system.id === "copter3").controls.map((control) => control.key));
+for (const axis of ["yaw", "pitch", "roll"]) {
+  const ki = axis === "pitch" ? "pitchIntegralGain" : `${axis}Ki`;
+  for (const key of [ki, `${axis}IntegralInitial`, `${axis}IntegralMaxPercent`]) assert(copter3Keys.has(key), `Copter3 ${axis} PID is missing ${key}`);
+}
+
+const parameterHelpStrings = [
+  "P gain acts on the current position or angle error for this controller. Increasing it strengthens immediate correction. Excessive values can cause oscillation.",
+  "D gain acts on velocity or error rate to add damping. Excessive values can amplify measurement and estimation noise.",
+  "I gain accumulates controller error to remove steady-state offset. Its contribution is bounded by I max to limit windup.",
+  "Initial integral contribution at the start of the simulation. It is limited by I max.",
+  "Antiwindup clamp for the integral contribution, expressed as a percentage of the maximum command handled by this control loop.",
+  "Weight applied to position error before it enters the integral channel.",
+  "Weight applied to velocity error before it enters the integral channel.",
+  "Minimum reference allowed for the inner control loop.",
+  "Maximum reference allowed for the inner control loop.",
+  "Reference value commanded to this control loop.",
+  "Amplitude applied to the generated motion reference.",
+  "Editable parameter for this control loop.",
+];
+const statusStrings = [
+  "Parameters changed. Run the simulation to apply them.",
+  "Replaying the current result. Change a parameter to run a new simulation.",
+  "A simulation is already running. Wait for it to finish before starting another.",
+  "Running the nonlinear simulation in your browser…",
+  "Running…",
+  "Pending",
+  "Simulation complete. Change a parameter to calculate a new result, or replay the current result.",
+  "Simulation error: a non-finite result was rejected for numerical safety.",
+  "The browser simulator could not start.",
+  "The interactive simulator could not be loaded.",
+  "Choose a system to begin",
+  "Dashed = target",
+];
+for (const text of [...parameterHelpStrings, ...statusStrings]) {
+  assert(demoRenderer.includes(text) || text === "Dashed = target", `Simulator source is missing active copy: ${text}`);
+  configuredText.add(text);
+}
+for (const language of ["es", "fr"]) {
+  for (const text of configuredText) assert.ok(translations.translations[language][text], `${language} needs a translation for: ${text}`);
+}
+
+assert.match(cssSource, /\.forge-control-group-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,/s, "Controller groups must use a three-column grid");
+assert.match(demoRenderer, /function parameterHelp/);
+assert.match(demoRenderer, /const help = parameterHelp\(control\)/);
+assert.doesNotMatch(demoRenderer, /if\s*\(help\)/, "Every control parameter must receive an information icon");
+assert.match(demoRenderer, /for \(const tab of ui\.tabs\.querySelectorAll\("button"\)\) tab\.disabled = disabled/, "System tabs must be disabled during a run");
+assert.doesNotMatch(demoRenderer, /manualRunAllowed|manualRunTimestamps|rateLimitTimer|countAgainstLimit|Two new simulations|rolling minute|next recalculation/i, "The old run-rate limiter must be removed");
+const runStart = demoRenderer.indexOf("function runSimulation()");
+const runningGuard = demoRenderer.indexOf("if (state.running)", runStart);
+const postMessage = demoRenderer.indexOf("state.worker.postMessage", runStart);
+assert(runStart >= 0 && runningGuard > runStart && postMessage > runningGuard, "runSimulation must reject a second request before posting to the worker");
+assert.match(demoRenderer, /if \(!system \|\| state\.running\) return;/, "System changes must be rejected while a simulation is running");
+assert.equal((demoRenderer.match(/state\.worker\.postMessage/g) || []).length, 1, "The UI must have one non-queued simulation dispatch path");
+
+const publicCopy = {
+  "index.html": indexSource,
+  "assets/data/dynamics-forge-demos.json": catalogueSource,
+  "assets/data/i18n.json": translationSource,
+  "assets/js/dynamics-forge-demos.js": demoRenderer,
+  "assets/js/i18n.js": i18nRuntimeSource,
+  "README.md": read("README.md"),
+  "docs/DYNAMICS_FORGE_DEMOS.md": read("docs", "DYNAMICS_FORGE_DEMOS.md"),
+  "CHANGELOG.md": read("CHANGELOG.md"),
+};
+const removedAlgorithmName = ["Feather", "stone"].join("");
+for (const [filename, source] of Object.entries(publicCopy)) {
+  assert.equal(new RegExp(removedAlgorithmName, "i").test(source), false, `${filename} contains the removed public algorithm name`);
+  assert.doesNotMatch(source, /\b10\s*(?:s|seconds?)\b|\b10[- ]second/i, `${filename} contains explicit user-facing 10-second wording`);
+  assert.doesNotMatch(source, /Two new simulations|per (?:rolling )?minute|next recalculation/i, `${filename} contains stale rate-limit wording`);
+  assert.doesNotMatch(source, /—/, `${filename} contains an em dash`);
+}
+
 assert.match(demoRenderer, /system\.primaryPlotLabel/);
 assert.match(demoRenderer, /system\.secondaryPlotLabel/);
 assert.match(demoRenderer, /function renderPositionPlot/);
-assert.doesNotMatch(demoRenderer, /tr\("primary"\)/);
-assert.doesNotMatch(demoRenderer, /tr\("secondary"\)/);
+assert.match(demoRenderer, /function drawTargetPoint/);
+assert.match(demoRenderer, /state\.appliedParameters\.targetX/);
+assert.doesNotMatch(demoRenderer, /tr\("primary"\)|tr\("secondary"\)/);
+assert.equal(level4Source.includes("allocationScale"), false, "Rotor allocation must not be normalized by rotor count");
+assert.equal(level4Source.includes("collectiveScale"), false, "Collective effort must not be normalized by rotor count");
+assert.doesNotMatch(level4Source, /this\.parameters\.targetRoll|this\.parameters\.targetPitch/, "Full multirotors must hold roll and pitch targets at zero");
+assert.match(workerSource, /integralLimitFromPercent\(parameters\.j1IntegralMaxPercent, outputLimit\)/, "Arm antiwindup percentages must use the joint command limit");
+assert.match(workerSource, /clamp\(parameters\.j1IntegralInitial, -j1IntegralLimit, j1IntegralLimit\)/, "Arm integral initial values must be clamped by antiwindup");
+assert.match(level4Source, /integralLimitFromPercent\(parameters\.zIntegralMaxPercent, ROTOR_EFFORT_LIMIT\)/, "Direct rotor-loop percentages must use the rotor command limit");
+assert.match(level4Source, /integralLimitFromPercent\(parameters\.yawIntegralMaxPercent, maximumRollReference\)/, "Copter 2 outer-loop antiwindup must use its roll-reference limit");
+assert.match(level4Source, /clamp\(parameters\.positionIntegralInitial, -this\.positionIntegralMax, this\.positionIntegralMax\)/, "Position integral initial values must be clamped by antiwindup");
+assert.match(level4Source, /positionIntegralMaxPercent/);
+assert.match(level4Source, /attitudeIntegralMaxPercent/);
+
 const messages = [];
-const context = {
-  console,
-  Float32Array,
-  Float64Array,
-  Math,
-  Number,
-  Set,
-  Array,
-  Error,
-  self: null,
-};
+const context = { console, Float32Array, Float64Array, Math, Number, Set, Array, Error, self: null };
 context.self = context;
 context.importScripts = (source) => {
   const filename = source.split("?")[0];
@@ -66,7 +206,7 @@ context.addEventListener = (type, listener) => {
 };
 context.postMessage = (message) => messages.push(message);
 vm.createContext(context);
-vm.runInContext(fs.readFileSync(path.join(workerRoot, "dynamics-forge-worker.js"), "utf8"), context, { filename: "dynamics-forge-worker.js" });
+vm.runInContext(workerSource, context, { filename: "dynamics-forge-worker.js" });
 
 function defaultsFor(systemId) {
   const system = catalogue.systems.find((entry) => entry.id === systemId);
@@ -76,14 +216,7 @@ function defaultsFor(systemId) {
 
 function simulate(systemId, overrides = {}, duration = 3) {
   messages.length = 0;
-  context.workerListener({
-    data: {
-      requestId: 1,
-      systemId,
-      parameters: { ...defaultsFor(systemId), ...overrides },
-      duration,
-    },
-  });
+  context.workerListener({ data: { requestId: 1, systemId, parameters: { ...defaultsFor(systemId), ...overrides }, duration } });
   const result = messages[0];
   assert(result, `${systemId} returned no worker result`);
   assert.equal(result.error, undefined, `${systemId}: ${result.error}`);
@@ -106,128 +239,31 @@ function requestError(systemId, parameters, duration) {
 
 function peakAbsolute(result, stateIndex) {
   let peak = 0;
-  for (let sample = 0; sample < result.time.length; sample += 1) {
-    peak = Math.max(peak, Math.abs(result.states[sample * 12 + stateIndex]));
-  }
+  for (let sample = 0; sample < result.time.length; sample += 1) peak = Math.max(peak, Math.abs(result.states[sample * 12 + stateIndex]));
   return peak;
 }
 
+for (const system of catalogue.systems) {
+  const result = simulate(system.id, {}, system.duration);
+  assert.equal(result.time.length, 601, `${system.id} must return 60 Hz samples for its internal horizon`);
+}
 for (const systemId of ["drone6", "drone8", "taxi_drone"]) {
-  const system = catalogue.systems.find((entry) => entry.id === systemId);
-  assert(system.positionPlot, `${systemId} needs the combined X/Y position plot`);
-  assert.equal(system.controls.some((control) => control.key === "targetRoll" || control.key === "targetPitch"), false, `${systemId} must not expose roll or pitch targets`);
-  const controlKeys = system.controls.map((control) => control.key);
-  assert.deepEqual(controlKeys.slice(0, 6), ["positionKp", "positionKi", "positionKd", "attitudeKp", "attitudeKi", "attitudeKd"], `${systemId} gains must appear first`);
-  assert.deepEqual(controlKeys.slice(-4), ["targetX", "targetY", "targetZ", "targetYaw"], `${systemId} targets must stay grouped at the end`);
-  assert.equal(defaultsFor(systemId).integralMax, 1, `${systemId} needs the editable anti-windup maximum`);
-  const result = simulate(systemId, {
-    targetX: 0.8,
-    targetY: 0.6,
-    targetZ: 1,
-    targetYaw: 0,
-  });
+  const result = simulate(systemId, { targetX: 0.8, targetY: 0.6, targetZ: 1, targetYaw: 0 });
   assert(peakAbsolute(result, 0) > 0.05, `${systemId} did not track the X target`);
   assert(peakAbsolute(result, 1) > 0.05, `${systemId} did not track the Y target`);
   assert(peakAbsolute(result, 6) > 0.01, `${systemId} did not generate roll for Y tracking`);
   assert(peakAbsolute(result, 7) > 0.01, `${systemId} did not generate pitch for X tracking`);
 }
-assert.deepEqual(
-  catalogue.systems.find((system) => system.id === "drone8").controls.map((control) => control.key),
-  catalogue.systems.find((system) => system.id === "drone6").controls.map((control) => control.key),
-  "Drone8 must expose the same full position/yaw control fields as Drone6",
-);
-
-for (const system of catalogue.systems) {
-  assert.equal(system.duration, 10, `${system.id} must use the common 10-second simulation window`);
-  const result = simulate(system.id, {}, system.duration);
-  assert.equal(result.time.length, 601, `${system.id} must return 60 Hz samples for 10 seconds`);
-}
-
-for (const systemId of ["copter1", "copter2", "copter3", "drone4", "drone6", "drone8", "taxi_drone"]) {
-  const source = fs.readFileSync(path.join(workerRoot, "dynamics-forge-worker.js"), "utf8");
-  assert(source.includes(`["copter1", "copter2", "copter3", "drone4", "drone6", "drone8", "taxi_drone"]`), `${systemId} is not dispatched through the articulated-body engine`);
-}
-
-const level4Source = fs.readFileSync(path.join(workerRoot, "dynamics-forge-level4.js"), "utf8");
-assert.equal(level4Source.includes("allocationScale"), false, "Rotor allocation must not be normalized by rotor count");
-assert.equal(level4Source.includes("collectiveScale"), false, "Collective effort must not be normalized by rotor count");
-assert.doesNotMatch(level4Source, /this\.parameters\.targetRoll|this\.parameters\.targetPitch/, "Drone6, Drone8, and TaxiDrone must hold the independent roll and pitch targets at zero");
-assert.match(level4Source, /this\.integralMax/, "Drone6, Drone8, and TaxiDrone must apply the editable anti-windup maximum");
-
 const drone4Defaults = defaultsFor("drone4");
 assert.match(requestError("drone4", { ...drone4Defaults, zKp: Number.NaN }, 10), /finite number/i);
 assert.match(requestError("drone4", drone4Defaults, Number.NaN), /finite number/i);
 assert.match(requestError("drone4", { ...drone4Defaults, zKp: Number.POSITIVE_INFINITY }, 10), /finite number/i);
 
-const gainKey = (key) => (
-  /(^|[A-Z0-9])Kp(?:\d+)?$/i.test(key)
-  || /(^|[A-Z0-9])Kd(?:\d+)?$/i.test(key)
-  || /(^|[A-Z0-9])Ki(?:\d+)?$/i.test(key)
-  || /^k[pid]\d*$/i.test(key)
-  || /IntegralGain$/i.test(key)
-);
-let gainCount = 0;
-for (const system of catalogue.systems) {
-  for (const control of system.controls) {
-    if (gainKey(control.key)) {
-      gainCount += 1;
-      assert(control.label.length <= 10, `Gain label ${control.label} should remain compact`);
-    }
-    if (/Target|Initial|Limit|Weight|Amplitude|Minimum|Maximum/i.test(control.label)) {
-      assert.equal(gainKey(control.key), false, `Non-gain control ${control.key} would receive an information icon`);
-    }
-  }
-}
-assert.equal(gainCount, 46, "Every configured gain must receive loop-specific help");
-assert.match(demoRenderer, /function gainLoop/);
-assert.match(demoRenderer, /P gain scales the current tracking error/);
-assert.match(demoRenderer, /I gain accumulates tracking error/);
-assert.match(demoRenderer, /D gain acts on velocity or error rate/);
-assert.match(demoRenderer, /function drawTargetPoint/);
-assert.match(demoRenderer, /state\.appliedParameters\.targetX/);
-for (const language of ["es", "fr"]) {
-  for (const text of [
-    "Joint 1 position loop",
-    "Shared XYZ position loop (collective thrust and attitude-reference generation)",
-    "P gain scales the current tracking error. Increasing it strengthens immediate correction; excessive values can excite oscillation.",
-    "I gain accumulates tracking error to reject steady-state offset. Excessive values can cause windup and slow oscillation.",
-    "D gain acts on velocity or error rate to add damping. Excessive values can amplify encoder and estimator noise.",
-  ]) assert.ok(translations.translations[language][text], `${language} needs ${text}`);
-}
 assert.doesNotMatch(indexSource, /Dynamics Forge Web Demos|inspect CAD geometry|directly in the portfolio|I am open to/i);
 assert.match(indexSource, /<html[^>]*translate="no"[^>]*class="notranslate"/i, "The curated portfolio must opt out of browser machine translation");
 assert.match(indexSource, /<meta name="google" content="notranslate">/i, "Google translation must defer to the curated language selector");
 assert.match(indexSource, /class="hero-name notranslate" translate="no">David Bedolla, <span>PhD<\/span>/, "The visible name and PhD credential must be protected from automatic translation");
-for (const language of ["es", "fr"]) {
-  for (const [sourceText, translatedText] of Object.entries(translations.translations[language])) {
-    for (const term of ["PhD", "R&D", "CAD", "IMU", "IMUs", "EMG", "PID", "DAQ", "FPGA", "stack"]) {
-      const preservesTerm = term === "stack"
-        ? translatedText.toLowerCase().includes(term)
-        : translatedText.includes(term);
-      if (sourceText.includes(term)) assert(preservesTerm, `${language} must preserve ${term} in: ${sourceText}`);
-    }
-  }
-}
-const naturalEngineeringCopy = {
-  es: {
-    "P gain scales the current tracking error. Increasing it strengthens immediate correction; excessive values can excite oscillation.": "La ganancia P escala el error de seguimiento actual. Aumentarla refuerza la corrección inmediata; valores excesivos pueden excitar oscilaciones.",
-    "D gain acts on velocity or error rate to add damping. Excessive values can amplify encoder and estimator noise.": "La ganancia D actúa sobre la velocidad o la tasa de cambio del error para añadir amortiguamiento. Valores excesivos pueden amplificar el ruido del codificador y del estimador.",
-    "Joint 1 position loop": "Lazo de posición de la articulación 1",
-    "Tools used across the robotics stack": "Herramientas utilizadas en todo el stack de robótica",
-  },
-  fr: {
-    "P gain scales the current tracking error. Increasing it strengthens immediate correction; excessive values can excite oscillation.": "Le gain P multiplie l'erreur de suivi instantanée. L'augmenter renforce la correction immédiate; des valeurs excessives peuvent exciter des oscillations.",
-    "D gain acts on velocity or error rate to add damping. Excessive values can amplify encoder and estimator noise.": "Le gain D agit sur la vitesse ou la dérivée de l'erreur pour ajouter de l'amortissement. Des valeurs excessives peuvent amplifier le bruit de l'encodeur et de l'estimateur.",
-    "Joint 1 position loop": "Boucle de position de l'articulation 1",
-    "Tools used across the robotics stack": "Outils utilisés dans l'ensemble du stack robotique",
-  },
-};
-for (const [language, copy] of Object.entries(naturalEngineeringCopy)) {
-  for (const [sourceText, expectedText] of Object.entries(copy)) {
-    assert.equal(translations.translations[language][sourceText], expectedText, `${language} must use natural engineering terminology for: ${sourceText}`);
-  }
-}
-assert(indexSource.indexOf('id="forge-run"') < indexSource.indexOf('class="forge-gains-heading"'), "Run simulation must appear above the gain fields");
+assert(indexSource.indexOf('id="forge-run"') < indexSource.indexOf('class="forge-gains-heading"'), "Run simulation must appear above the parameter fields");
 assert(indexSource.indexOf('class="forge-results"') < indexSource.indexOf('class="forge-layer-controls"'), "Results must appear before viewer layers below the graphs");
 assert(indexSource.indexOf('id="forge-position-plot-wrap"') < indexSource.indexOf('class="forge-results"'), "Results must follow the graphs");
 

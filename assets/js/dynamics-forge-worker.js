@@ -1,7 +1,11 @@
-importScripts("dynamics-forge-level4.js?v=20260801-eight-systems1");
+importScripts("dynamics-forge-level4.js?v=20260802-controller-groups1");
 
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
 const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
+
+function integralLimitFromPercent(percent, maximumOutput) {
+  return Math.abs(maximumOutput) * clamp(percent, 0, 100) / 100;
+}
 
 function requireFinite(value, label) {
   if (!Number.isFinite(value)) throw new Error(`${label} must be a finite number.`);
@@ -122,7 +126,11 @@ function simulateTwoLink(parameters, duration) {
   const i1 = 0.01;
   const i2 = 0.01;
   const gravity = 9.81;
-  const integralLimit = 1;
+  const outputLimit = 4;
+  const j1IntegralLimit = integralLimitFromPercent(parameters.j1IntegralMaxPercent, outputLimit);
+  const j2IntegralLimit = integralLimitFromPercent(parameters.j2IntegralMaxPercent, outputLimit);
+  const j1IntegralInitial = clamp(parameters.j1IntegralInitial, -j1IntegralLimit, j1IntegralLimit);
+  const j2IntegralInitial = clamp(parameters.j2IntegralInitial, -j2IntegralLimit, j2IntegralLimit);
 
   const target = (time) => ({
     q1: amplitude * Math.sin(0.62 * time),
@@ -135,8 +143,8 @@ function simulateTwoLink(parameters, duration) {
     const desired = target(time);
     return {
       desired,
-      tau1: clamp(parameters.kp1 * (desired.q1 - values[0]) + parameters.kd1 * (desired.dq1 - values[2]) + parameters.ki1 * values[4], -4, 4),
-      tau2: clamp(parameters.kp2 * (desired.q2 - values[1]) + parameters.kd2 * (desired.dq2 - values[3]) + parameters.ki2 * values[5], -4, 4),
+      tau1: clamp(parameters.kp1 * (desired.q1 - values[0]) + parameters.kd1 * (desired.dq1 - values[2]) + clamp(values[4], -j1IntegralLimit, j1IntegralLimit), -outputLimit, outputLimit),
+      tau2: clamp(parameters.kp2 * (desired.q2 - values[1]) + parameters.kd2 * (desired.dq2 - values[3]) + clamp(values[5], -j2IntegralLimit, j2IntegralLimit), -outputLimit, outputLimit),
     };
   }
 
@@ -157,19 +165,21 @@ function simulateTwoLink(parameters, duration) {
     const determinant = Math.max(1e-7, m11 * m22 - m12 * m12);
     const e1 = desired.q1 - q1;
     const e2 = desired.q2 - q2;
+    const j1IntegralDrive = parameters.ki1 * e1;
+    const j2IntegralDrive = parameters.ki2 * e2;
     return [
       dq1,
       dq2,
       (m22 * rhs1 - m12 * rhs2) / determinant,
       (-m12 * rhs1 + m11 * rhs2) / determinant,
-      Math.abs(values[4]) >= integralLimit && Math.sign(values[4]) === Math.sign(e1) ? 0 : e1,
-      Math.abs(values[5]) >= integralLimit && Math.sign(values[5]) === Math.sign(e2) ? 0 : e2,
+      Math.abs(values[4]) >= j1IntegralLimit && Math.sign(values[4]) === Math.sign(j1IntegralDrive) ? 0 : j1IntegralDrive,
+      Math.abs(values[5]) >= j2IntegralLimit && Math.sign(values[5]) === Math.sign(j2IntegralDrive) ? 0 : j2IntegralDrive,
     ];
   }
 
   const initialTarget = target(0);
   return integrateRecorded({
-    initialState: [initialTarget.q1, initialTarget.q2, 0, 0, 0, 0],
+    initialState: [initialTarget.q1, initialTarget.q2, 0, 0, j1IntegralInitial, j2IntegralInitial],
     duration,
     stateStride: 4,
     dt: 0.002,

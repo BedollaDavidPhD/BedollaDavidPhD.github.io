@@ -35,10 +35,10 @@
       document.documentElement.dataset.theme = 'light';
     }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260801-control-ui1">
-  <script defer src="assets/js/i18n.js?v=20260801-engineering-copy1"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260802-controller-groups1">
+  <script defer src="assets/js/i18n.js?v=20260802-controller-groups1"></script>
   <script defer src="assets/js/main.js?v=20260801-trilingual1"></script>
-  <script defer src="assets/js/dynamics-forge-demos.js?v=20260801-control-ui1"></script>
+  <script defer src="assets/js/dynamics-forge-demos.js?v=20260802-controller-groups1"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -175,7 +175,7 @@
             <div class="project-body">
               <p class="project-kicker">Rehabilitation robotics · Sensor-driven assistance</p>
               <h3>Real-Time Mirror Rehabilitation with a 7-DoF Exoskeleton</h3>
-              <p>Extends mirror therapy by capturing movement of the unaffected arm and physically reproducing it on the impaired arm in real time. Two wearable IMUs measure upper-arm and forearm motion, while surface EMG estimates wrist orientation; the fused measurements generate a complete reference trajectory for the exoskeleton. Human-oriented inverse kinematics, smooth trajectory generation, and closed-loop tracking reproduce natural upper-limb configurations while adding proprioceptive and kinesthetic feedback to the visual mirror effect.</p>
+              <p>Extends mirror therapy by capturing movement of the unaffected arm and physically reproducing it on the impaired arm in real time. Two wearable IMUs measure upper-arm and forearm motion, while surface EMG estimates wrist orientation; the fused measurements generate a complete reference trajectory for the exoskeleton. Human-oriented inverse kinematics, smooth trajectory generation, and closed-loop tracking reproduce natural upper-limb configurations while adding proprioceptive and kinesthetic feedback to the visual mirror effect. The demonstrated IMU and EMG motion references, together with related depth-camera motion-capture work, provide a foundation for future human-demonstration collection in perception-conditioned imitation-learning pipelines, including Diffusion Policy research for dexterous manipulation.</p>
               <ul>
                 <li>Motion capture: two wearable IMUs plus surface EMG</li>
                 <li>Complete shoulder, elbow, forearm, and wrist reference</li>
@@ -190,12 +190,12 @@
             <div class="project-body">
               <p class="project-kicker">Analytical robotics</p>
               <h3>Analytical Redundancy Resolution for a 7-DoF Manipulator</h3>
-              <p>Developed a closed-form redundancy-resolution method for the 7-DoF Kinova Gen3. A swivel angle parameterizes the elbow position along a geometrically determined circle for a specified end-effector pose, providing direct configuration control without iterative inverse-kinematics optimization. Pinocchio-based computational testing confirmed smooth elbow motion and evaluated approximately 1.05 million solutions in 2.84 seconds on an Intel i7 laptop.</p>
+              <p>Developed a closed-form redundancy-resolution method for the 7-DoF Kinova Gen3. For a specified end-effector pose, the swivel angle determines the elbow position and the analytical solver returns joint positions that preserve the Cartesian task. The accompanying Isaac Sim demonstration applies the solution to a simulated object grasp. Pinocchio-based validation evaluated approximately 1.05 million solutions in 2.84 seconds on an Intel i7 laptop.</p>
               <ul>
-                <li>Geometric elbow-circle parameterization</li>
+                <li>Analytical joint-position solution from end-effector pose and swivel angle</li>
+                <li>Simulated object grasp in Isaac Sim</li>
                 <li>Closed-form solution without iterative optimization</li>
                 <li>1.05 million solutions evaluated in 2.84 seconds</li>
-                <li>Pinocchio-based kinematic validation</li>
               </ul>
             </div>
           </article>
@@ -205,7 +205,7 @@
             <div class="project-body">
               <p class="project-kicker">Real hardware</p>
               <h3>Real-Time Implementation of 7-DoF Redundancy Resolution</h3>
-              <p>Deployed the redundancy controller on the physical Kinova Gen3 with PS4-commanded Cartesian motion along x, y, and z. The ROS 2 and C++ pipeline accepts velocity-based twist references and absolute pose targets, while command arbitration prioritizes fresh twist inputs for predictable, safety-oriented operation. An independently commanded swivel angle is projected into the Cartesian task null space, enabling real-time elbow reconfiguration with a 3 μs analytical redundancy-resolution computation.</p>
+              <p>Deployed the redundancy method on the physical Kinova Gen3 through a ROS 2 and C++ control pipeline. The analytical formulation determines the desired position-level redundant configuration, while a Pinocchio-based Jacobian solver and numerical optimization generate the joint-velocity commands used by the robot. A PS4 controller supplies Cartesian and swivel-angle commands, and the same control path accepts twist and absolute-pose references. Command arbitration prioritizes fresh twist inputs for predictable hardware operation. The analytical redundancy calculation runs in approximately 3 μs.</p>
               <ul>
                 <li>PS4 Cartesian velocity commands on real hardware</li>
                 <li>Unified twist and absolute-pose control pipeline</li>
@@ -235,7 +235,7 @@
             <div class="project-body">
               <p class="project-kicker">Whole-body implementation</p>
               <h3>Real-Time Whole-Body Control of a 10-DoF Mobile Manipulator</h3>
-              <p>Demonstrates whole-body control on the complete AgileX and Kinova Gen3 mobile manipulator. The end-effector target is fixed in the world frame; as the base moves, filtered odometry continuously transforms that target into the arm-base frame, and the manipulator compensates for base displacement to maintain the commanded global position and orientation. The onboard ROS 2 and C++ architecture coordinates base motion, odometry transformation, Cartesian tracking, redundancy resolution, and arm joint-velocity control at 400 Hz.</p>
+              <p>Demonstrates whole-body control on the complete AgileX and Kinova Gen3 mobile manipulator. The end-effector target is fixed in the world frame; as the base moves, filtered odometry continuously transforms that target into the arm-base frame, and the manipulator compensates for base displacement to maintain the commanded global position and orientation. A Pinocchio-based Jacobian solver generates arm joint-velocity commands, and the onboard ROS 2 and C++ stack coordinates joystick input, base motion, odometry, Cartesian tracking, and redundancy objectives at 400 Hz. The Cartesian command interface can serve as a model-based execution layer for future perception-conditioned imitation learning, where a Diffusion Policy supplies pose or velocity sequences and the lower-level controller manages kinematics, redundancy, limits, smoothing, and safe execution.</p>
               <ul>
                 <li>Primary task: world-frame end-effector position and orientation</li>
                 <li>Filtered odometry transformation into the arm-base frame</li>
@@ -250,7 +250,7 @@
             <div class="project-body">
               <p class="project-kicker">Learning-based control · Real hardware</p>
               <h3>Learning-Based Robust Predictive Control for a 7-DoF Rehabilitation Exoskeleton</h3>
-              <p>Developed a learning-based model predictive control framework for the 7-DoF ETS-MARSE upper-limb rehabilitation exoskeleton. A Gaussian Process learns behavior not represented by the analytical model: its predictive mean improves future-state estimates, while its uncertainty quantifies when the controller should act assertively or cautiously. The MPC optimizes control over a prediction horizon with explicit state and input constraints, and a robust sliding-mode layer compensates for remaining disturbances, interaction forces, and prediction errors.</p>
+              <p>Developed and deployed learning-based model predictive control for the 7-DoF ETS-MARSE upper-limb rehabilitation exoskeleton. A Gaussian Process learns residual behavior outside the analytical model, while constrained MPC and robust sliding-mode feedback provide predictive tracking and disturbance rejection. When physical performance differed from simulation, I compared predicted and measured states, tracking errors, control commands, actuator response, and computation time. I incorporated representative physical data into the learned model and retained robust feedback for remaining disturbances and prediction errors.</p>
               <ul>
                 <li>Gaussian Process predictive mean and uncertainty estimation</li>
                 <li>Explicit exoskeleton state and actuator constraints</li>
@@ -277,13 +277,13 @@
 
         </div>
 
-        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260801-control-ui1">
+        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260802-controller-groups1">
           <div class="forge-heading">
             <div>
               <p class="eyebrow">Interactive simulator</p>
               <h3>Dynamics Forge</h3>
             </div>
-            <p>Each 10 s run uses Featherstone articulated-body dynamics with RK4 at 1 kHz and a 250 Hz controller. Rotor plants also include thrust and drag, motor delay and limits, encoder quantization, state estimation, and direct allocation. Default gains are starting values—not optimized settings; tune them and compare tracking and effort.</p>
+            <p>The browser simulator uses nonlinear articulated-body dynamics with RK4 integration at 1 kHz and a 250 Hz controller. Rotor systems also include thrust and drag, motor delay and limits, encoder quantization, state estimation, and direct allocation. Default gains are starting values, not optimized settings. Modify them and compare tracking and effort.</p>
           </div>
 
           <div class="forge-layout">
@@ -327,9 +327,9 @@
               </div>
 
               <div class="forge-results" aria-label="Simulation results">
-                <div><span id="forge-rms-label">Primary RMS</span><strong id="forge-rms">—</strong></div>
-                <div id="forge-secondary-result"><span id="forge-secondary-rms-label">Secondary RMS</span><strong id="forge-secondary-rms">—</strong></div>
-                <div><span>Peak effort</span><strong id="forge-peak">—</strong></div>
+                <div><span id="forge-rms-label">Primary RMS</span><strong id="forge-rms">Pending</strong></div>
+                <div id="forge-secondary-result"><span id="forge-secondary-rms-label">Secondary RMS</span><strong id="forge-secondary-rms">Pending</strong></div>
+                <div><span>Peak effort</span><strong id="forge-peak">Pending</strong></div>
               </div>
 
               <fieldset class="forge-layer-controls">
@@ -354,7 +354,7 @@
                 <p id="forge-demo-category" class="project-kicker">Robotics system</p>
                 <h4 id="forge-demo-title">Interactive system</h4>
                 <p id="forge-demo-description">Select a model, adjust its controller, and run the simulation.</p>
-                <p class="forge-controller-line">Controller <strong id="forge-controller-name">—</strong></p>
+                <p class="forge-controller-line">Controller <strong id="forge-controller-name">Not selected</strong></p>
               </div>
 
               <button id="forge-run" class="forge-run" type="button">Run simulation</button>
@@ -414,7 +414,7 @@
             <div>
               <h3>Research Assistant</h3>
               <p class="timeline-place">ÉTS, Montréal</p>
-              <p>Deployed a 1-4 kHz exoskeleton control stack, FPGA interfaces, digital twins, learning-based predictive control, safety logic, and sensor-driven motion pipelines integrating EMG, IMU, depth-camera, and force data.</p>
+              <p>Deployed a 1-4 kHz exoskeleton control stack, FPGA interfaces, and learning-based predictive control. Built physics-based digital twins and a controller emulator with the same control structure and interfaces as the physical system. The validation models incorporated Coulomb friction, joint-velocity noise, actuator constraints and response, and computation and communication delays. Integrated EMG, IMU, depth-camera, and force sensing.</p>
             </div>
           </article>
         </div>
@@ -571,7 +571,7 @@
           </article>
           <article class="skill-card reveal">
             <h3>Modeling and control</h3>
-            <p>Kinematics, Featherstone ABA, RNEA, MPC, sliding-mode control, reinforcement learning</p>
+            <p>Kinematics, dynamics, numerical optimization, RNEA, MPC, sliding-mode control, Gaussian Processes</p>
           </article>
           <article class="skill-card reveal">
             <h3>Software systems</h3>

@@ -34,7 +34,6 @@
         switchTheme: 'Cambiar al tema {theme}',
         video: 'Video de {title}',
         about: 'Información sobre {label}',
-        rateLimit: 'Hay dos simulaciones nuevas disponibles por minuto. La repetición es ilimitada; el siguiente cálculo estará disponible en {seconds} s.',
         simulationError: 'Error de simulación: {error}'
       },
       fr: {
@@ -43,7 +42,6 @@
         switchTheme: 'Passer au thème {theme}',
         video: 'Vidéo de {title}',
         about: 'Informations sur {label}',
-        rateLimit: 'Deux nouvelles simulations sont disponibles par minute. La relecture est illimitée; le prochain calcul sera disponible dans {seconds} s.',
         simulationError: 'Erreur de simulation : {error}'
       }
     };
@@ -61,9 +59,6 @@
       const label = catalogue.translations?.[language]?.[aboutMatch[1]] || aboutMatch[1];
       return interpolate(dictionary.about, { label });
     }
-
-    const rateLimitMatch = source.match(/^Two new simulations are available per minute\. Replay is unlimited; the next recalculation is available in (\d+) s\.$/);
-    if (rateLimitMatch) return interpolate(dictionary.rateLimit, { seconds: rateLimitMatch[1] });
 
     const errorMatch = source.match(/^Simulation error: (.+)$/);
     if (errorMatch) return interpolate(dictionary.simulationError, { error: errorMatch[1] });
@@ -192,7 +187,7 @@
     document.dispatchEvent(new CustomEvent('portfolio-language-change', { detail: { language: currentLanguage } }));
   };
 
-  const ready = fetch('assets/data/i18n.json?v=20260801-engineering-copy1')
+  const ready = fetch('assets/data/i18n.json?v=20260802-controller-groups1')
     .then((response) => {
       if (!response.ok) throw new Error('Translation catalogue could not be loaded.');
       return response.json();

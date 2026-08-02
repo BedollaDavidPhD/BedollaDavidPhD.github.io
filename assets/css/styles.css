@@ -462,6 +462,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   cursor: pointer;
 }
 .forge-demo-tab:hover, .forge-demo-tab:focus-visible { color: var(--blue); border-color: var(--blue); outline: none; }
+.forge-demo-tab:disabled { cursor: wait; opacity: 0.55; }
 .forge-demo-tab.active { color: white; background: #1d4ed8; border-color: #60a5fa; }
 .forge-demo-copy { margin-top: 24px; }
 .forge-demo-copy h4 { margin: 0 0 9px; font-size: 1.45rem; line-height: 1.2; }
@@ -493,7 +494,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-weight: 750;
   cursor: pointer;
 }
-.forge-gain-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.forge-gain-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 13px; margin-top: 10px; }
+.forge-control-group { min-width: 0; padding-top: 2px; }
+.forge-control-group + .forge-control-group { padding-top: 11px; border-top: 1px solid var(--line); }
+.forge-control-group h6 { margin: 0 0 7px; color: var(--ink); font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.forge-control-group-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .forge-control { min-width: 0; color: var(--muted); font-size: 0.68rem; font-weight: 720; }
 .forge-control-label { display: flex; align-items: center; min-height: 22px; gap: 5px; margin-bottom: 3px; }
 .forge-control-label > label:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
@@ -723,6 +728,8 @@ html[data-theme="dark"] .forge-layer-controls legend { color: #89b7f9; }
 html[data-theme="dark"] .forge-layer-controls label { color: #c9d6e7; }
 html[data-theme="dark"] .forge-gains-heading h5 { color: #eef5ff; }
 html[data-theme="dark"] .forge-gains-heading button { color: #bcd0e8; border-color: #3a506c; }
+html[data-theme="dark"] .forge-control-group + .forge-control-group { border-color: #30445f; }
+html[data-theme="dark"] .forge-control-group h6 { color: #eef5ff; }
 html[data-theme="dark"] .forge-control { color: #aebfd4; }
 html[data-theme="dark"] .forge-info-button { color: #dbeafe; background: #1e3a5f; border-color: #4f7199; }
 html[data-theme="dark"] .forge-number-field { background: #0a1728; border-color: #30445f; }

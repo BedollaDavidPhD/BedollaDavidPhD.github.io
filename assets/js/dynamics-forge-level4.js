@@ -18,6 +18,10 @@
   const clamp = (value, lower, upper) => Math.max(lower, Math.min(value, upper));
   const deg2rad = (value) => value * PI / 180;
 
+  function integralLimitFromPercent(percent, maximumOutput) {
+    return Math.abs(maximumOutput) * clamp(percent, 0, 100) / 100;
+  }
+
   function finiteNumber(value, label) {
     if (!Number.isFinite(value)) throw new Error(`${label} must be a finite number.`);
     return value;
@@ -698,9 +702,10 @@
       initialQ[2] = initialPosition[0];
       super(model, parameters, initialQ);
       this.initialPosition = initialPosition.slice();
-      this.integralMax = Math.max(0, Number(parameters.integralMax) || 0);
-      const pInitial = clamp(Number(parameters.positionIntegralInitial) || 0, -this.integralMax, this.integralMax);
-      const aInitial = clamp(Number(parameters.attitudeIntegralInitial) || 0, -this.integralMax, this.integralMax);
+      this.positionIntegralMax = integralLimitFromPercent(parameters.positionIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
+      this.attitudeIntegralMax = integralLimitFromPercent(parameters.attitudeIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
+      const pInitial = clamp(parameters.positionIntegralInitial, -this.positionIntegralMax, this.positionIntegralMax);
+      const aInitial = clamp(parameters.attitudeIntegralInitial, -this.attitudeIntegralMax, this.attitudeIntegralMax);
       this.integrals = {
         z: new TrapezoidalIntegral(pInitial), x: new TrapezoidalIntegral(pInitial), y: new TrapezoidalIntegral(pInitial),
         roll: new TrapezoidalIntegral(aInitial), pitch: new TrapezoidalIntegral(aInitial), yaw: new TrapezoidalIntegral(aInitial),
@@ -718,7 +723,8 @@
       const kp = group === "position" ? this.parameters.positionKp : this.parameters.attitudeKp;
       const kd = group === "position" ? this.parameters.positionKd : this.parameters.attitudeKd;
       const ki = group === "position" ? this.parameters.positionKi : this.parameters.attitudeKi;
-      const integral = this.integrals[axis].update(ki * positionError, CONTROLLER_DT, this.integralMax);
+      const integralMax = group === "position" ? this.positionIntegralMax : this.attitudeIntegralMax;
+      const integral = this.integrals[axis].update(ki * positionError, CONTROLLER_DT, integralMax);
       return kp * positionError + kd * velocityError + integral;
     }
 
@@ -757,8 +763,10 @@
       const initialQ = zeros(model.parents.length);
       initialQ[0] = 0.3;
       super(model, parameters, initialQ);
-      this.zIntegral = new TrapezoidalIntegral(parameters.zIntegralInitial);
-      this.yawIntegral = new TrapezoidalIntegral(parameters.yawIntegralInitial);
+      this.zIntegralMax = integralLimitFromPercent(parameters.zIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
+      this.yawIntegralMax = integralLimitFromPercent(parameters.yawIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
+      this.zIntegral = new TrapezoidalIntegral(clamp(parameters.zIntegralInitial, -this.zIntegralMax, this.zIntegralMax));
+      this.yawIntegral = new TrapezoidalIntegral(clamp(parameters.yawIntegralInitial, -this.yawIntegralMax, this.yawIntegralMax));
       this.metricConfig = { primaryIndex: 0, secondaryIndex: 3, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / PI, effortUnit: "N" };
     }
 
@@ -770,8 +778,8 @@
       const desired = this.references(this.time);
       const zError = desired.z - this.feedbackQ[0];
       const yawError = wrapPi(desired.yaw - this.feedbackQ[3]);
-      const zIntegral = this.zIntegral.update(this.parameters.zKi * zError, CONTROLLER_DT, 1);
-      const yawIntegral = this.yawIntegral.update(this.parameters.yawKi * yawError, CONTROLLER_DT, 1);
+      const zIntegral = this.zIntegral.update(this.parameters.zKi * zError, CONTROLLER_DT, this.zIntegralMax);
+      const yawIntegral = this.yawIntegral.update(this.parameters.yawKi * yawError, CONTROLLER_DT, this.yawIntegralMax);
       const collective = Math.max(0, this.parameters.zKp * zError - this.parameters.zKd * this.feedbackDq[0] + zIntegral);
       const yawMix = this.parameters.yawKp * yawError - this.parameters.yawKd * this.feedbackDq[3] + yawIntegral;
       for (let rotor = 0; rotor < this.model.rotorFrames.length; rotor += 1) {
@@ -795,7 +803,8 @@
   class Copter1Simulation extends ArticulatedSimulation {
     constructor(model, parameters) {
       super(model, parameters, zeros(model.parents.length));
-      this.integral = new TrapezoidalIntegral(parameters.integralInitial);
+      this.integralMax = integralLimitFromPercent(parameters.integralMaxPercent, ROTOR_EFFORT_LIMIT);
+      this.integral = new TrapezoidalIntegral(clamp(parameters.integralInitial, -this.integralMax, this.integralMax));
       this.metricConfig = { primaryIndex: 0, primaryAngular: true, primaryUnit: "rad", effortUnit: "N·m" };
     }
 
@@ -807,7 +816,7 @@
       const desired = this.reference(this.time);
       const error = desired.position - this.feedbackQ[0];
       const velocityError = desired.velocity - this.feedbackDq[0];
-      const integral = this.integral.update(this.parameters.ki * error, CONTROLLER_DT, 1.5);
+      const integral = this.integral.update(this.parameters.ki * error, CONTROLLER_DT, this.integralMax);
       const command = Math.max(0, this.parameters.kp * error + this.parameters.kd * velocityError + integral);
       this.desiredEffort[0] = clamp(command, 0, ROTOR_EFFORT_LIMIT);
     }
@@ -824,8 +833,11 @@
   class Copter2Simulation extends ArticulatedSimulation {
     constructor(model, parameters) {
       super(model, parameters, zeros(model.parents.length));
-      this.yawIntegral = new TrapezoidalIntegral(parameters.yawIntegralInitial);
-      this.rollIntegral = new TrapezoidalIntegral(parameters.rollIntegralInitial);
+      const maximumRollReference = Math.max(Math.abs(parameters.rollReferenceMin), Math.abs(parameters.rollReferenceMax));
+      this.yawIntegralMax = integralLimitFromPercent(parameters.yawIntegralMaxPercent, maximumRollReference);
+      this.rollIntegralMax = integralLimitFromPercent(parameters.rollIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
+      this.yawIntegral = new TrapezoidalIntegral(clamp(parameters.yawIntegralInitial, -this.yawIntegralMax, this.yawIntegralMax));
+      this.rollIntegral = new TrapezoidalIntegral(clamp(parameters.rollIntegralInitial, -this.rollIntegralMax, this.rollIntegralMax));
       this.lastRollReference = 0;
       this.metricConfig = { primaryIndex: 0, secondaryIndex: 1, primaryAngular: true, secondaryAngular: true, primaryUnit: "deg", secondaryUnit: "deg", primaryScale: 180 / PI, secondaryScale: 180 / PI, effortUnit: "N·m" };
     }
@@ -839,13 +851,13 @@
       const yawError = desired.position - this.feedbackQ[0];
       const yawVelocityError = desired.velocity - this.feedbackDq[0];
       const yawDrive = this.parameters.yawIntegralGain * (this.parameters.yawIntegralPositionWeight * yawError + this.parameters.yawIntegralVelocityWeight * yawVelocityError);
-      const yawIntegral = this.yawIntegral.update(yawDrive, CONTROLLER_DT, this.parameters.yawIntegralLimit);
+      const yawIntegral = this.yawIntegral.update(yawDrive, CONTROLLER_DT, this.yawIntegralMax);
       const collective = this.parameters.yawKp * yawError + this.parameters.yawKd * yawVelocityError + yawIntegral;
       this.lastRollReference = clamp(-collective, this.parameters.rollReferenceMin, this.parameters.rollReferenceMax);
       const rollError = this.lastRollReference - this.feedbackQ[2];
       const rollVelocityError = -this.feedbackDq[2];
       const rollDrive = this.parameters.rollIntegralGain * (this.parameters.rollIntegralPositionWeight * rollError + this.parameters.rollIntegralVelocityWeight * rollVelocityError);
-      const rollIntegral = this.rollIntegral.update(rollDrive, CONTROLLER_DT, this.parameters.rollIntegralLimit);
+      const rollIntegral = this.rollIntegral.update(rollDrive, CONTROLLER_DT, this.rollIntegralMax);
       const differential = this.parameters.rollKp * rollError + this.parameters.rollKd * rollVelocityError + rollIntegral;
       const leftMagnitude = clamp(Math.abs(0.9 * collective) + differential, 0, ROTOR_EFFORT_LIMIT);
       const rightMagnitude = clamp(Math.abs(0.9 * collective) - differential, 0, ROTOR_EFFORT_LIMIT);
@@ -869,7 +881,12 @@
       initialQ[1] = deg2rad(-10);
       initialQ[3] = deg2rad(20);
       super(model, parameters, initialQ);
-      this.pitchIntegral = new TrapezoidalIntegral(parameters.pitchIntegralInitial);
+      this.yawIntegralMax = integralLimitFromPercent(parameters.yawIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
+      this.pitchIntegralMax = integralLimitFromPercent(parameters.pitchIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
+      this.rollIntegralMax = integralLimitFromPercent(parameters.rollIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
+      this.yawIntegral = new TrapezoidalIntegral(clamp(parameters.yawIntegralInitial, -this.yawIntegralMax, this.yawIntegralMax));
+      this.pitchIntegral = new TrapezoidalIntegral(clamp(parameters.pitchIntegralInitial, -this.pitchIntegralMax, this.pitchIntegralMax));
+      this.rollIntegral = new TrapezoidalIntegral(clamp(parameters.rollIntegralInitial, -this.rollIntegralMax, this.rollIntegralMax));
       this.metricConfig = { primaryIndex: 0, secondaryIndex: 1, primaryAngular: true, secondaryAngular: true, primaryUnit: "deg", secondaryUnit: "deg", primaryScale: 180 / PI, secondaryScale: 180 / PI, effortUnit: "N·m" };
     }
 
@@ -888,12 +905,14 @@
       const pitchVelocityError = desired.pitch.velocity - this.feedbackDq[1];
       const rollError = -this.feedbackQ[3];
       const rollVelocityError = -this.feedbackDq[3];
+      const yawIntegral = this.yawIntegral.update(this.parameters.yawKi * yawError, CONTROLLER_DT, this.yawIntegralMax);
       const pitchDrive = this.parameters.pitchIntegralGain
         * (this.parameters.pitchIntegralPositionWeight * pitchError + this.parameters.pitchIntegralVelocityWeight * pitchVelocityError);
-      const pitchIntegral = this.pitchIntegral.update(pitchDrive, CONTROLLER_DT, this.parameters.pitchIntegralLimit);
+      const pitchIntegral = this.pitchIntegral.update(pitchDrive, CONTROLLER_DT, this.pitchIntegralMax);
+      const rollIntegral = this.rollIntegral.update(this.parameters.rollKi * rollError, CONTROLLER_DT, this.rollIntegralMax);
       const pitchCommand = this.parameters.pitchKp * pitchError + this.parameters.pitchKd * pitchVelocityError + pitchIntegral;
-      const rollCommand = this.parameters.rollKp * rollError + this.parameters.rollKd * rollVelocityError;
-      const yawCommand = this.parameters.yawKp * yawError + this.parameters.yawKd * yawVelocityError;
+      const rollCommand = this.parameters.rollKp * rollError + this.parameters.rollKd * rollVelocityError + rollIntegral;
+      const yawCommand = this.parameters.yawKp * yawError + this.parameters.yawKd * yawVelocityError + yawIntegral;
       const differential = yawCommand + rollCommand;
       const leftMagnitude = clamp(pitchCommand + differential, 0, ROTOR_EFFORT_LIMIT);
       const rightMagnitude = clamp(pitchCommand - differential, 0, ROTOR_EFFORT_LIMIT);
