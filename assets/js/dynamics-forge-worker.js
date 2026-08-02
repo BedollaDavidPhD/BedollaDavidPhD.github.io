@@ -1,4 +1,4 @@
-importScripts("dynamics-forge-level4.js?v=20260802-stall-integrals1");
+importScripts("dynamics-forge-level4.js?v=20260802-peak-effort1");
 
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
 const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));

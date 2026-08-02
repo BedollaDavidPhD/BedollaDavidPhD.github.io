@@ -718,7 +718,7 @@
         z: new TrapezoidalIntegral(pInitial), x: new TrapezoidalIntegral(pInitial), y: new TrapezoidalIntegral(pInitial),
         roll: new TrapezoidalIntegral(aInitial), pitch: new TrapezoidalIntegral(aInitial), yaw: new TrapezoidalIntegral(aInitial),
       };
-      this.metricConfig = { primaryIndex: 2, secondaryIndex: 8, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / PI, effortUnit: "N" };
+      this.metricConfig = { primaryIndex: 2, secondaryIndex: 8, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / PI, effortUnit: "N·m" };
     }
 
     references(time) {
@@ -762,7 +762,7 @@
 
     recordingReference(time) {
       const desired = this.references(time);
-      return { primary: desired.position[2], secondary: desired.attitude[2], effort: this.lastTotalThrust };
+      return { primary: desired.position[2], secondary: desired.attitude[2], effort: this.lastActuatorEffort };
     }
   }
 
@@ -775,7 +775,7 @@
       this.yawIntegralMax = integralLimitFromPercent(parameters.yawIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
       this.zIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.zIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.zIntegralMax));
       this.yawIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.yawIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.yawIntegralMax));
-      this.metricConfig = { primaryIndex: 0, secondaryIndex: 3, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / PI, effortUnit: "N" };
+      this.metricConfig = { primaryIndex: 0, secondaryIndex: 3, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / PI, effortUnit: "N·m" };
     }
 
     references(time) {
@@ -804,7 +804,7 @@
 
     recordingReference(time) {
       const desired = this.references(time);
-      return { primary: desired.z, secondary: desired.yaw, effort: this.lastTotalThrust };
+      return { primary: desired.z, secondary: desired.yaw, effort: this.lastActuatorEffort };
     }
   }
 

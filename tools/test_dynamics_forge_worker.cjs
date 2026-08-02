@@ -251,6 +251,10 @@ function peakAbsolute(result, stateIndex) {
 for (const system of catalogue.systems) {
   const result = simulate(system.id, {}, system.duration);
   assert.equal(result.time.length, 601, `${system.id} must return 60 Hz samples for its internal horizon`);
+  if (system.id !== "two_link") {
+    assert(result.metrics.peakEffort <= 1.500001, `${system.id} peak effort must measure the actuator control signal, not total thrust`);
+    assert.equal(result.metrics.effortUnit, "N·m", `${system.id} peak effort must use the actuator-effort unit`);
+  }
 }
 for (const systemId of ["drone6", "drone8", "taxi_drone"]) {
   const result = simulate(systemId, { targetX: 0.8, targetY: 0.6, targetZ: 1, targetYaw: 0 });
