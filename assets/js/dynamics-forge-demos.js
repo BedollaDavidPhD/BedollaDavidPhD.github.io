@@ -774,10 +774,10 @@
       explanation = "D gain acts on velocity or error rate to add damping. Excessive values can amplify measurement and estimation noise.";
     } else if (/(^|[A-Z0-9])Ki(?:\d+)?$/i.test(control.key) || /^ki\d*$/i.test(control.key) || /IntegralGain$/i.test(control.key)) {
       explanation = "I gain accumulates controller error to remove steady-state offset. Its contribution is bounded by I max to limit windup.";
-    } else if (/IntegralInitial$/i.test(control.key)) {
-      explanation = "Initial integral contribution at the start of the simulation. It is limited by I max.";
+    } else if (/IntegralInitialPercent$/i.test(control.key)) {
+      explanation = "Signed initial integral contribution, expressed from -100% to +100% of the fixed actuator stall input. It is clamped by I max.";
     } else if (/IntegralMaxPercent$/i.test(control.key)) {
-      explanation = "Antiwindup clamp for the integral contribution, expressed as a percentage of the maximum command handled by this control loop.";
+      explanation = "Antiwindup clamp for the integral contribution, expressed as a percentage of the fixed actuator stall input before velocity and power constraints.";
     } else if (/IntegralPositionWeight$/i.test(control.key)) {
       explanation = "Weight applied to position error before it enters the integral channel.";
     } else if (/IntegralVelocityWeight$/i.test(control.key)) {
@@ -956,7 +956,7 @@
       const payload = await response.json();
       if (!Array.isArray(payload.systems) || payload.systems.length === 0) throw new Error("No systems configured");
       state.systems = [...payload.systems].sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER));
-      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260802-controller-groups1");
+      state.worker = new Worker("assets/js/dynamics-forge-worker.js?v=20260802-stall-integrals1");
       state.worker.addEventListener("message", (event) => {
         const result = event.data;
         if (result.requestId !== state.requestId || result.systemId !== state.systems[state.activeIndex]?.id) return;

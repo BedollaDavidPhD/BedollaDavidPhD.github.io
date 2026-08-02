@@ -68,9 +68,12 @@ for (const system of orderedSystems) {
     assert(kpKey(controls[0].key), `${system.id} ${groupName} column 1 must start with Kp`);
     assert(kiKey(controls[1].key), `${system.id} ${groupName} column 2 must start with Ki`);
     assert(kdKey(controls[2].key), `${system.id} ${groupName} column 3 must start with Kd`);
-    assert.match(controls[3].key, /IntegralInitial$/i, `${system.id} ${groupName} second row must start with I0`);
+    assert.match(controls[3].key, /IntegralInitialPercent$/i, `${system.id} ${groupName} second row must start with I0`);
     assert.match(controls[4].key, /IntegralMaxPercent$/i, `${system.id} ${groupName} second row needs an antiwindup percentage`);
+    assert.equal(controls[3].unit, "%", `${system.id} ${groupName} initial integral must be a percentage`);
     assert.equal(controls[4].unit, "%", `${system.id} ${groupName} antiwindup limit must be a percentage`);
+    assert.equal(controls[3].min, -100, `${system.id} ${groupName} initial integral must allow -100 percent`);
+    assert.equal(controls[3].max, 100, `${system.id} ${groupName} initial integral must allow +100 percent`);
     assert(controls[4].min >= 0 && controls[4].max <= 100, `${system.id} ${groupName} antiwindup percentage must stay in 0 to 100 percent`);
     for (const gain of controls.slice(0, 3)) assert(gain.label.length <= 12, `Gain label ${gain.label} should remain compact`);
   }
@@ -98,7 +101,7 @@ for (const systemId of ["drone6", "drone8", "taxi_drone"]) {
   assert(system.positionPlot, `${systemId} needs the combined X/Y position plot`);
   assert.equal(system.controls.some((control) => control.key === "targetRoll" || control.key === "targetPitch"), false, `${systemId} must not expose roll or pitch targets`);
   const keys = new Set(system.controls.map((control) => control.key));
-  for (const key of ["positionKp", "positionKi", "positionKd", "positionIntegralInitial", "positionIntegralMaxPercent", "attitudeKp", "attitudeKi", "attitudeKd", "attitudeIntegralInitial", "attitudeIntegralMaxPercent", "targetX", "targetY", "targetZ", "targetYaw"]) {
+  for (const key of ["positionKp", "positionKi", "positionKd", "positionIntegralInitialPercent", "positionIntegralMaxPercent", "attitudeKp", "attitudeKi", "attitudeKd", "attitudeIntegralInitialPercent", "attitudeIntegralMaxPercent", "targetX", "targetY", "targetZ", "targetYaw"]) {
     assert(keys.has(key), `${systemId} is missing ${key}`);
   }
   assert.equal(system.controls.filter((control) => control.key === "positionIntegralMaxPercent").length, 1, `${systemId} needs one position antiwindup limit`);
@@ -107,15 +110,15 @@ for (const systemId of ["drone6", "drone8", "taxi_drone"]) {
 const copter3Keys = new Set(catalogue.systems.find((system) => system.id === "copter3").controls.map((control) => control.key));
 for (const axis of ["yaw", "pitch", "roll"]) {
   const ki = axis === "pitch" ? "pitchIntegralGain" : `${axis}Ki`;
-  for (const key of [ki, `${axis}IntegralInitial`, `${axis}IntegralMaxPercent`]) assert(copter3Keys.has(key), `Copter3 ${axis} PID is missing ${key}`);
+  for (const key of [ki, `${axis}IntegralInitialPercent`, `${axis}IntegralMaxPercent`]) assert(copter3Keys.has(key), `Copter3 ${axis} PID is missing ${key}`);
 }
 
 const parameterHelpStrings = [
   "P gain acts on the current position or angle error for this controller. Increasing it strengthens immediate correction. Excessive values can cause oscillation.",
   "D gain acts on velocity or error rate to add damping. Excessive values can amplify measurement and estimation noise.",
   "I gain accumulates controller error to remove steady-state offset. Its contribution is bounded by I max to limit windup.",
-  "Initial integral contribution at the start of the simulation. It is limited by I max.",
-  "Antiwindup clamp for the integral contribution, expressed as a percentage of the maximum command handled by this control loop.",
+  "Signed initial integral contribution, expressed from -100% to +100% of the fixed actuator stall input. It is clamped by I max.",
+  "Antiwindup clamp for the integral contribution, expressed as a percentage of the fixed actuator stall input before velocity and power constraints.",
   "Weight applied to position error before it enters the integral channel.",
   "Weight applied to velocity error before it enters the integral channel.",
   "Minimum reference allowed for the inner control loop.",
@@ -186,11 +189,13 @@ assert.doesNotMatch(demoRenderer, /tr\("primary"\)|tr\("secondary"\)/);
 assert.equal(level4Source.includes("allocationScale"), false, "Rotor allocation must not be normalized by rotor count");
 assert.equal(level4Source.includes("collectiveScale"), false, "Collective effort must not be normalized by rotor count");
 assert.doesNotMatch(level4Source, /this\.parameters\.targetRoll|this\.parameters\.targetPitch/, "Full multirotors must hold roll and pitch targets at zero");
-assert.match(workerSource, /integralLimitFromPercent\(parameters\.j1IntegralMaxPercent, outputLimit\)/, "Arm antiwindup percentages must use the joint command limit");
-assert.match(workerSource, /clamp\(parameters\.j1IntegralInitial, -j1IntegralLimit, j1IntegralLimit\)/, "Arm integral initial values must be clamped by antiwindup");
-assert.match(level4Source, /integralLimitFromPercent\(parameters\.zIntegralMaxPercent, ROTOR_EFFORT_LIMIT\)/, "Direct rotor-loop percentages must use the rotor command limit");
-assert.match(level4Source, /integralLimitFromPercent\(parameters\.yawIntegralMaxPercent, maximumRollReference\)/, "Copter 2 outer-loop antiwindup must use its roll-reference limit");
-assert.match(level4Source, /clamp\(parameters\.positionIntegralInitial, -this\.positionIntegralMax, this\.positionIntegralMax\)/, "Position integral initial values must be clamped by antiwindup");
+assert.match(workerSource, /integralLimitFromPercent\(parameters\.j1IntegralMaxPercent, stallTorque\)/, "Arm antiwindup percentages must use stall torque");
+assert.match(workerSource, /initialIntegralFromPercent\(parameters\.j1IntegralInitialPercent, stallTorque, j1IntegralLimit\)/, "Arm initial integral percentages must use stall torque and the antiwindup clamp");
+assert.match(level4Source, /integralLimitFromPercent\(parameters\.zIntegralMaxPercent, ROTOR_EFFORT_LIMIT\)/, "Direct rotor-loop percentages must use the fixed rotor stall input");
+assert.match(level4Source, /integralLimitFromPercent\(parameters\.yawIntegralMaxPercent, ROTOR_EFFORT_LIMIT\)/, "Copter 2 outer-loop antiwindup must use the fixed rotor stall input");
+assert.doesNotMatch(level4Source, /maximumRollReference/, "Integral scaling must not depend on a constrained intermediate reference");
+assert.match(level4Source, /initialIntegralFromPercent\(parameters\.positionIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this\.positionIntegralMax\)/, "Position initial integral percentages must use stall input and the antiwindup clamp");
+assert.match(level4Source, /const activeLimit = Math\.min\(actuator\.maxEffort, powerLimit\)/, "Velocity and power constraints must remain separate from the fixed stall-input reference");
 assert.match(level4Source, /positionIntegralMaxPercent/);
 assert.match(level4Source, /attitudeIntegralMaxPercent/);
 
@@ -253,6 +258,11 @@ for (const systemId of ["drone6", "drone8", "taxi_drone"]) {
   assert(peakAbsolute(result, 1) > 0.05, `${systemId} did not track the Y target`);
   assert(peakAbsolute(result, 6) > 0.01, `${systemId} did not generate roll for Y tracking`);
   assert(peakAbsolute(result, 7) > 0.01, `${systemId} did not generate pitch for X tracking`);
+}
+const clampedIntegralResult = simulate("drone4", { zIntegralInitialPercent: 100, zIntegralMaxPercent: 10 }, 1);
+for (let sample = 0; sample < clampedIntegralResult.time.length; sample += 1) {
+  const zIntegral = clampedIntegralResult.states[sample * 6 + 2];
+  assert(Math.abs(zIntegral) <= 0.150001, "Drone 4 I0 must be converted from stall-input percent and clamped by I max");
 }
 const drone4Defaults = defaultsFor("drone4");
 assert.match(requestError("drone4", { ...drone4Defaults, zKp: Number.NaN }, 10), /finite number/i);

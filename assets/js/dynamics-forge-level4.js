@@ -18,8 +18,16 @@
   const clamp = (value, lower, upper) => Math.max(lower, Math.min(value, upper));
   const deg2rad = (value) => value * PI / 180;
 
-  function integralLimitFromPercent(percent, maximumOutput) {
-    return Math.abs(maximumOutput) * clamp(percent, 0, 100) / 100;
+  function integralContributionFromPercent(percent, stallInput) {
+    return Math.abs(stallInput) * clamp(percent, -100, 100) / 100;
+  }
+
+  function integralLimitFromPercent(percent, stallInput) {
+    return Math.abs(integralContributionFromPercent(clamp(percent, 0, 100), stallInput));
+  }
+
+  function initialIntegralFromPercent(percent, stallInput, integralLimit) {
+    return clamp(integralContributionFromPercent(percent, stallInput), -integralLimit, integralLimit);
   }
 
   function finiteNumber(value, label) {
@@ -704,8 +712,8 @@
       this.initialPosition = initialPosition.slice();
       this.positionIntegralMax = integralLimitFromPercent(parameters.positionIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
       this.attitudeIntegralMax = integralLimitFromPercent(parameters.attitudeIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
-      const pInitial = clamp(parameters.positionIntegralInitial, -this.positionIntegralMax, this.positionIntegralMax);
-      const aInitial = clamp(parameters.attitudeIntegralInitial, -this.attitudeIntegralMax, this.attitudeIntegralMax);
+      const pInitial = initialIntegralFromPercent(parameters.positionIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.positionIntegralMax);
+      const aInitial = initialIntegralFromPercent(parameters.attitudeIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.attitudeIntegralMax);
       this.integrals = {
         z: new TrapezoidalIntegral(pInitial), x: new TrapezoidalIntegral(pInitial), y: new TrapezoidalIntegral(pInitial),
         roll: new TrapezoidalIntegral(aInitial), pitch: new TrapezoidalIntegral(aInitial), yaw: new TrapezoidalIntegral(aInitial),
@@ -765,8 +773,8 @@
       super(model, parameters, initialQ);
       this.zIntegralMax = integralLimitFromPercent(parameters.zIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
       this.yawIntegralMax = integralLimitFromPercent(parameters.yawIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
-      this.zIntegral = new TrapezoidalIntegral(clamp(parameters.zIntegralInitial, -this.zIntegralMax, this.zIntegralMax));
-      this.yawIntegral = new TrapezoidalIntegral(clamp(parameters.yawIntegralInitial, -this.yawIntegralMax, this.yawIntegralMax));
+      this.zIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.zIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.zIntegralMax));
+      this.yawIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.yawIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.yawIntegralMax));
       this.metricConfig = { primaryIndex: 0, secondaryIndex: 3, secondaryAngular: true, primaryUnit: "m", secondaryUnit: "deg", secondaryScale: 180 / PI, effortUnit: "N" };
     }
 
@@ -804,7 +812,7 @@
     constructor(model, parameters) {
       super(model, parameters, zeros(model.parents.length));
       this.integralMax = integralLimitFromPercent(parameters.integralMaxPercent, ROTOR_EFFORT_LIMIT);
-      this.integral = new TrapezoidalIntegral(clamp(parameters.integralInitial, -this.integralMax, this.integralMax));
+      this.integral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.integralInitialPercent, ROTOR_EFFORT_LIMIT, this.integralMax));
       this.metricConfig = { primaryIndex: 0, primaryAngular: true, primaryUnit: "rad", effortUnit: "N·m" };
     }
 
@@ -833,11 +841,10 @@
   class Copter2Simulation extends ArticulatedSimulation {
     constructor(model, parameters) {
       super(model, parameters, zeros(model.parents.length));
-      const maximumRollReference = Math.max(Math.abs(parameters.rollReferenceMin), Math.abs(parameters.rollReferenceMax));
-      this.yawIntegralMax = integralLimitFromPercent(parameters.yawIntegralMaxPercent, maximumRollReference);
+      this.yawIntegralMax = integralLimitFromPercent(parameters.yawIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
       this.rollIntegralMax = integralLimitFromPercent(parameters.rollIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
-      this.yawIntegral = new TrapezoidalIntegral(clamp(parameters.yawIntegralInitial, -this.yawIntegralMax, this.yawIntegralMax));
-      this.rollIntegral = new TrapezoidalIntegral(clamp(parameters.rollIntegralInitial, -this.rollIntegralMax, this.rollIntegralMax));
+      this.yawIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.yawIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.yawIntegralMax));
+      this.rollIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.rollIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.rollIntegralMax));
       this.lastRollReference = 0;
       this.metricConfig = { primaryIndex: 0, secondaryIndex: 1, primaryAngular: true, secondaryAngular: true, primaryUnit: "deg", secondaryUnit: "deg", primaryScale: 180 / PI, secondaryScale: 180 / PI, effortUnit: "N·m" };
     }
@@ -884,9 +891,9 @@
       this.yawIntegralMax = integralLimitFromPercent(parameters.yawIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
       this.pitchIntegralMax = integralLimitFromPercent(parameters.pitchIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
       this.rollIntegralMax = integralLimitFromPercent(parameters.rollIntegralMaxPercent, ROTOR_EFFORT_LIMIT);
-      this.yawIntegral = new TrapezoidalIntegral(clamp(parameters.yawIntegralInitial, -this.yawIntegralMax, this.yawIntegralMax));
-      this.pitchIntegral = new TrapezoidalIntegral(clamp(parameters.pitchIntegralInitial, -this.pitchIntegralMax, this.pitchIntegralMax));
-      this.rollIntegral = new TrapezoidalIntegral(clamp(parameters.rollIntegralInitial, -this.rollIntegralMax, this.rollIntegralMax));
+      this.yawIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.yawIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.yawIntegralMax));
+      this.pitchIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.pitchIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.pitchIntegralMax));
+      this.rollIntegral = new TrapezoidalIntegral(initialIntegralFromPercent(parameters.rollIntegralInitialPercent, ROTOR_EFFORT_LIMIT, this.rollIntegralMax));
       this.metricConfig = { primaryIndex: 0, secondaryIndex: 1, primaryAngular: true, secondaryAngular: true, primaryUnit: "deg", secondaryUnit: "deg", primaryScale: 180 / PI, secondaryScale: 180 / PI, effortUnit: "N·m" };
     }
 

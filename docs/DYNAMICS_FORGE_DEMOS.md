@@ -13,7 +13,7 @@ The **Research and engineering work** section contains eight interactive systems
 
 Each demo calculates a new result when a controller value or target changes. After completion, the main action becomes **Replay**. Replay does not repeat the numerical integration. A second calculation cannot be started or queued while the worker is busy.
 
-The visible parameter names stay compact. Every field has an information icon that identifies the affected control loop and describes its role. Each PID group starts with Kp, Ki, and Kd, followed by the integral initial contribution, an antiwindup limit expressed as a percentage of the loop's maximum command, and its targets or other settings. The default values are starting points rather than optimized gains. **Run simulation** appears above the parameter grid; response metrics and viewer layers appear below the graphs.
+The visible parameter names stay compact. Every field has an information icon that identifies the affected control loop and describes its role. Each PID group starts with Kp, Ki, and Kd, followed by a signed initial integral percentage, an antiwindup percentage, and its targets or other settings. Both integral settings use the fixed actuator stall input as their reference, before velocity and power constraints. The initial contribution is clamped by the antiwindup limit. The default values are starting points rather than optimized gains. **Run simulation** appears above the parameter grid; response metrics and viewer layers appear below the graphs.
 
 Drone6, Drone8, and TaxiDrone show Z position and yaw in the first time-history graph and X/Y position in a second graph. The X and Y responses share one axis with their dashed target traces. Their independent roll and pitch targets are fixed at zero and omitted from the interface; the outer position loop still generates the transient attitude needed for lateral motion.
 
@@ -31,7 +31,7 @@ Copter1 and Copter2 use configured cubic trajectories. Copter1 follows `[0, 0.5,
 
 ## Architecture
 
-- `assets/data/dynamics-forge-demos.json` defines systems, editable gains and targets, integral initial and anti-windup values, bounds, camera views, and CAD references.
+- `assets/data/dynamics-forge-demos.json` defines systems, editable gains and targets, signed initial integral and antiwindup percentages, bounds, camera views, and CAD references.
 - `assets/js/dynamics-forge-level4.js` contains the static-browser articulated plants, model tables, articulated-body forward dynamics, rotor forces, motor pipeline, encoder quantization, and state estimator.
 - `assets/js/dynamics-forge-worker.js` integrates the selected nonlinear plant and controller equations away from the main UI thread.
 - `assets/js/dynamics-forge-demos.js` manages Run/Replay state, single-run locking, controls, STL loading, Canvas rendering, playback, views, and plots.

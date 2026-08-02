@@ -1,10 +1,18 @@
-importScripts("dynamics-forge-level4.js?v=20260802-controller-groups1");
+importScripts("dynamics-forge-level4.js?v=20260802-stall-integrals1");
 
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
 const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
 
-function integralLimitFromPercent(percent, maximumOutput) {
-  return Math.abs(maximumOutput) * clamp(percent, 0, 100) / 100;
+function integralContributionFromPercent(percent, stallInput) {
+  return Math.abs(stallInput) * clamp(percent, -100, 100) / 100;
+}
+
+function integralLimitFromPercent(percent, stallInput) {
+  return Math.abs(integralContributionFromPercent(clamp(percent, 0, 100), stallInput));
+}
+
+function initialIntegralFromPercent(percent, stallInput, integralLimit) {
+  return clamp(integralContributionFromPercent(percent, stallInput), -integralLimit, integralLimit);
 }
 
 function requireFinite(value, label) {
@@ -126,11 +134,11 @@ function simulateTwoLink(parameters, duration) {
   const i1 = 0.01;
   const i2 = 0.01;
   const gravity = 9.81;
-  const outputLimit = 4;
-  const j1IntegralLimit = integralLimitFromPercent(parameters.j1IntegralMaxPercent, outputLimit);
-  const j2IntegralLimit = integralLimitFromPercent(parameters.j2IntegralMaxPercent, outputLimit);
-  const j1IntegralInitial = clamp(parameters.j1IntegralInitial, -j1IntegralLimit, j1IntegralLimit);
-  const j2IntegralInitial = clamp(parameters.j2IntegralInitial, -j2IntegralLimit, j2IntegralLimit);
+  const stallTorque = 4;
+  const j1IntegralLimit = integralLimitFromPercent(parameters.j1IntegralMaxPercent, stallTorque);
+  const j2IntegralLimit = integralLimitFromPercent(parameters.j2IntegralMaxPercent, stallTorque);
+  const j1IntegralInitial = initialIntegralFromPercent(parameters.j1IntegralInitialPercent, stallTorque, j1IntegralLimit);
+  const j2IntegralInitial = initialIntegralFromPercent(parameters.j2IntegralInitialPercent, stallTorque, j2IntegralLimit);
 
   const target = (time) => ({
     q1: amplitude * Math.sin(0.62 * time),
@@ -143,8 +151,8 @@ function simulateTwoLink(parameters, duration) {
     const desired = target(time);
     return {
       desired,
-      tau1: clamp(parameters.kp1 * (desired.q1 - values[0]) + parameters.kd1 * (desired.dq1 - values[2]) + clamp(values[4], -j1IntegralLimit, j1IntegralLimit), -outputLimit, outputLimit),
-      tau2: clamp(parameters.kp2 * (desired.q2 - values[1]) + parameters.kd2 * (desired.dq2 - values[3]) + clamp(values[5], -j2IntegralLimit, j2IntegralLimit), -outputLimit, outputLimit),
+      tau1: clamp(parameters.kp1 * (desired.q1 - values[0]) + parameters.kd1 * (desired.dq1 - values[2]) + clamp(values[4], -j1IntegralLimit, j1IntegralLimit), -stallTorque, stallTorque),
+      tau2: clamp(parameters.kp2 * (desired.q2 - values[1]) + parameters.kd2 * (desired.dq2 - values[3]) + clamp(values[5], -j2IntegralLimit, j2IntegralLimit), -stallTorque, stallTorque),
     };
   }
 

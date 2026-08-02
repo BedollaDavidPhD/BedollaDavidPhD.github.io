@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 2.33 - Stall Input Integral Scaling
+
+- Expressed every initial integral setting as a signed percentage from -100% to +100%
+- Referenced both initial integral and antiwindup limits to each actuator's fixed stall input rather than its velocity and power constrained active limit
+- Preserved the previous physical initial values and antiwindup limits through equivalent default percentages
+- Updated English, Spanish, and French guidance and added validation for every PID loop
+
 ## Version 2.32 - Controller Groups and Transferable Robotics
 
 - Distinguished analytical joint-position solutions from Pinocchio Jacobian based joint-velocity control and limited object-grasp claims to the Isaac Sim demonstration
