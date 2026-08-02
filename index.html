@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate">
-  <meta name="description" content="David Bedolla, PhD, is a robotics software engineer who builds real-time C++, ROS 2, and LabVIEW systems for robot motion, mobile manipulation, model-based control, and rehabilitation robotics.">
+  <meta name="description" content="David Bedolla, PhD, develops real-time C++ and ROS 2 software for robot manipulation, whole-body control, reliable physical execution, and Physical AI deployment.">
   <meta name="author" content="David Bedolla">
   <meta property="og:title" content="David Bedolla, PhD | Robotics Software Engineer">
-  <meta property="og:description" content="Real-time robotics software, control, simulation, and hardware deployment for mobile manipulation and rehabilitation robotics.">
+  <meta property="og:description" content="Robot manipulation, whole-body control, and real-time C++/ROS 2 software for reliable physical execution and Physical AI deployment.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://bedolladavidphd.github.io/">
   <meta property="og:image" content="https://bedolladavidphd.github.io/public/og.png">
@@ -17,7 +17,7 @@
   <meta property="og:image:alt" content="David Bedolla, PhD - Robotics Software Engineer">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="David Bedolla, PhD | Robotics Software Engineer">
-  <meta name="twitter:description" content="Real-time robotics software, control, simulation, and hardware deployment.">
+  <meta name="twitter:description" content="Robot manipulation, whole-body control, and real-time C++/ROS 2 software for reliable physical execution.">
   <meta name="twitter:image" content="https://bedolladavidphd.github.io/public/og.png">
   <link rel="canonical" href="https://bedolladavidphd.github.io/">
   <meta name="theme-color" content="#0b1220">
@@ -36,7 +36,7 @@
     }
   </script>
   <link rel="stylesheet" href="assets/css/styles.css?v=20260802-controller-groups1">
-  <script defer src="assets/js/i18n.js?v=20260802-peak-effort1"></script>
+  <script defer src="assets/js/i18n.js?v=20260802-linkedin-alignment1"></script>
   <script defer src="assets/js/main.js?v=20260801-trilingual1"></script>
   <script defer src="assets/js/dynamics-forge-demos.js?v=20260802-peak-effort1"></script>
 </head>
@@ -90,9 +90,9 @@
         <div class="hero-copy reveal">
           <p class="eyebrow">Robotics Software Engineer | Montréal, QC, Canada</p>
           <h1 class="hero-name notranslate" translate="no">David Bedolla, <span>PhD</span></h1>
-          <p class="hero-role">Real-Time Robotics Software | Motion &amp; Control | Hardware Deployment</p>
+          <p class="hero-role">Robot Manipulation | Whole-Body Control | Real-Time C++/ROS 2 | Physical AI Deployment</p>
           <p class="hero-summary">
-            I build and deploy robotics software that turns kinematic and dynamic models into reliable motion on physical systems. My work combines C++, ROS 2, LabVIEW, model-based control, redundancy resolution, hardware integration, and measurable real-time performance.
+            I develop and deploy robotics software that converts task-level commands, robot models, and sensor information into reliable motion on physical robots. My work spans whole-body mobile manipulation, Cartesian control, redundancy resolution, teleoperation, learning-based control, and real-time hardware integration.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#projects">Explore my work</a>
@@ -140,23 +140,26 @@
       <div class="container two-col">
         <div class="section-heading reveal">
           <p class="eyebrow">About</p>
-          <h2>Turning robot models into fast, testable software for real hardware.</h2>
+          <h2>Connecting learned robot behavior with reliable physical execution.</h2>
         </div>
         <div class="about-copy reveal">
           <p>
-            I am a robotics software engineer with applied R&amp;D experience across the full path from mathematical modeling to deployment on real hardware. I design kinematics and dynamics algorithms, deterministic motion and control software, hardware interfaces, and validation workflows using C++, ROS 2, LabVIEW RT and FPGA, MATLAB and Simulink, and Python.
+            I am a robotics software engineer with applied R&amp;D experience across the full path from task-level commands and mathematical models to reliable motion on physical robots. I design kinematics and dynamics algorithms, deterministic motion and control software, sensor and hardware interfaces, and validation workflows using C++, ROS 2, Pinocchio, LabVIEW RT and FPGA, MATLAB and Simulink, and Python.
           </p>
           <p>
-            At Lab INIT Robots, I develop whole-body motion, Cartesian control, redundancy resolution, and safety-oriented command systems for a Kinova Gen3 mobile manipulator. My academic background adds depth in learning-based rehabilitation robotics, while my engineering focus stays on runtime performance, integration, testing, and dependable behavior on physical systems.
+            At Lab INIT Robots, I develop a real-time ROS 2 and C++ whole-body control system for a 10-DoF mobile manipulator with a Kinova Gen3 arm. The 400 Hz pipeline coordinates Cartesian motion, arm and base control, redundancy resolution, trajectory execution, teleoperation, joint-limit handling, and safety-oriented pose and velocity commands on physical hardware.
+          </p>
+          <p>
+            My current direction is the interface between learned robot behaviors and dependable physical execution. Experience with game-controller teleoperation, wearable IMUs, EMG, and depth-camera motion acquisition can support future demonstration collection, while the model-based control layer can execute perception-conditioned pose or velocity commands with kinematic constraints, smoothing, redundancy management, and safety checks. I am applying this foundation toward future imitation learning and Diffusion Policy systems for dexterous manipulation.
           </p>
           <div class="focus-tags" aria-label="Research interests">
             <span>Real-Time Control</span>
             <span>Robotics Software</span>
-            <span>Mobile Manipulation</span>
-            <span>Hardware Integration</span>
-            <span>Robot Dynamics</span>
-            <span>Motion &amp; Control</span>
-            <span>System Validation</span>
+            <span>Robot Manipulation</span>
+            <span>Whole-Body Control</span>
+            <span>Teleoperation</span>
+            <span>Human Motion Capture</span>
+            <span>Model-Based Execution</span>
           </div>
         </div>
       </div>
@@ -205,10 +208,10 @@
             <div class="project-body">
               <p class="project-kicker">Real hardware</p>
               <h3>Real-Time Implementation of 7-DoF Redundancy Resolution</h3>
-              <p>Deployed the redundancy method on the physical Kinova Gen3 through a ROS 2 and C++ control pipeline. The analytical formulation determines the desired position-level redundant configuration, while a Pinocchio-based Jacobian solver and numerical optimization generate the joint-velocity commands used by the robot. A PS4 controller supplies Cartesian and swivel-angle commands, and the same control path accepts twist and absolute-pose references. Command arbitration prioritizes fresh twist inputs for predictable hardware operation. The analytical redundancy calculation runs in approximately 3 μs.</p>
+              <p>Deployed the redundancy method on the physical Kinova Gen3 through a ROS 2 and C++ control pipeline. The analytical formulation determines the desired position-level redundant configuration, while a Pinocchio-based Jacobian solver and numerical optimization generate joint-velocity commands with joint-limit handling. A PS4 controller supplies Cartesian and swivel-angle commands, and the same control path accepts validated twist and absolute-pose references. Command arbitration prioritizes fresh twist inputs for predictable hardware operation. The analytical redundancy calculation runs in approximately 3 μs.</p>
               <ul>
                 <li>PS4 Cartesian velocity commands on real hardware</li>
-                <li>Unified twist and absolute-pose control pipeline</li>
+                <li>Validated twist and absolute-pose control pipeline</li>
                 <li>Fresh-twist priority through command arbitration</li>
                 <li>Null-space swivel control with 3 μs redundancy resolution</li>
               </ul>
@@ -383,38 +386,38 @@
 
         <div class="timeline">
           <article class="timeline-item reveal">
-            <div class="timeline-date">2026-Present</div>
+            <div class="timeline-date">March 2026-Present</div>
             <div>
               <h3>Associate Researcher</h3>
               <p class="timeline-place">Lab INIT Robots, Montréal</p>
-              <p>Delivering 400 Hz whole-body control and mobile-manipulation software for a Kinova Gen3 and AgileX system, including ROS 2/C++ integration, world-frame tracking, deterministic redundancy resolution, and safety-oriented commands.</p>
+              <p>Deployed a 400 Hz whole-body control pipeline for a 10-DoF Kinova Gen3 and AgileX mobile manipulator. The analytical redundancy method generates position-level configurations, while a Pinocchio Jacobian solver generates joint velocities for end-effector tracking, elbow control, joint-limit handling, and base coordination. Improved Cartesian tracking with super-twisting feedback, and implemented command validation, filtering, safe state transitions, and game-controller teleoperation for future demonstration collection.</p>
             </div>
           </article>
 
           <article class="timeline-item reveal">
-            <div class="timeline-date">2025</div>
+            <div class="timeline-date">March 2025-March 2026</div>
             <div>
               <h3>Postdoctoral Researcher</h3>
               <p class="timeline-place">ÉTS, Montréal</p>
-              <p>Reduced lower-limb control latency by 30×, improved ROS/Python scheduling for autonomous-vehicle control, and delivered reusable dynamics, inverse-kinematics, and simulation tools for international robotics collaborations.</p>
+              <p>Reduced lower-limb control latency by 30× to enable torque control, improved ROS/Python real-time scheduling for an autonomous vehicle to reduce steering oscillations, and developed symbolic dynamics and inverse-kinematics GUI tools. Delivered 6-DoF inverse kinematics and real-time motion-control support to international assistive-robotics collaborations.</p>
             </div>
           </article>
 
           <article class="timeline-item reveal">
-            <div class="timeline-date">2024</div>
+            <div class="timeline-date">March 2024-March 2025</div>
             <div>
               <h3>Research Professor</h3>
               <p class="timeline-place">Universidad Tecnológica de la Mixteca, Mexico</p>
-              <p>Developed and tested 7-DoF robot optimization and supported the mechanical design of a three-finger adaptive robotic gripper for activities of daily living.</p>
+              <p>Developed and tested an optimization strategy for a 7-DoF robot that reduced tracking error by 20%, and supported the design of a three-finger adaptive robotic gripper for activities of daily living.</p>
             </div>
           </article>
 
           <article class="timeline-item reveal">
-            <div class="timeline-date">2020-2023</div>
+            <div class="timeline-date">January 2020-December 2023</div>
             <div>
               <h3>Research Assistant</h3>
               <p class="timeline-place">ÉTS, Montréal</p>
-              <p>Deployed a 1-4 kHz exoskeleton control stack, FPGA interfaces, and learning-based predictive control. Built physics-based digital twins and a controller emulator with the same control structure and interfaces as the physical system. The validation models incorporated Coulomb friction, joint-velocity noise, actuator constraints and response, and computation and communication delays. Integrated EMG, IMU, depth-camera, and force sensing.</p>
+              <p>Deployed a 1-4 kHz hard real-time motion-control stack for a 7-DoF exoskeleton. Implemented a Gaussian Process residual model inside a robust model predictive controller at approximately 387 μs per iteration and learning-based inverse kinematics at 43 μs. Built physics-based digital twins and a controller emulator for sim-to-real validation, and integrated EMG, IMU, and depth-camera sensing for human-motion acquisition and sensor-guided trajectory generation.</p>
             </div>
           </article>
         </div>
@@ -567,11 +570,11 @@
           </article>
           <article class="skill-card reveal">
             <h3>Robotics</h3>
-            <p>ROS 2, Pinocchio, URDF, Ruckig, real-time control, motion planning</p>
+            <p>ROS 2, Pinocchio, URDF, Ruckig, robot manipulation, whole-body control, Cartesian control, teleoperation</p>
           </article>
           <article class="skill-card reveal">
             <h3>Modeling and control</h3>
-            <p>Kinematics, dynamics, numerical optimization, RNEA, MPC, sliding-mode control, Gaussian Processes</p>
+            <p>Kinematics, dynamics, numerical optimization, redundancy resolution, RNEA, MPC, super-twisting control, Gaussian Processes</p>
           </article>
           <article class="skill-card reveal">
             <h3>Software systems</h3>
@@ -590,7 +593,7 @@
         <div>
           <p class="eyebrow">Contact</p>
           <h2>Let us build reliable robot motion from models to real hardware.</h2>
-          <p>Professional work in robotics software engineering and applied R&amp;D, focused on real-time control, mobile manipulation, model-based algorithms, hardware integration, and human-robot interaction.</p>
+          <p>Professional work in robotics software engineering and applied R&amp;D, focused on robot manipulation, whole-body control, model-based execution, teleoperation, hardware integration, and the interface between learned behavior and reliable physical systems.</p>
         </div>
         <div class="contact-actions">
           <a class="button primary" href="mailto:davidbedollamartinez@outlook.es">Send email</a>

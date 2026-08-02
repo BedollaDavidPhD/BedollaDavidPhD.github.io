@@ -1,6 +1,6 @@
 # David Bedolla profile consistency review
 
-Last reviewed: 2026-07-31
+Last reviewed: 2026-08-02
 
 This file compares the portfolio website, downloadable PDF CV, Google Drive portfolio material, ChatGPT project history, and the editable Overleaf sources. It records the consistency decisions approved by David Bedolla and where they were applied.
 
@@ -13,14 +13,14 @@ All twelve decisions in the former unresolved-conflicts list were approved and a
 | Field | Current standard |
 | --- | --- |
 | Display name | David Bedolla, PhD |
-| Professional headline | Robotics Software Engineer |
+| Professional headline | Robotics Software Engineer \| Robot Manipulation, Whole-Body Control & Real-Time C++/ROS 2 \| Physical AI Deployment |
 | Current organization | Lab INIT Robots |
 | Location | Montréal, QC, Canada |
 | Email | davidbedollamartinez@outlook.es |
 | LinkedIn | linkedin.com/in/-davidbedolla |
 | Website GitHub link | github.com/BedollaDavidPhD |
 | ORCID | orcid.org/0000-0001-8552-6842 |
-| Current role | Associate Researcher, 2026-Present |
+| Current role | Associate Researcher, March 2026-Present |
 | Video portfolio | YouTube, muted autoplay when visible |
 
 ## Previously resolved decisions
@@ -33,9 +33,9 @@ Current website choice: Option A.
 
 ### 2. Professional headline
 
-- Option A - Robotics Software Engineer
+- Current standard - Robotics Software Engineer | Robot Manipulation, Whole-Body Control & Real-Time C++/ROS 2 | Physical AI Deployment
 
-Conflict: the website request uses **Robotics Software Engineer**; the uploaded LaTeX CV uses **Robotics Engineer**. The downloadable PDF has been aligned with the website.
+The website retains **Robotics Software Engineer** as the primary role and now uses the full LinkedIn positioning statement as the supporting headline. The downloadable CV remains unchanged by the 2026-08-02 LinkedIn alignment.
 
 Current website choice: Option A.
 
@@ -55,9 +55,9 @@ Applied: the website and downloadable PDF now use **2020-2023**, and the dissert
 
 ### 5. Current role date
 
-- Option A - 2026-Present
+- Current standard - March 2026-Present
 
-Conflict: the uploaded LaTeX CV says **2026**; the website and PDF say **2026-Present**.
+The website now uses the month-level date shown on LinkedIn. The downloadable CV remains unchanged by the 2026-08-02 LinkedIn alignment.
 
 Current website choice: Option A.
 
@@ -99,6 +99,16 @@ Conflict: the uploaded LaTeX CV links to a Google Drive video portfolio; the web
 - Option A - Keep direct DOI links for each publication in the web
 
 Current website choice: Option A.
+
+## LinkedIn alignment applied on 2026-08-02
+
+- Aligned the website headline with robot manipulation, whole-body control, real-time C++/ROS 2, and Physical AI deployment.
+- Reworked the public summary around task-level commands, robot models, sensor information, and dependable execution on physical robots.
+- Added confirmed Lab INIT Robots responsibilities: 400 Hz whole-body control, analytical position-level redundancy, Pinocchio Jacobian joint-velocity control, joint-limit handling, super-twisting feedback, safe command processing, and teleoperation.
+- Aligned the visible experience dates with the month-level LinkedIn dates for Lab INIT Robots, the postdoctoral role, Universidad Tecnológica de la Mixteca, and ÉTS research assistance.
+- Preserved imitation learning and Diffusion Policy as future technology-transfer directions supported by teleoperation, IMU, EMG, and depth-camera experience. They are not listed as deployed policies or established production skills.
+- Kept the previous decisions to omit earlier academic roles and the race-vehicle project from the shorter website timeline. Their absence is a curation choice, not a factual conflict.
+- Copied no private street address or phone information into the public repository. The reviewed profile export remains unchanged and outside the repository.
 
 ## Consistent performance claims
 

@@ -187,7 +187,7 @@
     document.dispatchEvent(new CustomEvent('portfolio-language-change', { detail: { language: currentLanguage } }));
   };
 
-  const ready = fetch('assets/data/i18n.json?v=20260802-peak-effort1')
+  const ready = fetch('assets/data/i18n.json?v=20260802-linkedin-alignment1')
     .then((response) => {
       if (!response.ok) throw new Error('Translation catalogue could not be loaded.');
       return response.json();

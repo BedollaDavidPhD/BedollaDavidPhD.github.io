@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 2.34 - LinkedIn Profile Alignment
+
+- Aligned the public headline and summary with the manipulation, whole-body control, real-time C++/ROS 2, and Physical AI emphasis of the current LinkedIn profile
+- Expanded the current Lab INIT Robots description with confirmed Jacobian velocity control, analytical position-level redundancy, joint-limit handling, super-twisting feedback, safe command processing, and teleoperation
+- Corrected experience date ranges and added confirmed results for assistive robotics, autonomous-vehicle scheduling, optimization, predictive control, inverse kinematics, and human-motion acquisition
+- Clarified the technology-transfer path from teleoperation and sensing to future imitation learning and Diffusion Policy systems without presenting those policies as deployed work
+- Updated the curated Spanish and French engineering translations while keeping private address and phone information out of the website
+
 ## Version 2.33 - Stall Input Integral Scaling
 
 - Expressed every initial integral setting as a signed percentage from -100% to +100%

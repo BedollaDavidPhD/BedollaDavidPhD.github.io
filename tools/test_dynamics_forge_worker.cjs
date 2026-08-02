@@ -149,6 +149,31 @@ for (const language of ["es", "fr"]) {
   for (const text of configuredText) assert.ok(translations.translations[language][text], `${language} needs a translation for: ${text}`);
 }
 
+const profileAlignmentStrings = [
+  "Robot Manipulation | Whole-Body Control | Real-Time C++/ROS 2 | Physical AI Deployment",
+  "I develop and deploy robotics software that converts task-level commands, robot models, and sensor information into reliable motion on physical robots. My work spans whole-body mobile manipulation, Cartesian control, redundancy resolution, teleoperation, learning-based control, and real-time hardware integration.",
+  "Connecting learned robot behavior with reliable physical execution.",
+  "At Lab INIT Robots, I develop a real-time ROS 2 and C++ whole-body control system for a 10-DoF mobile manipulator with a Kinova Gen3 arm. The 400 Hz pipeline coordinates Cartesian motion, arm and base control, redundancy resolution, trajectory execution, teleoperation, joint-limit handling, and safety-oriented pose and velocity commands on physical hardware.",
+  "My current direction is the interface between learned robot behaviors and dependable physical execution. Experience with game-controller teleoperation, wearable IMUs, EMG, and depth-camera motion acquisition can support future demonstration collection, while the model-based control layer can execute perception-conditioned pose or velocity commands with kinematic constraints, smoothing, redundancy management, and safety checks. I am applying this foundation toward future imitation learning and Diffusion Policy systems for dexterous manipulation.",
+  "Deployed a 400 Hz whole-body control pipeline for a 10-DoF Kinova Gen3 and AgileX mobile manipulator. The analytical redundancy method generates position-level configurations, while a Pinocchio Jacobian solver generates joint velocities for end-effector tracking, elbow control, joint-limit handling, and base coordination. Improved Cartesian tracking with super-twisting feedback, and implemented command validation, filtering, safe state transitions, and game-controller teleoperation for future demonstration collection.",
+  "Reduced lower-limb control latency by 30× to enable torque control, improved ROS/Python real-time scheduling for an autonomous vehicle to reduce steering oscillations, and developed symbolic dynamics and inverse-kinematics GUI tools. Delivered 6-DoF inverse kinematics and real-time motion-control support to international assistive-robotics collaborations.",
+  "Developed and tested an optimization strategy for a 7-DoF robot that reduced tracking error by 20%, and supported the design of a three-finger adaptive robotic gripper for activities of daily living.",
+  "Deployed a 1-4 kHz hard real-time motion-control stack for a 7-DoF exoskeleton. Implemented a Gaussian Process residual model inside a robust model predictive controller at approximately 387 μs per iteration and learning-based inverse kinematics at 43 μs. Built physics-based digital twins and a controller emulator for sim-to-real validation, and integrated EMG, IMU, and depth-camera sensing for human-motion acquisition and sensor-guided trajectory generation.",
+  "ROS 2, Pinocchio, URDF, Ruckig, robot manipulation, whole-body control, Cartesian control, teleoperation",
+  "Kinematics, dynamics, numerical optimization, redundancy resolution, RNEA, MPC, super-twisting control, Gaussian Processes",
+  "Professional work in robotics software engineering and applied R&D, focused on robot manipulation, whole-body control, model-based execution, teleoperation, hardware integration, and the interface between learned behavior and reliable physical systems.",
+];
+for (const text of profileAlignmentStrings) {
+  const htmlText = text.replaceAll("&", "&amp;");
+  assert(indexSource.includes(text) || indexSource.includes(htmlText), `Website is missing LinkedIn-aligned copy: ${text}`);
+  for (const language of ["es", "fr"]) assert.ok(translations.translations[language][text], `${language} needs a translation for LinkedIn-aligned copy: ${text}`);
+}
+assert.doesNotMatch(indexSource, /href=["']tel:|class=["'][^"']*street/i, "Private address or phone fields must not appear on the public website");
+assert.match(indexSource, /March 2026-Present/);
+assert.match(indexSource, /March 2025-March 2026/);
+assert.match(indexSource, /March 2024-March 2025/);
+assert.match(indexSource, /January 2020-December 2023/);
+
 assert.match(cssSource, /\.forge-control-group-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,/s, "Controller groups must use a three-column grid");
 assert.match(demoRenderer, /function parameterHelp/);
 assert.match(demoRenderer, /const help = parameterHelp\(control\)/);
