@@ -18,3 +18,15 @@ dist/
 
 # Private editable source material (not part of the public website)
 source-materials/
+
+# Local-only document generators, maintenance utilities, and review notes
+tools/
+docs/
+CHANGELOG.md
+README.txt
+UPLOAD_INSTRUCTIONS.txt
+FULL_PROJECT_MANIFEST.txt
+
+# Obsolete local examples that are not loaded by the website
+assets/data/videos.example.json
+assets/data/videos.json
