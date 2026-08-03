@@ -15,6 +15,7 @@ cv_render/
 tmp/
 dist/
 *.tar.gz
+*.zip
 
 # Private editable source material (not part of the public website)
 source-materials/
