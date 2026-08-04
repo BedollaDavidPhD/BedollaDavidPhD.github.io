@@ -191,7 +191,7 @@
           <article class="project-card reveal" data-project-id="kinova-analytical-redundancy">
             <img src="assets/images/tooling.svg" alt="Stylized analytical robotics and kinematics illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Analytical robotics</p>
+              <p class="project-kicker"><span class="project-step" aria-hidden="true">1.</span>Analytical robotics</p>
               <h3>Analytical Redundancy Resolution for a 7-DoF Manipulator</h3>
               <p>Developed a closed-form redundancy-resolution method for the 7-DoF Kinova Gen3. For a specified end-effector pose, the swivel angle determines the elbow position and the analytical solver returns joint positions that preserve the Cartesian task. The accompanying Isaac Sim demonstration applies the solution to a simulated object grasp. Pinocchio-based validation evaluated approximately 1.05 million solutions in 2.84 seconds on an Intel i7 laptop.</p>
               <ul>
@@ -206,7 +206,7 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-nullspace">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Real hardware</p>
+              <p class="project-kicker"><span class="project-step" aria-hidden="true">2.</span>Real hardware</p>
               <h3>Real-Time Implementation of 7-DoF Redundancy Resolution</h3>
               <p>Deployed the redundancy method on the physical Kinova Gen3 through a ROS 2 and C++ control pipeline. The analytical formulation determines the desired position-level redundant configuration, while a Pinocchio-based Jacobian solver and numerical optimization generate joint-velocity commands with joint-limit handling. A PS4 controller supplies Cartesian and swivel-angle commands, and the same control path accepts validated twist and absolute-pose references. Command arbitration prioritizes fresh twist inputs for predictable hardware operation. The analytical redundancy calculation runs in approximately 3 μs.</p>
               <ul>
@@ -221,7 +221,7 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-analytical">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Whole-body control</p>
+              <p class="project-kicker"><span class="project-step" aria-hidden="true">3.</span>Whole-body control</p>
               <h3>Analytical Whole-Body Redundancy Resolution for a Mobile Manipulator</h3>
               <p>Extended the analytical formulation to the 10-DoF Kinova Gen3 and AgileX mobile manipulator. A task-priority model allocates the additional degrees of freedom to elbow configuration and mobile-base pose regulation after satisfying the Cartesian end-effector objective. This creates one hardware-independent mathematical framework for coordinating arm self-motion, base displacement, and Cartesian tracking.</p>
               <ul>
@@ -236,7 +236,7 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-world-frame">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Whole-body implementation</p>
+              <p class="project-kicker"><span class="project-step" aria-hidden="true">4.</span>Whole-body implementation</p>
               <h3>Real-Time Whole-Body Control of a 10-DoF Mobile Manipulator</h3>
               <p>Demonstrates whole-body control on the complete AgileX and Kinova Gen3 mobile manipulator. The end-effector target is fixed in the world frame; as the base moves, filtered odometry continuously transforms that target into the arm-base frame, and the manipulator compensates for base displacement to maintain the commanded global position and orientation. A Pinocchio-based Jacobian solver generates arm joint-velocity commands, and the onboard ROS 2 and C++ stack coordinates joystick input, base motion, odometry, Cartesian tracking, and redundancy objectives at 400 Hz. The Cartesian command interface can serve as a model-based execution layer for future perception-conditioned imitation learning, where a Diffusion Policy supplies pose or velocity sequences and the lower-level controller manages kinematics, redundancy, limits, smoothing, and safe execution.</p>
               <ul>

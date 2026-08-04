@@ -347,6 +347,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .project-card.featured-project.has-video ul { margin-top: 18px; font-size: 0.9rem; line-height: 1.5; }
 .project-body { padding: 26px; }
 .project-kicker { margin: 0 0 6px; color: var(--blue); font-weight: 800; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.project-kicker .project-step { display: inline-block; margin-right: 0.42rem; color: #dc2626; font-size: 1.35rem; line-height: 0.8; letter-spacing: 0; vertical-align: -0.08em; }
 .project-card h3 { margin: 0 0 10px; font-size: 1.42rem; line-height: 1.25; }
 .project-card p { color: var(--muted); }
 .project-card ul { margin: 20px 0 0; padding-left: 20px; color: #344054; }
