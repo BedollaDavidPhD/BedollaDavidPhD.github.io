@@ -36,7 +36,7 @@
     }
   </script>
   <link rel="stylesheet" href="assets/css/styles.css?v=20260812-tsf85-1">
-  <script defer src="assets/js/i18n.js?v=20260812-tsf85-1"></script>
+  <script defer src="assets/js/i18n.js?v=20260812-cards-1"></script>
   <script defer src="assets/js/main.js?v=20260812-tsf85-1"></script>
 </head>
 <body>
@@ -179,15 +179,14 @@
           <article class="project-card featured-project reveal" data-project-id="exoskeleton-control">
             <img src="assets/images/exoskeleton.svg" alt="Stylized rehabilitation exoskeleton illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Rehabilitation robotics · Physical system</p>
               <h3>Real-Time Mirror Rehabilitation with a 7-DoF Exoskeleton</h3>
+              <p class="project-summary">Wearable sensing drives coordinated real-time assistance on a physical upper-limb exoskeleton.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Reproduce the unaffected arm's motion as coordinated physical assistance for the impaired arm.</dd></div>
                 <div><dt>My contribution</dt><dd>Integrated two wearable IMUs and surface EMG with human-oriented inverse kinematics, smooth trajectory generation, and closed-loop tracking.</dd></div>
                 <div><dt>Hardware</dt><dd>Physical 7-DoF ETS-MARSE upper-limb exoskeleton and wearable sensors.</dd></div>
                 <div><dt>Stack</dt><dd>LabVIEW RT/FPGA and C++.</dd></div>
                 <div><dt>Measured result</dt><dd>Hard real-time control operating from 1 to 4 kHz.</dd></div>
-                <div><dt>Validation</dt><dd>Physical hardware.</dd></div>
               </dl>
             </div>
           </article>
@@ -195,15 +194,14 @@
           <article class="project-card reveal" data-project-id="kinova-analytical-redundancy">
             <img src="assets/images/tooling.svg" alt="Stylized Kinova Gen3 kinematics illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker"><span class="project-step">1.</span>Analytical redundancy resolution</p>
-              <h3>7-DoF Kinova Gen3 Joint-Position Solver</h3>
+              <h3>1. Analytical Redundancy Resolution for the 7-DoF Kinova Gen3</h3>
+              <p class="project-summary">A swivel-angle formulation selects a smooth elbow configuration while preserving the commanded end-effector pose.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Select a smooth elbow configuration while preserving a commanded end-effector pose.</dd></div>
-                <div><dt>My contribution</dt><dd>Developed a closed-form swivel-angle formulation that returns joint positions without iterative inverse-kinematics optimization.</dd></div>
-                <div><dt>Simulation</dt><dd>Kinova Gen3 in Isaac Sim, with computational validation on an Intel i7 laptop.</dd></div>
+                <div><dt>My contribution</dt><dd>Developed and evaluated the analytical formulation, including joint-limit handling and kinematic verification.</dd></div>
+                <div><dt>Simulation</dt><dd>Kinova Gen3 in Isaac Sim, with computational benchmarks on an Intel i7 laptop.</dd></div>
                 <div><dt>Stack</dt><dd>C++, Pinocchio, and Isaac Sim.</dd></div>
                 <div><dt>Measured result</dt><dd>Approximately 1.05 million solutions evaluated in 2.84 seconds.</dd></div>
-                <div><dt>Validation</dt><dd>Simulation and computational testing.</dd></div>
               </dl>
             </div>
           </article>
@@ -211,15 +209,14 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-nullspace">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker"><span class="project-step">2.</span>Physical redundancy resolution</p>
-              <h3>Real-Time Kinova Gen3 Null-Space Control</h3>
+              <h3>2. Real-Time Redundancy Resolution on the Kinova Gen3</h3>
+              <p class="project-summary">PS4 teleoperation combines Cartesian commands with independent elbow reconfiguration on the physical robot.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Command Cartesian motion and elbow configuration predictably on a redundant physical manipulator.</dd></div>
                 <div><dt>My contribution</dt><dd>Combined analytical position-level redundancy resolution with Pinocchio Jacobian joint velocities, joint-limit handling, command arbitration, and PS4 teleoperation.</dd></div>
                 <div><dt>Hardware</dt><dd>Physical Kinova Gen3 and PS4 controller.</dd></div>
                 <div><dt>Stack</dt><dd>ROS 2, C++, and Pinocchio.</dd></div>
                 <div><dt>Measured result</dt><dd>Analytical redundancy calculation in approximately 3 μs.</dd></div>
-                <div><dt>Validation</dt><dd>Physical hardware.</dd></div>
               </dl>
             </div>
           </article>
@@ -227,15 +224,14 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-analytical">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker"><span class="project-step">3.</span>Analytical whole-body control</p>
-              <h3>10-DoF Mobile-Manipulator Coordination</h3>
+              <h3>3. Analytical Whole-Body Control for a 10-DoF Mobile Manipulator</h3>
+              <p class="project-summary">A task-priority formulation coordinates the mobile base, arm, elbow configuration, and end-effector objective.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Coordinate arm self-motion, base displacement, and Cartesian tracking in one 10-DoF system.</dd></div>
                 <div><dt>My contribution</dt><dd>Extended the analytical redundancy formulation with a task-priority hierarchy for end-effector, elbow, and mobile-base objectives.</dd></div>
                 <div><dt>Simulation</dt><dd>Kinova Gen3 and AgileX mobile-manipulator model.</dd></div>
                 <div><dt>Stack</dt><dd>Analytical kinematics and task-priority whole-body control.</dd></div>
                 <div><dt>Measured result</dt><dd>Unified coordination of ten degrees of freedom in one solver.</dd></div>
-                <div><dt>Validation</dt><dd>Simulation.</dd></div>
               </dl>
             </div>
           </article>
@@ -243,16 +239,14 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-world-frame">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker"><span class="project-step">4.</span>Physical whole-body control</p>
-              <h3>World-Frame Mobile Manipulation</h3>
+              <h3>4. World-Frame Mobile Manipulation</h3>
+              <p class="project-summary">The deployed controller coordinates a physical mobile base and Kinova Gen3 while maintaining the commanded end-effector pose in the world frame.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Maintain a world-frame end-effector pose while the mobile base moves.</dd></div>
                 <div><dt>My contribution</dt><dd>Implemented filtered odometry transforms, Cartesian tracking, redundancy objectives, command validation, and coordinated base and arm control.</dd></div>
                 <div><dt>Hardware</dt><dd>Physical AgileX base with a Kinova Gen3 arm.</dd></div>
-                <div><dt>Simulation</dt><dd>Gazebo and MuJoCo whole-body models.</dd></div>
-                <div><dt>Stack</dt><dd>ROS 2, C++, Pinocchio, Gazebo, and MuJoCo.</dd></div>
-                <div><dt>Measured result</dt><dd>Onboard whole-body control nodes operating at 400 Hz.</dd></div>
-                <div><dt>Validation</dt><dd>Physical hardware and simulation.</dd></div>
+                <div><dt>Stack</dt><dd>ROS 2, C++, and Pinocchio.</dd></div>
+                <div><dt>Measured result</dt><dd>Deployed onboard with the core whole-body control nodes operating at 400 Hz.</dd></div>
               </dl>
             </div>
           </article>
@@ -260,15 +254,14 @@
           <article class="project-card reveal" data-project-id="learning-based-predictive-control">
             <img src="assets/images/exoskeleton.svg" alt="Stylized rehabilitation exoskeleton control illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Learning-based control · Real hardware</p>
               <h3>Learning-Based Robust Predictive Control for a 7-DoF Rehabilitation Exoskeleton</h3>
+              <p class="project-summary">Gaussian Process modeling, constrained MPC, and robust compensation support responsive trajectory tracking on the physical exoskeleton.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Track constrained exoskeleton motion despite nonlinear dynamics, model error, and human-robot interaction forces.</dd></div>
                 <div><dt>My contribution</dt><dd>Integrated a Gaussian Process residual model with constrained MPC and robust sliding-mode compensation.</dd></div>
                 <div><dt>Hardware</dt><dd>Physical 7-DoF ETS-MARSE rehabilitation exoskeleton.</dd></div>
                 <div><dt>Stack</dt><dd>Gaussian Processes, model predictive control, C++, and LabVIEW RT.</dd></div>
                 <div><dt>Measured result</dt><dd>Approximately 387 μs per control iteration on the physical system.</dd></div>
-                <div><dt>Validation</dt><dd>Physical hardware.</dd></div>
               </dl>
             </div>
           </article>
@@ -276,15 +269,14 @@
           <article class="project-card reveal" data-project-id="trajectory-planning-application">
             <img src="assets/images/tooling.svg" alt="Stylized robot trajectory-planning application illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Motion-planning software · C++ desktop application</p>
               <h3>URDF-Driven Trajectory Planning and Visualization</h3>
+              <p class="project-summary">A reusable C++ application generates and visualizes joint-space and Cartesian trajectories directly from robot descriptions.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Provide reusable joint-space and Cartesian planning across manipulators with different kinematic structures.</dd></div>
                 <div><dt>My contribution</dt><dd>Built the URDF-driven planning, inverse-kinematics, motion-limit, plotting, and CAD visualization application.</dd></div>
                 <div><dt>Simulation</dt><dd>Kinova Gen3 robot model in a desktop environment.</dd></div>
                 <div><dt>Stack</dt><dd>C++, Qt, URDF, OpenGL, and Ruckig.</dd></div>
                 <div><dt>Measured result</dt><dd>URDF-based inverse kinematics operating at up to 1 kHz in current tests.</dd></div>
-                <div><dt>Validation</dt><dd>Software and simulation testing.</dd></div>
               </dl>
             </div>
           </article>
@@ -292,17 +284,15 @@
           <article class="project-card featured-project tactile-project reveal" data-project-id="cross-simulator-tactile-adaptation">
             <img src="assets/images/tooling.svg" alt="Stylized contact-aware robotics simulation illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Contact-aware robotics · Simulation only</p>
               <h3>Cross-Simulator Tactile Sensor Adaptation</h3>
-              <p class="project-summary">What if tactile sensing were not tied to a single simulator? At INIT Lab, I adapted the open-source Lab-CORO TSF-85 work for Gazebo and MuJoCo and connected tactile contact maps through ROS 2 alongside whole-body robot control. The upstream work models physical capacitive-sensor response in Isaac Sim through deformable-body simulation and a learned model; my contribution focuses on a shared tactile interface for complete robot simulation in two additional physics engines. The resulting interface makes contact signals available for contact-aware manipulation, Learning from Demonstration, and reinforcement-learning experiments.</p>
+              <p class="project-summary">A common ROS 2 tactile interface extends TSF-85-based contact-map acquisition to Gazebo and MuJoCo and connects it with whole-body robot control.</p>
               <dl class="project-facts">
-                <div><dt>Technical problem</dt><dd>Decouple tactile contact data from a single physics engine for whole-robot manipulation simulation.</dd></div>
+                <div><dt>Technical problem</dt><dd>Make tactile contact data available consistently across different physics engines for whole-robot manipulation.</dd></div>
                 <div><dt>My contribution</dt><dd>Implemented Gazebo and MuJoCo tactile-contact adapters, a common ROS 2 data interface, and whole-body control integration.</dd></div>
-                <div><dt>Simulation</dt><dd>Gazebo and MuJoCo, using Lab-CORO's Isaac Sim TSF-85 extension as the upstream reference.</dd></div>
-                <div><dt>Stack</dt><dd>ROS 2, Gazebo, MuJoCo, tactile contact maps, and whole-body control.</dd></div>
-                <div><dt>Measured result</dt><dd>Generated tactile contact maps through the same ROS 2 interface in both simulators.</dd></div>
-                <div><dt>Validation</dt><dd>Cross-simulator tactile-data and control integration in simulation.</dd></div>
-                <div><dt>Upstream</dt><dd><a href="https://github.com/Lab-CORO/TSF-85" target="_blank" rel="noopener">Lab-CORO TSF-85</a>, <a href="third-party-notices/TSF-85_Apache-2.0.txt" target="_blank" rel="license noopener">Apache-2.0</a>.</dd></div>
+                <div><dt>Simulation</dt><dd>Gazebo and MuJoCo, informed by Lab-CORO's Isaac Sim TSF-85 implementation.</dd></div>
+                <div><dt>Stack</dt><dd>ROS 2, tactile contact maps, and whole-body control.</dd></div>
+                <div><dt>Measured result</dt><dd>Published tactile contact maps through the same ROS 2 interface in both environments.</dd></div>
+                <div><dt>Upstream</dt><dd><a href="https://github.com/Lab-CORO/TSF-85" target="_blank" rel="noopener">Lab-CORO TSF-85</a>.</dd></div>
               </dl>
             </div>
           </article>
