@@ -179,7 +179,9 @@
 
     observer?.disconnect();
     translateTree(document.body);
-    const meta = catalogue.meta?.[currentLanguage] || catalogue.meta?.en;
+    const pageKey = document.body?.dataset.page;
+    const pageMeta = pageKey ? catalogue.pageMeta?.[pageKey] : null;
+    const meta = pageMeta?.[currentLanguage] || pageMeta?.en || catalogue.meta?.[currentLanguage] || catalogue.meta?.en;
     if (meta?.title) document.title = meta.title;
     if (meta?.description) document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
     observer?.takeRecords();
@@ -187,7 +189,7 @@
     document.dispatchEvent(new CustomEvent('portfolio-language-change', { detail: { language: currentLanguage } }));
   };
 
-  const ready = fetch('assets/data/i18n.json?v=20260802-linkedin-alignment1')
+  const ready = fetch('assets/data/i18n.json?v=20260812-industry1')
     .then((response) => {
       if (!response.ok) throw new Error('Translation catalogue could not be loaded.');
       return response.json();

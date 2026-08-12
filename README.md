@@ -2,14 +2,16 @@
 
 [Visit the portfolio](https://bedolladavidphd.github.io/)
 
+[Open the interactive simulator](https://bedolladavidphd.github.io/simulator/)
+
 A static, trilingual portfolio focused on robotics software engineering, real-time control, mobile manipulation, rehabilitation robotics, motion planning, and learning-based control.
 
 ## Highlights
 
 - Curated English, Spanish, and French content
 - Responsive light and dark themes
-- Applied robotics case studies with vertical video demonstrations
-- Interactive manipulator and aerial-system simulations
+- Evidence-based robotics case studies with vertical video demonstrations
+- Dedicated interactive simulator with manipulator and aerial systems
 - Publications, professional experience, technical skills, and education
 - Downloadable current CV
 

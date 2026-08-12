@@ -208,15 +208,17 @@ const mountProjectVideo = (project) => {
   }
 };
 
-fetch('assets/data/project-media.json?v=20260801-publicrepo1')
-  .then((response) => {
-    if (!response.ok) throw new Error('Project media data could not be loaded.');
-    return response.json();
-  })
-  .then((data) => {
-    if (!Array.isArray(data.projects)) throw new Error('Project media must contain a projects list.');
-    data.projects.forEach(mountProjectVideo);
-  })
-  .catch((error) => {
-    console.warn('Project videos were not loaded; keeping the project illustrations.', error);
-  });
+if (document.querySelector('[data-project-id]')) {
+  fetch('assets/data/project-media.json?v=20260812-tactile1')
+    .then((response) => {
+      if (!response.ok) throw new Error('Project media data could not be loaded.');
+      return response.json();
+    })
+    .then((data) => {
+      if (!Array.isArray(data.projects)) throw new Error('Project media must contain a projects list.');
+      data.projects.forEach(mountProjectVideo);
+    })
+    .catch((error) => {
+      console.warn('Project videos were not loaded; keeping the project illustrations.', error);
+    });
+}

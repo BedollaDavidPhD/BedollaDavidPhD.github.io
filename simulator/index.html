@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" translate="no" class="notranslate">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
+  <meta name="description" content="Interactive browser-based robotics control simulator by David Bedolla, PhD, with manipulators and aerial systems for controller tuning and trajectory inspection.">
+  <meta name="author" content="David Bedolla">
+  <meta property="og:title" content="Interactive Robotics Control Simulator | David Bedolla, PhD">
+  <meta property="og:description" content="Tune controllers and compare tracking across eight interactive robotics systems.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bedolladavidphd.github.io/simulator/">
+  <meta property="og:image" content="https://bedolladavidphd.github.io/public/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://bedolladavidphd.github.io/simulator/">
+  <base href="../">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="color-scheme" content="light dark">
+  <title>Interactive Robotics Control Simulator | David Bedolla, PhD</title>
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="site.webmanifest">
+  <script>
+    document.documentElement.classList.add('js');
+    try {
+      const savedTheme = localStorage.getItem('portfolio-theme');
+      const systemTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = savedTheme || systemTheme;
+    } catch {
+      document.documentElement.dataset.theme = 'light';
+    }
+  </script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260812-industry1">
+  <script defer src="assets/js/i18n.js?v=20260812-industry1"></script>
+  <script defer src="assets/js/main.js?v=20260812-simulator-route1"></script>
+  <script defer src="assets/js/dynamics-forge-demos.js?v=20260812-simulator-route1"></script>
+</head>
+<body class="simulator-page" data-page="simulator">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a class="brand notranslate" href="./" aria-label="David Bedolla home" translate="no">
+        <span class="brand-mark">DB</span>
+        <span class="brand-text">David Bedolla</span>
+      </a>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
+        <div class="nav-section-links" aria-label="Page sections">
+          <a href="./#about">About</a>
+          <a href="./#projects">Portfolio</a>
+          <a href="./#experience">Experience</a>
+          <a href="./#publications">Publications</a>
+          <a href="./#skills">Skills</a>
+          <a class="active" href="simulator/" aria-current="page">Simulator</a>
+          <a href="./#contact">Contact</a>
+        </div>
+        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf?v=20260812-industry1" target="_blank" rel="noopener">
+          <span>CV PDF</span><span class="nav-cta-arrow" aria-hidden="true">↗</span>
+        </a>
+      </nav>
+
+      <div class="header-controls">
+        <label class="language-control">
+          <span class="visually-hidden">Language</span>
+          <select class="language-select" aria-label="Language" disabled>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+          </select>
+        </label>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme" aria-pressed="false">
+          <span class="theme-icon" aria-hidden="true">☾</span>
+          <span class="theme-label">Dark</span>
+        </button>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="simulator-hero section-pad section-light">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Interactive simulator</p>
+          <h1>Robotics control systems in motion</h1>
+          <p>Adjust controller gains and targets, run one simulation at a time, and inspect tracking, effort, frames, links, CAD, and centers of mass across eight systems.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="simulator-workspace section-pad">
+      <div class="container">
+        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260812-simulator-route1">
+          <div class="forge-heading">
+            <div>
+              <p class="eyebrow">Controller tuning</p>
+              <h2>Dynamics Forge</h2>
+            </div>
+            <p>The browser simulator uses nonlinear articulated-body dynamics with RK4 integration at 1 kHz and a 250 Hz controller. Rotor systems also include thrust and drag, motor delay and limits, encoder quantization, state estimation, and direct allocation. Initial integral values and antiwindup limits are percentages of the fixed actuator stall input, before velocity and power constraints. Default gains are starting values, not optimized settings. Modify them and compare tracking and effort.</p>
+          </div>
+
+          <div class="forge-layout">
+            <div class="forge-viewer-shell">
+              <div class="forge-canvas-wrap">
+                <canvas id="forge-canvas" tabindex="0" aria-label="Interactive three-dimensional robotics simulator. Drag to rotate, use Shift-drag to pan, and use the mouse wheel or zoom buttons to zoom."></canvas>
+                <span class="forge-live-badge">Browser simulation</span>
+                <div class="forge-canvas-note">Drag to rotate · Shift-drag to pan</div>
+              </div>
+
+              <div class="forge-controls" aria-label="Simulation playback controls">
+                <button id="forge-play" type="button" disabled aria-pressed="false">Play</button>
+                <button id="forge-restart" type="button" disabled>Restart</button>
+                <label>Speed
+                  <select id="forge-speed" disabled>
+                    <option value="0.5">0.5×</option>
+                    <option value="1" selected>1×</option>
+                    <option value="2">2×</option>
+                  </select>
+                </label>
+                <label>View
+                  <select id="forge-view" disabled>
+                    <option value="full" selected>Full 3D</option>
+                    <option value="top">Top</option>
+                    <option value="front">Front</option>
+                    <option value="side">Side</option>
+                  </select>
+                </label>
+                <span class="forge-control-separator" aria-hidden="true"></span>
+                <button id="forge-zoom-out" type="button" disabled aria-label="Zoom out">−</button>
+                <button id="forge-zoom-in" type="button" disabled aria-label="Zoom in">+</button>
+                <button id="forge-camera-reset" type="button" disabled>Reset view</button>
+              </div>
+
+              <div class="forge-plot-wrap">
+                <canvas id="forge-plot" aria-label="Reference and simulated response plot"></canvas>
+              </div>
+
+              <div id="forge-position-plot-wrap" class="forge-plot-wrap" hidden>
+                <canvas id="forge-position-plot" aria-label="X and Y position targets and simulated responses versus time"></canvas>
+              </div>
+
+              <div class="forge-results" aria-label="Simulation results">
+                <div><span id="forge-rms-label">Primary RMS</span><strong id="forge-rms">Pending</strong></div>
+                <div id="forge-secondary-result"><span id="forge-secondary-rms-label">Secondary RMS</span><strong id="forge-secondary-rms">Pending</strong></div>
+                <div><span>Peak effort</span><strong id="forge-peak">Pending</strong></div>
+              </div>
+
+              <fieldset class="forge-layer-controls">
+                <legend>Viewer layers</legend>
+                <label><input id="forge-show-cad" type="checkbox" checked> CAD</label>
+                <label><input id="forge-show-links" type="checkbox" checked> Links</label>
+                <label><input id="forge-show-frames" type="checkbox" checked> Frames</label>
+                <label><input id="forge-show-numbers" type="checkbox" checked> Labels</label>
+                <label><input id="forge-show-com" type="checkbox" checked> COM</label>
+              </fieldset>
+
+              <div class="forge-timeline-row">
+                <input id="forge-timeline" type="range" min="0" max="1000" value="0" disabled aria-label="Simulation playback position">
+                <output id="forge-time" for="forge-timeline">0.00 / 0.00 s</output>
+              </div>
+              <p id="forge-demo-status" class="forge-status" role="status">Loading interactive systems…</p>
+            </div>
+
+            <div class="forge-demo-panel">
+              <div id="forge-demo-tabs" class="forge-demo-tabs" role="tablist" aria-label="Dynamics Forge examples"></div>
+              <div class="forge-demo-copy" role="tabpanel" aria-live="polite">
+                <p id="forge-demo-category" class="project-kicker">Robotics system</p>
+                <h3 id="forge-demo-title">Interactive system</h3>
+                <p id="forge-demo-description">Select a model, adjust its controller, and run the simulation.</p>
+                <p class="forge-controller-line">Controller <strong id="forge-controller-name">Not selected</strong></p>
+              </div>
+
+              <button id="forge-run" class="forge-run" type="button">Run simulation</button>
+              <div class="forge-gains-heading">
+                <h4>Controller parameters</h4>
+                <button id="forge-reset-gains" type="button">Reset</button>
+              </div>
+              <div id="forge-gain-grid" class="forge-gain-grid"></div>
+            </div>
+          </div>
+
+          <noscript>
+            <p class="forge-noscript">Enable JavaScript to run the interactive robotics demos.</p>
+          </noscript>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>© <span id="year"></span> David Bedolla. Built with HTML, CSS, and JavaScript.</p>
+      <a href="./">Return to portfolio</a>
+    </div>
+  </footer>
+</body>
+</html>

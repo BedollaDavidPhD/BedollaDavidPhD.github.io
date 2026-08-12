@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate">
-  <meta name="description" content="David Bedolla, PhD, develops real-time C++ and ROS 2 software for robot manipulation, whole-body control, reliable physical execution, and Physical AI deployment.">
+  <meta name="description" content="David Bedolla, PhD, develops real-time C++ and ROS 2 software for robot manipulation, whole-body control, contact-aware robotics, simulation, and reliable physical deployment.">
   <meta name="author" content="David Bedolla">
   <meta property="og:title" content="David Bedolla, PhD | Robotics Software Engineer">
-  <meta property="og:description" content="Robot manipulation, whole-body control, and real-time C++/ROS 2 software for reliable physical execution and Physical AI deployment.">
+  <meta property="og:description" content="Robot manipulation, whole-body control, contact-aware robotics, and real-time C++/ROS 2 software for reliable physical deployment.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://bedolladavidphd.github.io/">
   <meta property="og:image" content="https://bedolladavidphd.github.io/public/og.png">
@@ -35,10 +35,9 @@
       document.documentElement.dataset.theme = 'light';
     }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260804-redundancy-steps1">
-  <script defer src="assets/js/i18n.js?v=20260802-linkedin-alignment1"></script>
-  <script defer src="assets/js/main.js?v=20260801-trilingual1"></script>
-  <script defer src="assets/js/dynamics-forge-demos.js?v=20260802-peak-effort1"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260812-industry1">
+  <script defer src="assets/js/i18n.js?v=20260812-industry1"></script>
+  <script defer src="assets/js/main.js?v=20260812-simulator-route1"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -57,9 +56,10 @@
           <a href="#experience">Experience</a>
           <a href="#publications">Publications</a>
           <a href="#skills">Skills</a>
+          <a href="simulator/">Simulator</a>
           <a href="#contact">Contact</a>
         </div>
-        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf?v=20260801-one-line-contact" target="_blank" rel="noopener">
+        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf?v=20260812-industry1" target="_blank" rel="noopener">
           <span>CV PDF</span><span class="nav-cta-arrow" aria-hidden="true">↗</span>
         </a>
       </nav>
@@ -90,18 +90,17 @@
         <div class="hero-copy reveal">
           <p class="eyebrow">Robotics Software Engineer | Montréal, QC, Canada</p>
           <h1 class="hero-name notranslate" translate="no">David Bedolla, <span>PhD</span></h1>
-          <p class="hero-role">Robot Manipulation | Whole-Body Control | Real-Time C++/ROS 2 | Physical AI Deployment</p>
+          <p class="hero-role">Robot Manipulation | Whole-Body Control | Real-Time C++/ROS 2 | Contact-Aware Robotics</p>
           <p class="hero-summary">
             I develop and deploy robotics software that converts task-level commands, robot models, and sensor information into reliable motion on physical robots. My work spans whole-body mobile manipulation, Cartesian control, redundancy resolution, teleoperation, learning-based control, and real-time hardware integration.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#projects">Explore my work</a>
-            <a class="button secondary" href="documents/David_Bedolla_CV.pdf?v=20260801-one-line-contact" target="_blank" rel="noopener">Download CV</a>
+            <a class="button secondary" href="documents/David_Bedolla_CV.pdf?v=20260812-industry1" target="_blank" rel="noopener">Download CV</a>
           </div>
           <div class="social-row" aria-label="Professional links">
             <a href="https://github.com/BedollaDavidPhD" target="_blank" rel="noopener">GitHub</a>
             <a href="https://www.linkedin.com/in/-davidbedolla" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="https://orcid.org/0000-0001-8552-6842" target="_blank" rel="noopener">ORCID</a>
             <a href="mailto:davidbedollamartinez@outlook.es">Email</a>
           </div>
         </div>
@@ -140,7 +139,7 @@
       <div class="container two-col">
         <div class="section-heading reveal">
           <p class="eyebrow">About</p>
-          <h2>Connecting learned robot behavior with reliable physical execution.</h2>
+          <h2>Building reliable robot manipulation from models, sensing, and real-time software.</h2>
         </div>
         <div class="about-copy reveal">
           <p>
@@ -150,7 +149,10 @@
             At Lab INIT Robots, I develop a real-time ROS 2 and C++ whole-body control system for a 10-DoF mobile manipulator with a Kinova Gen3 arm. The 400 Hz pipeline coordinates Cartesian motion, arm and base control, redundancy resolution, trajectory execution, teleoperation, joint-limit handling, and safety-oriented pose and velocity commands on physical hardware.
           </p>
           <p>
-            My current direction is the interface between learned robot behaviors and dependable physical execution. Experience with game-controller teleoperation, wearable IMUs, EMG, and depth-camera motion acquisition can support future demonstration collection, while the model-based control layer can execute perception-conditioned pose or velocity commands with kinematic constraints, smoothing, redundancy management, and safety checks. I am applying this foundation toward future imitation learning and Diffusion Policy systems for dexterous manipulation.
+            I have also exercised whole-body control in Gazebo and MuJoCo, completed PyTorch reinforcement-learning experiments in simulation, and adapted contact-data interfaces between simulators. These simulation results are presented separately from my physical robot deployments.
+          </p>
+          <p>
+            My current development direction is Learning from Demonstration for manipulation. Completed work in teleoperation, IMU, EMG, and depth-camera motion acquisition, cross-simulator contact modeling, and model-based execution provides the engineering foundation for future data-collection and policy-execution pipelines. I have not yet trained or deployed an imitation-learning policy.
           </p>
           <div class="focus-tags" aria-label="Research interests">
             <span>Real-Time Control</span>
@@ -159,6 +161,7 @@
             <span>Whole-Body Control</span>
             <span>Teleoperation</span>
             <span>Human Motion Capture</span>
+            <span>Contact-Aware Robotics</span>
             <span>Model-Based Execution</span>
           </div>
         </div>
@@ -176,15 +179,17 @@
           <article class="project-card featured-project reveal" data-project-id="exoskeleton-control">
             <img src="assets/images/exoskeleton.svg" alt="Stylized rehabilitation exoskeleton illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <p class="project-kicker">Rehabilitation robotics · Sensor-driven assistance</p>
+              <p class="project-kicker">Rehabilitation robotics · Physical system</p>
               <h3>Real-Time Mirror Rehabilitation with a 7-DoF Exoskeleton</h3>
-              <p>Extends mirror therapy by capturing movement of the unaffected arm and physically reproducing it on the impaired arm in real time. Two wearable IMUs measure upper-arm and forearm motion, while surface EMG estimates wrist orientation; the fused measurements generate a complete reference trajectory for the exoskeleton. Human-oriented inverse kinematics, smooth trajectory generation, and closed-loop tracking reproduce natural upper-limb configurations while adding proprioceptive and kinesthetic feedback to the visual mirror effect. The demonstrated IMU and EMG motion references, together with related depth-camera motion-capture work, provide a foundation for future human-demonstration collection in perception-conditioned imitation-learning pipelines, including Diffusion Policy research for dexterous manipulation.</p>
-              <ul>
-                <li>Motion capture: two wearable IMUs plus surface EMG</li>
-                <li>Complete shoulder, elbow, forearm, and wrist reference</li>
-                <li>Physical assistance beyond conventional visual mirror therapy</li>
-                <li>1-4 kHz LabVIEW RT/FPGA and C++ control stack</li>
-              </ul>
+              <dl class="project-facts">
+                <div><dt>Technical problem</dt><dd>Reproduce the unaffected arm's motion as coordinated physical assistance for the impaired arm.</dd></div>
+                <div><dt>My contribution</dt><dd>Integrated two wearable IMUs and surface EMG with human-oriented inverse kinematics, smooth trajectory generation, and closed-loop tracking.</dd></div>
+                <div><dt>Hardware or simulator</dt><dd>Physical 7-DoF ETS-MARSE upper-limb exoskeleton and wearable sensors.</dd></div>
+                <div><dt>Stack</dt><dd>LabVIEW RT/FPGA and C++.</dd></div>
+                <div><dt>Measured result</dt><dd>Hard real-time control operating from 1 to 4 kHz.</dd></div>
+                <div><dt>Validation</dt><dd>Physical hardware.</dd></div>
+              </dl>
+              <div class="project-links"><a href="https://youtube.com/shorts/QAqGqnWXZ5I" target="_blank" rel="noopener">Watch project video</a></div>
             </div>
           </article>
 
@@ -193,13 +198,15 @@
             <div class="project-body">
               <p class="project-kicker"><span class="project-step" aria-hidden="true">1.</span>Analytical robotics</p>
               <h3>Analytical Redundancy Resolution for a 7-DoF Manipulator</h3>
-              <p>Developed a closed-form redundancy-resolution method for the 7-DoF Kinova Gen3. For a specified end-effector pose, the swivel angle determines the elbow position and the analytical solver returns joint positions that preserve the Cartesian task. The accompanying Isaac Sim demonstration applies the solution to a simulated object grasp. Pinocchio-based validation evaluated approximately 1.05 million solutions in 2.84 seconds on an Intel i7 laptop.</p>
-              <ul>
-                <li>Analytical joint-position solution from end-effector pose and swivel angle</li>
-                <li>Simulated object grasp in Isaac Sim</li>
-                <li>Closed-form solution without iterative optimization</li>
-                <li>1.05 million solutions evaluated in 2.84 seconds</li>
-              </ul>
+              <dl class="project-facts">
+                <div><dt>Technical problem</dt><dd>Select a smooth elbow configuration while preserving a commanded end-effector pose.</dd></div>
+                <div><dt>My contribution</dt><dd>Developed a closed-form swivel-angle formulation that returns joint positions without iterative inverse-kinematics optimization.</dd></div>
+                <div><dt>Hardware or simulator</dt><dd>Kinova Gen3 model in Isaac Sim, with computational validation on an Intel i7 laptop.</dd></div>
+                <div><dt>Stack</dt><dd>C++, Pinocchio, and Isaac Sim.</dd></div>
+                <div><dt>Measured result</dt><dd>Approximately 1.05 million solutions evaluated in 2.84 seconds.</dd></div>
+                <div><dt>Validation</dt><dd>Simulation and computational testing.</dd></div>
+              </dl>
+              <div class="project-links"><a href="https://youtube.com/shorts/45pMyiITNns" target="_blank" rel="noopener">Watch project video</a></div>
             </div>
           </article>
 
@@ -208,13 +215,15 @@
             <div class="project-body">
               <p class="project-kicker"><span class="project-step" aria-hidden="true">2.</span>Real hardware</p>
               <h3>Real-Time Implementation of 7-DoF Redundancy Resolution</h3>
-              <p>Deployed the redundancy method on the physical Kinova Gen3 through a ROS 2 and C++ control pipeline. The analytical formulation determines the desired position-level redundant configuration, while a Pinocchio-based Jacobian solver and numerical optimization generate joint-velocity commands with joint-limit handling. A PS4 controller supplies Cartesian and swivel-angle commands, and the same control path accepts validated twist and absolute-pose references. Command arbitration prioritizes fresh twist inputs for predictable hardware operation. The analytical redundancy calculation runs in approximately 3 μs.</p>
-              <ul>
-                <li>PS4 Cartesian velocity commands on real hardware</li>
-                <li>Validated twist and absolute-pose control pipeline</li>
-                <li>Fresh-twist priority through command arbitration</li>
-                <li>Null-space swivel control with 3 μs redundancy resolution</li>
-              </ul>
+              <dl class="project-facts">
+                <div><dt>Technical problem</dt><dd>Command Cartesian motion and elbow configuration predictably on a redundant physical manipulator.</dd></div>
+                <div><dt>My contribution</dt><dd>Combined analytical position-level redundancy resolution with Pinocchio Jacobian joint velocities, joint-limit handling, command arbitration, and PS4 teleoperation.</dd></div>
+                <div><dt>Hardware or simulator</dt><dd>Physical Kinova Gen3 and PS4 controller.</dd></div>
+                <div><dt>Stack</dt><dd>ROS 2, C++, and Pinocchio.</dd></div>
+                <div><dt>Measured result</dt><dd>Analytical redundancy calculation in approximately 3 μs.</dd></div>
+                <div><dt>Validation</dt><dd>Physical hardware.</dd></div>
+              </dl>
+              <div class="project-links"><a href="https://youtube.com/shorts/bXCMJ5xxLK0" target="_blank" rel="noopener">Watch project video</a></div>
             </div>
           </article>
 
@@ -223,13 +232,15 @@
             <div class="project-body">
               <p class="project-kicker"><span class="project-step" aria-hidden="true">3.</span>Whole-body control</p>
               <h3>Analytical Whole-Body Redundancy Resolution for a Mobile Manipulator</h3>
-              <p>Extended the analytical formulation to the 10-DoF Kinova Gen3 and AgileX mobile manipulator. A task-priority model allocates the additional degrees of freedom to elbow configuration and mobile-base pose regulation after satisfying the Cartesian end-effector objective. This creates one hardware-independent mathematical framework for coordinating arm self-motion, base displacement, and Cartesian tracking.</p>
-              <ul>
-                <li>Unified 10-DoF arm-and-base kinematic model</li>
-                <li>Hierarchical Cartesian and configuration objectives</li>
-                <li>Secondary elbow and mobile-base pose regulation</li>
-                <li>Analytical coordination without hardware-specific logic</li>
-              </ul>
+              <dl class="project-facts">
+                <div><dt>Technical problem</dt><dd>Coordinate arm self-motion, base displacement, and Cartesian tracking in one 10-DoF system.</dd></div>
+                <div><dt>My contribution</dt><dd>Extended the analytical redundancy formulation with a task-priority hierarchy for end-effector, elbow, and mobile-base objectives.</dd></div>
+                <div><dt>Hardware or simulator</dt><dd>Simulated Kinova Gen3 and AgileX mobile-manipulator model.</dd></div>
+                <div><dt>Stack</dt><dd>Analytical kinematics and task-priority whole-body control.</dd></div>
+                <div><dt>Measured result</dt><dd>Unified coordination of ten degrees of freedom in one solver.</dd></div>
+                <div><dt>Validation</dt><dd>Simulation.</dd></div>
+              </dl>
+              <div class="project-links"><a href="https://youtube.com/shorts/q_POaccER_o" target="_blank" rel="noopener">Watch project video</a></div>
             </div>
           </article>
 
@@ -238,13 +249,15 @@
             <div class="project-body">
               <p class="project-kicker"><span class="project-step" aria-hidden="true">4.</span>Whole-body implementation</p>
               <h3>Real-Time Whole-Body Control of a 10-DoF Mobile Manipulator</h3>
-              <p>Demonstrates whole-body control on the complete AgileX and Kinova Gen3 mobile manipulator. The end-effector target is fixed in the world frame; as the base moves, filtered odometry continuously transforms that target into the arm-base frame, and the manipulator compensates for base displacement to maintain the commanded global position and orientation. A Pinocchio-based Jacobian solver generates arm joint-velocity commands, and the onboard ROS 2 and C++ stack coordinates joystick input, base motion, odometry, Cartesian tracking, and redundancy objectives at 400 Hz. The Cartesian command interface can serve as a model-based execution layer for future perception-conditioned imitation learning, where a Diffusion Policy supplies pose or velocity sequences and the lower-level controller manages kinematics, redundancy, limits, smoothing, and safe execution.</p>
-              <ul>
-                <li>Primary task: world-frame end-effector position and orientation</li>
-                <li>Filtered odometry transformation into the arm-base frame</li>
-                <li>Onboard ROS 2 and C++ control nodes operating at 400 Hz</li>
-                <li>Coordinated base commands and arm joint-velocity control</li>
-              </ul>
+              <dl class="project-facts">
+                <div><dt>Technical problem</dt><dd>Maintain a world-frame end-effector pose while the mobile base moves.</dd></div>
+                <div><dt>My contribution</dt><dd>Implemented filtered odometry transforms, Cartesian tracking, redundancy objectives, command validation, and coordinated base and arm control.</dd></div>
+                <div><dt>Hardware or simulator</dt><dd>Physical AgileX base with Kinova Gen3 arm, plus Gazebo and MuJoCo simulation.</dd></div>
+                <div><dt>Stack</dt><dd>ROS 2, C++, Pinocchio, Gazebo, and MuJoCo.</dd></div>
+                <div><dt>Measured result</dt><dd>Onboard whole-body control nodes operating at 400 Hz.</dd></div>
+                <div><dt>Validation</dt><dd>Physical hardware and simulation.</dd></div>
+              </dl>
+              <div class="project-links"><a href="https://youtube.com/shorts/Nh0xvZrZQ18" target="_blank" rel="noopener">Watch project video</a></div>
             </div>
           </article>
 
@@ -253,13 +266,18 @@
             <div class="project-body">
               <p class="project-kicker">Learning-based control · Real hardware</p>
               <h3>Learning-Based Robust Predictive Control for a 7-DoF Rehabilitation Exoskeleton</h3>
-              <p>Developed and deployed learning-based model predictive control for the 7-DoF ETS-MARSE upper-limb rehabilitation exoskeleton. A Gaussian Process learns residual behavior outside the analytical model, while constrained MPC and robust sliding-mode feedback provide predictive tracking and disturbance rejection. When physical performance differed from simulation, I compared predicted and measured states, tracking errors, control commands, actuator response, and computation time. I incorporated representative physical data into the learned model and retained robust feedback for remaining disturbances and prediction errors.</p>
-              <ul>
-                <li>Gaussian Process predictive mean and uncertainty estimation</li>
-                <li>Explicit exoskeleton state and actuator constraints</li>
-                <li>Robust sliding-mode compensation for residual errors</li>
-                <li>Physical-system validation at approximately 387 μs per control iteration</li>
-              </ul>
+              <dl class="project-facts">
+                <div><dt>Technical problem</dt><dd>Track constrained exoskeleton motion despite nonlinear dynamics, model error, and human-robot interaction forces.</dd></div>
+                <div><dt>My contribution</dt><dd>Integrated a Gaussian Process residual model with constrained MPC and robust sliding-mode compensation.</dd></div>
+                <div><dt>Hardware or simulator</dt><dd>Physical 7-DoF ETS-MARSE rehabilitation exoskeleton.</dd></div>
+                <div><dt>Stack</dt><dd>Gaussian Processes, model predictive control, C++, and LabVIEW RT.</dd></div>
+                <div><dt>Measured result</dt><dd>Approximately 387 μs per control iteration on the physical system.</dd></div>
+                <div><dt>Validation</dt><dd>Physical hardware.</dd></div>
+              </dl>
+              <div class="project-links">
+                <a href="https://youtube.com/shorts/gqUnTe_00sA" target="_blank" rel="noopener">Watch project video</a>
+                <a href="https://doi.org/10.1109/PEDS57185.2023.10246735" target="_blank" rel="noopener">Open publication DOI</a>
+              </div>
             </div>
           </article>
 
@@ -268,110 +286,45 @@
             <div class="project-body">
               <p class="project-kicker">Motion-planning software · C++ desktop application</p>
               <h3>URDF-Driven Trajectory Planning and Visualization</h3>
-              <p>Built a modular C++ and Qt application for robot-independent trajectory planning, demonstrated with the Kinova Gen3. Loading a URDF automatically creates the corresponding joint controls and kinematic model, allowing the same interface to support different joint counts and structures. The application combines joint-space time laws, Cartesian waypoints, configurable damped least-squares inverse kinematics, Euler-angle or quaternion orientation references, B-spline and blended paths, Ruckig motion limits, trajectory plots, and OpenGL CAD visualization.</p>
-              <ul>
-                <li>Linear, trapezoidal, cubic, quintic, and seventh-order joint profiles</li>
-                <li>URDF-based inverse kinematics operating at up to 1 kHz in current tests</li>
-                <li>Position, velocity, acceleration, and jerk analysis</li>
-                <li>Lock-free data flow with batched kinematics and asynchronous 3D overlays</li>
-              </ul>
+              <dl class="project-facts">
+                <div><dt>Technical problem</dt><dd>Provide reusable joint-space and Cartesian planning across manipulators with different kinematic structures.</dd></div>
+                <div><dt>My contribution</dt><dd>Built the URDF-driven planning, inverse-kinematics, motion-limit, plotting, and CAD visualization application.</dd></div>
+                <div><dt>Hardware or simulator</dt><dd>Kinova Gen3 robot model in desktop simulation.</dd></div>
+                <div><dt>Stack</dt><dd>C++, Qt, URDF, OpenGL, and Ruckig.</dd></div>
+                <div><dt>Measured result</dt><dd>URDF-based inverse kinematics operating at up to 1 kHz in current tests.</dd></div>
+                <div><dt>Validation</dt><dd>Software and simulation testing.</dd></div>
+              </dl>
+              <div class="project-links"><a href="https://youtube.com/shorts/AiUlFXjvsWw" target="_blank" rel="noopener">Watch project video</a></div>
+            </div>
+          </article>
+
+          <article class="project-card featured-project tactile-project reveal" data-project-id="cross-simulator-tactile-adaptation">
+            <img src="assets/images/tooling.svg" alt="Stylized contact-aware robotics simulation illustration" loading="lazy" decoding="async">
+            <div class="project-body">
+              <p class="project-kicker">Contact-aware robotics · Simulation only</p>
+              <h3>Cross-Simulator Tactile Sensor Adaptation</h3>
+              <p>Ported and adapted a tactile-sensing implementation based on an Isaac Sim reference for use in Gazebo and MuJoCo. Investigated contact-data generation, simulator interfaces, and integration requirements for future contact-aware robot-learning experiments. The current implementation is simulation-only and has not yet been integrated with a learned manipulation policy or validated using physical tactile hardware.</p>
+              <dl class="project-facts">
+                <div><dt>Technical problem</dt><dd>Make contact-data generation available through different simulator interfaces.</dd></div>
+                <div><dt>My contribution</dt><dd>Adapted the simulator-facing contact pipeline and implemented Gazebo and MuJoCo data interfaces.</dd></div>
+                <div><dt>Hardware or simulator</dt><dd>Gazebo and MuJoCo, based on an Isaac Lab reference for Isaac Sim.</dd></div>
+                <div><dt>Stack</dt><dd>Gazebo, MuJoCo, and Isaac Lab reference interfaces.</dd></div>
+                <div><dt>Measured result</dt><dd>Contact-data adaptation completed across two target simulators.</dd></div>
+                <div><dt>Validation</dt><dd>Simulation only. No learned policy or physical tactile-hardware validation.</dd></div>
+              </dl>
+              <p class="project-credit">Reference implementation: <a href="https://isaac-sim.github.io/IsaacLab/main/source/overview/core-concepts/sensors/contact_sensor.html" target="_blank" rel="noopener">Isaac Lab Contact Sensor</a> for Isaac Sim, © The Isaac Lab Project Developers, <a href="third-party-notices/Isaac_Lab_BSD-3-Clause.txt" target="_blank" rel="license noopener">BSD-3-Clause</a>.</p>
             </div>
           </article>
 
         </div>
 
-        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260802-peak-effort1">
-          <div class="forge-heading">
-            <div>
-              <p class="eyebrow">Interactive simulator</p>
-              <h3>Dynamics Forge</h3>
-            </div>
-            <p>The browser simulator uses nonlinear articulated-body dynamics with RK4 integration at 1 kHz and a 250 Hz controller. Rotor systems also include thrust and drag, motor delay and limits, encoder quantization, state estimation, and direct allocation. Initial integral values and antiwindup limits are percentages of the fixed actuator stall input, before velocity and power constraints. Default gains are starting values, not optimized settings. Modify them and compare tracking and effort.</p>
+        <div class="simulator-cta reveal">
+          <div>
+            <p class="eyebrow">Interactive simulator</p>
+            <h3>Tune controllers across eight robotics systems</h3>
+            <p>Open the dedicated simulator to adjust control gains and targets, inspect three-dimensional motion, and compare tracking and effort.</p>
           </div>
-
-          <div class="forge-layout">
-            <div class="forge-viewer-shell">
-              <div class="forge-canvas-wrap">
-                <canvas id="forge-canvas" tabindex="0" aria-label="Interactive three-dimensional robotics simulator. Drag to rotate, use Shift-drag to pan, and use the mouse wheel or zoom buttons to zoom."></canvas>
-                <span class="forge-live-badge">Browser simulation</span>
-                <div class="forge-canvas-note">Drag to rotate · Shift-drag to pan</div>
-              </div>
-
-              <div class="forge-controls" aria-label="Simulation playback controls">
-                <button id="forge-play" type="button" disabled aria-pressed="false">Play</button>
-                <button id="forge-restart" type="button" disabled>Restart</button>
-                <label>Speed
-                  <select id="forge-speed" disabled>
-                    <option value="0.5">0.5×</option>
-                    <option value="1" selected>1×</option>
-                    <option value="2">2×</option>
-                  </select>
-                </label>
-                <label>View
-                  <select id="forge-view" disabled>
-                    <option value="full" selected>Full 3D</option>
-                    <option value="top">Top</option>
-                    <option value="front">Front</option>
-                    <option value="side">Side</option>
-                  </select>
-                </label>
-                <span class="forge-control-separator" aria-hidden="true"></span>
-                <button id="forge-zoom-out" type="button" disabled aria-label="Zoom out">−</button>
-                <button id="forge-zoom-in" type="button" disabled aria-label="Zoom in">+</button>
-                <button id="forge-camera-reset" type="button" disabled>Reset view</button>
-              </div>
-
-              <div class="forge-plot-wrap">
-                <canvas id="forge-plot" aria-label="Reference and simulated response plot"></canvas>
-              </div>
-
-              <div id="forge-position-plot-wrap" class="forge-plot-wrap" hidden>
-                <canvas id="forge-position-plot" aria-label="X and Y position targets and simulated responses versus time"></canvas>
-              </div>
-
-              <div class="forge-results" aria-label="Simulation results">
-                <div><span id="forge-rms-label">Primary RMS</span><strong id="forge-rms">Pending</strong></div>
-                <div id="forge-secondary-result"><span id="forge-secondary-rms-label">Secondary RMS</span><strong id="forge-secondary-rms">Pending</strong></div>
-                <div><span>Peak effort</span><strong id="forge-peak">Pending</strong></div>
-              </div>
-
-              <fieldset class="forge-layer-controls">
-                <legend>Viewer layers</legend>
-                <label><input id="forge-show-cad" type="checkbox" checked> CAD</label>
-                <label><input id="forge-show-links" type="checkbox" checked> Links</label>
-                <label><input id="forge-show-frames" type="checkbox" checked> Frames</label>
-                <label><input id="forge-show-numbers" type="checkbox" checked> Labels</label>
-                <label><input id="forge-show-com" type="checkbox" checked> COM</label>
-              </fieldset>
-
-              <div class="forge-timeline-row">
-                <input id="forge-timeline" type="range" min="0" max="1000" value="0" disabled aria-label="Simulation playback position">
-                <output id="forge-time" for="forge-timeline">0.00 / 0.00 s</output>
-              </div>
-              <p id="forge-demo-status" class="forge-status" role="status">Loading interactive systems…</p>
-            </div>
-
-            <div class="forge-demo-panel">
-              <div id="forge-demo-tabs" class="forge-demo-tabs" role="tablist" aria-label="Dynamics Forge examples"></div>
-              <div class="forge-demo-copy" role="tabpanel" aria-live="polite">
-                <p id="forge-demo-category" class="project-kicker">Robotics system</p>
-                <h4 id="forge-demo-title">Interactive system</h4>
-                <p id="forge-demo-description">Select a model, adjust its controller, and run the simulation.</p>
-                <p class="forge-controller-line">Controller <strong id="forge-controller-name">Not selected</strong></p>
-              </div>
-
-              <button id="forge-run" class="forge-run" type="button">Run simulation</button>
-              <div class="forge-gains-heading">
-                <h5>Controller parameters</h5>
-                <button id="forge-reset-gains" type="button">Reset</button>
-              </div>
-              <div id="forge-gain-grid" class="forge-gain-grid"></div>
-            </div>
-          </div>
-
-          <noscript>
-            <p class="forge-noscript">Enable JavaScript to run the interactive robotics demos.</p>
-          </noscript>
+          <a class="button primary" href="simulator/">Open simulator</a>
         </div>
 
       </div>
@@ -390,7 +343,12 @@
             <div>
               <h3>Associate Researcher</h3>
               <p class="timeline-place">Lab INIT Robots, Montréal</p>
-              <p>Deployed a 400 Hz whole-body control pipeline for a 10-DoF Kinova Gen3 and AgileX mobile manipulator. The analytical redundancy method generates position-level configurations, while a Pinocchio Jacobian solver generates joint velocities for end-effector tracking, elbow control, joint-limit handling, and base coordination. Improved Cartesian tracking with super-twisting feedback, and implemented command validation, filtering, safe state transitions, and game-controller teleoperation for future demonstration collection.</p>
+              <ul class="timeline-bullets">
+                <li>Deployed a 400 Hz ROS 2 and C++ whole-body control pipeline on a physical 10-DoF Kinova Gen3 and AgileX mobile manipulator.</li>
+                <li>Combined analytical position-level redundancy resolution with Pinocchio Jacobian joint velocities for Cartesian tracking, elbow control, joint-limit handling, and base coordination.</li>
+                <li>Implemented super-twisting feedback, validation, filtering, safe state transitions, and PS4 teleoperation for physical operation.</li>
+                <li>Exercised the whole-body controller in Gazebo and MuJoCo for simulator-based integration and contact-data studies.</li>
+              </ul>
             </div>
           </article>
 
@@ -399,7 +357,10 @@
             <div>
               <h3>Postdoctoral Researcher</h3>
               <p class="timeline-place">ÉTS, Montréal</p>
-              <p>Reduced lower-limb control latency by 30× to enable torque control, improved ROS/Python real-time scheduling for an autonomous vehicle to reduce steering oscillations, and developed symbolic dynamics and inverse-kinematics GUI tools. Delivered 6-DoF inverse kinematics and real-time motion-control support to international assistive-robotics collaborations.</p>
+              <ul class="timeline-bullets">
+                <li>Reduced lower-limb control latency by 30× to enable torque control and improved ROS/Python scheduling for stable real-time execution.</li>
+                <li>Developed symbolic dynamics and inverse-kinematics tools, then delivered 6-DoF inverse kinematics and motion-control support to international assistive-robotics teams.</li>
+              </ul>
             </div>
           </article>
 
@@ -408,7 +369,10 @@
             <div>
               <h3>Research Professor</h3>
               <p class="timeline-place">Universidad Tecnológica de la Mixteca, Mexico</p>
-              <p>Developed and tested an optimization strategy for a 7-DoF robot that reduced tracking error by 20%, and supported the design of a three-finger adaptive robotic gripper for activities of daily living.</p>
+              <ul class="timeline-bullets">
+                <li>Developed and tested controller optimization for a 7-DoF robot, reducing tracking error by 20%.</li>
+                <li>Contributed to a three-finger adaptive robotic gripper for activities of daily living.</li>
+              </ul>
             </div>
           </article>
 
@@ -417,7 +381,12 @@
             <div>
               <h3>Research Assistant</h3>
               <p class="timeline-place">ÉTS, Montréal</p>
-              <p>Deployed a 1-4 kHz hard real-time motion-control stack for a 7-DoF exoskeleton. Implemented a Gaussian Process residual model inside a robust model predictive controller at approximately 387 μs per iteration and learning-based inverse kinematics at 43 μs. Built physics-based digital twins and a controller emulator for sim-to-real validation, and integrated EMG, IMU, and depth-camera sensing for human-motion acquisition and sensor-guided trajectory generation.</p>
+              <ul class="timeline-bullets">
+                <li>Deployed a 1-4 kHz LabVIEW RT/FPGA and C++ motion-control stack on a physical 7-DoF rehabilitation exoskeleton.</li>
+                <li>Implemented Gaussian Process residual modeling with robust MPC at approximately 387 μs per iteration, plus analytical and learning-based inverse kinematics at 5 μs and 43 μs.</li>
+                <li>Integrated ATI Nano17 force/torque sensing and admittance control, and implemented external-force observation from motor current, robot dynamics, friction, and the Jacobian.</li>
+                <li>Integrated IMU, EMG, and depth-camera motion acquisition with sensor-guided trajectory generation and physics-based digital twins.</li>
+              </ul>
             </div>
           </article>
         </div>
@@ -566,23 +535,35 @@
         <div class="skills-grid">
           <article class="skill-card reveal">
             <h3>Programming</h3>
-            <p>C, C++, Python, MATLAB, Kotlin, LabVIEW, VHDL</p>
+            <p>C, C++, Python, MATLAB, LabVIEW, VHDL</p>
           </article>
           <article class="skill-card reveal">
             <h3>Robotics</h3>
-            <p>ROS 2, Pinocchio, URDF, Ruckig, robot manipulation, whole-body control, Cartesian control, teleoperation</p>
+            <p>ROS 2, Pinocchio, URDF, Cartesian control, redundancy resolution, whole-body control, mobile manipulation, teleoperation, motion planning</p>
           </article>
           <article class="skill-card reveal">
-            <h3>Modeling and control</h3>
-            <p>Kinematics, dynamics, numerical optimization, redundancy resolution, RNEA, MPC, super-twisting control, Gaussian Processes</p>
+            <h3>Robot Learning</h3>
+            <p>PyTorch, reinforcement learning, Gaussian Processes, learning-based model predictive control, neural-network inverse kinematics</p>
           </article>
           <article class="skill-card reveal">
-            <h3>Software systems</h3>
-            <p>CMake, Qt 6, PySide6, FastAPI, pybind11, Gymnasium, Stable-Baselines3, Android NDK, testing and CI</p>
+            <h3>Interaction and Sensing</h3>
+            <p>Force/torque sensing, admittance control, external-force observation, tactile-sensor simulation, IMU, EMG, depth cameras</p>
           </article>
           <article class="skill-card reveal">
-            <h3>Simulation and hardware</h3>
-            <p>Simulink, Simscape Multibody, OpenGL, LabVIEW RT/FPGA, TI DSP, DAQ, IMU, EMG, depth and force sensors</p>
+            <h3>Modeling and Control</h3>
+            <p>Robot kinematics and dynamics, Recursive Newton-Euler Algorithm, numerical optimization, model predictive control, sliding-mode control, trajectory generation</p>
+          </article>
+          <article class="skill-card reveal">
+            <h3>Simulation</h3>
+            <p>Gazebo, MuJoCo, Isaac Sim, Simulink, Simscape Multibody, LabVIEW digital twins</p>
+          </article>
+          <article class="skill-card reveal">
+            <h3>Real-Time Systems and Hardware</h3>
+            <p>Real-time C++ control, LabVIEW RT/FPGA, DAQ systems, digital signal controllers, microcontrollers</p>
+          </article>
+          <article class="skill-card reveal">
+            <h3>Earlier Machine-Learning Experience</h3>
+            <p>TensorFlow, convolutional neural networks, computer vision</p>
           </article>
         </div>
       </div>
@@ -593,7 +574,7 @@
         <div>
           <p class="eyebrow">Contact</p>
           <h2>Let us build reliable robot motion from models to real hardware.</h2>
-          <p>Professional work in robotics software engineering and applied R&amp;D, focused on robot manipulation, whole-body control, model-based execution, teleoperation, hardware integration, and the interface between learned behavior and reliable physical systems.</p>
+          <p>Professional work in robotics software engineering and applied R&amp;D, focused on robot manipulation, whole-body control, contact-aware systems, teleoperation, simulation, and reliable hardware integration.</p>
         </div>
         <div class="contact-actions">
           <a class="button primary" href="mailto:davidbedollamartinez@outlook.es">Send email</a>
