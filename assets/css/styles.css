@@ -349,6 +349,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .project-kicker { margin: 0 0 6px; color: var(--blue); font-weight: 800; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .project-kicker .project-step { display: inline-block; margin-right: 0.42rem; color: #dc2626; font-size: 1.35rem; line-height: 0.8; letter-spacing: 0; vertical-align: -0.08em; }
 .project-card h3 { margin: 0 0 10px; font-size: 1.42rem; line-height: 1.25; }
+.project-card h3 .project-step { display: inline-block; margin-right: 0.18em; color: #dc2626; font-size: 1.55em; font-weight: 900; line-height: 0.72; vertical-align: -0.1em; }
 .project-card p { color: var(--muted); }
 .project-card ul { margin: 20px 0 0; padding-left: 20px; color: #344054; }
 .project-card li + li { margin-top: 5px; }
@@ -831,6 +832,7 @@ html[data-theme="dark"] .project-card > img,
 html[data-theme="dark"] .project-media { background: #14243a; }
 html[data-theme="dark"] .project-link { color: #8fc1ff; }
 html[data-theme="dark"] .project-facts dd a { color: #8fc1ff; }
+html[data-theme="dark"] .project-card h3 .project-step { color: #ff6b6b; }
 html[data-theme="dark"] .simulator-cta {
   background: linear-gradient(135deg, #101c2d, #102957);
   border-color: var(--line);

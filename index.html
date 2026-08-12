@@ -35,8 +35,8 @@
       document.documentElement.dataset.theme = 'light';
     }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260812-tsf85-1">
-  <script defer src="assets/js/i18n.js?v=20260812-cards-1"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260812-progression-1">
+  <script defer src="assets/js/i18n.js?v=20260812-progression-1"></script>
   <script defer src="assets/js/main.js?v=20260812-tsf85-1"></script>
 </head>
 <body>
@@ -194,7 +194,7 @@
           <article class="project-card reveal" data-project-id="kinova-analytical-redundancy">
             <img src="assets/images/tooling.svg" alt="Stylized Kinova Gen3 kinematics illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <h3>1. Analytical Redundancy Resolution for the 7-DoF Kinova Gen3</h3>
+              <h3><span class="project-step">1.</span> Analytical Redundancy Resolution for the 7-DoF Kinova Gen3</h3>
               <p class="project-summary">A swivel-angle formulation selects a smooth elbow configuration while preserving the commanded end-effector pose.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Select a smooth elbow configuration while preserving a commanded end-effector pose.</dd></div>
@@ -209,7 +209,7 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-nullspace">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <h3>2. Real-Time Redundancy Resolution on the Kinova Gen3</h3>
+              <h3><span class="project-step">2.</span> Real-Time Redundancy Resolution on the Kinova Gen3</h3>
               <p class="project-summary">PS4 teleoperation combines Cartesian commands with independent elbow reconfiguration on the physical robot.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Command Cartesian motion and elbow configuration predictably on a redundant physical manipulator.</dd></div>
@@ -224,7 +224,7 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-analytical">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <h3>3. Analytical Whole-Body Control for a 10-DoF Mobile Manipulator</h3>
+              <h3><span class="project-step">3.</span> Analytical Whole-Body Control for a 10-DoF Mobile Manipulator</h3>
               <p class="project-summary">A task-priority formulation coordinates the mobile base, arm, elbow configuration, and end-effector objective.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Coordinate arm self-motion, base displacement, and Cartesian tracking in one 10-DoF system.</dd></div>
@@ -239,7 +239,7 @@
           <article class="project-card reveal" data-project-id="mobile-manipulator-world-frame">
             <img src="assets/images/mobile-manipulator.svg" alt="Stylized mobile manipulator illustration" loading="lazy" decoding="async">
             <div class="project-body">
-              <h3>4. World-Frame Mobile Manipulation</h3>
+              <h3><span class="project-step">4.</span> World-Frame Mobile Manipulation</h3>
               <p class="project-summary">The deployed controller coordinates a physical mobile base and Kinova Gen3 while maintaining the commanded end-effector pose in the world frame.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Maintain a world-frame end-effector pose while the mobile base moves.</dd></div>
