@@ -359,11 +359,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .project-facts dt { color: var(--blue); font-size: 0.67rem; font-weight: 820; letter-spacing: 0.06em; text-transform: uppercase; }
 .project-facts dd { margin: 2px 0 0; color: var(--muted); font-size: 0.79rem; line-height: 1.42; }
 .project-card.featured-project .project-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; }
-.project-links { display: flex; flex-wrap: wrap; gap: 7px 15px; margin-top: 13px; }
-.project-links a,
-.project-credit a { color: var(--blue); font-size: 0.82rem; font-weight: 800; text-underline-offset: 3px; }
-.project-links a:hover, .project-links a:focus-visible,
-.project-credit a:hover, .project-credit a:focus-visible { color: #1746a2; }
+.project-facts dd a { color: var(--blue); font-weight: 800; text-underline-offset: 3px; }
+.project-facts dd a:hover, .project-facts dd a:focus-visible { color: #1746a2; }
 .project-card.has-video .project-facts { gap: 5px; margin-top: 9px; }
 .project-card.has-video .project-facts > div { padding-top: 5px; }
 .project-card.has-video .project-facts dt { font-size: 0.6rem; }
@@ -373,7 +370,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .tactile-project { display: grid; grid-template-columns: 36% 64%; align-items: stretch; }
 .tactile-project > img { width: 100%; height: 100%; min-height: 420px; aspect-ratio: auto; border-right: 1px solid var(--line); }
 .tactile-project .project-body { padding: 24px 28px; }
-.project-credit { margin: 14px 0 0; font-size: 0.78rem; line-height: 1.45; }
 
 .simulator-cta {
   display: flex;
@@ -834,8 +830,7 @@ html[data-theme="dark"] .focus-tags span {
 html[data-theme="dark"] .project-card > img,
 html[data-theme="dark"] .project-media { background: #14243a; }
 html[data-theme="dark"] .project-link { color: #8fc1ff; }
-html[data-theme="dark"] .project-links a,
-html[data-theme="dark"] .project-credit a { color: #8fc1ff; }
+html[data-theme="dark"] .project-facts dd a { color: #8fc1ff; }
 html[data-theme="dark"] .simulator-cta {
   background: linear-gradient(135deg, #101c2d, #102957);
   border-color: var(--line);

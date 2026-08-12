@@ -29,10 +29,10 @@
       document.documentElement.dataset.theme = 'light';
     }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260812-industry1">
-  <script defer src="assets/js/i18n.js?v=20260812-industry1"></script>
-  <script defer src="assets/js/main.js?v=20260812-simulator-route1"></script>
-  <script defer src="assets/js/dynamics-forge-demos.js?v=20260812-simulator-route1"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260812-tsf85-1">
+  <script defer src="assets/js/i18n.js?v=20260812-tsf85-1"></script>
+  <script defer src="assets/js/main.js?v=20260812-tsf85-1"></script>
+  <script defer src="assets/js/dynamics-forge-demos.js?v=20260812-tsf85-1"></script>
 </head>
 <body class="simulator-page" data-page="simulator">
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -54,7 +54,7 @@
           <a class="active" href="simulator/" aria-current="page">Simulator</a>
           <a href="./#contact">Contact</a>
         </div>
-        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf?v=20260812-industry1" target="_blank" rel="noopener">
+        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf?v=20260812-tsf85-1" target="_blank" rel="noopener">
           <span>CV PDF</span><span class="nav-cta-arrow" aria-hidden="true">↗</span>
         </a>
       </nav>
@@ -92,13 +92,13 @@
 
     <section class="simulator-workspace section-pad">
       <div class="container">
-        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260812-simulator-route1">
+        <div id="dynamics-forge-demos" class="forge-showcase reveal" data-source="assets/data/dynamics-forge-demos.json?v=20260812-tsf85-1">
           <div class="forge-heading">
             <div>
               <p class="eyebrow">Controller tuning</p>
               <h2>Dynamics Forge</h2>
             </div>
-            <p>The browser simulator uses nonlinear articulated-body dynamics with RK4 integration at 1 kHz and a 250 Hz controller. Rotor systems also include thrust and drag, motor delay and limits, encoder quantization, state estimation, and direct allocation. Initial integral values and antiwindup limits are percentages of the fixed actuator stall input, before velocity and power constraints. Default gains are starting values, not optimized settings. Modify them and compare tracking and effort.</p>
+            <p>The browser simulator uses nonlinear articulated-body dynamics with RK4 integration at 1 kHz and a 250 Hz controller. Rotor systems also include thrust and drag, motor delay and limits, encoder quantization, state estimation, and direct allocation. Initial integral values and antiwindup limits are percentages of the fixed actuator stall input, before velocity and power constraints. Default gains are deliberately untuned starting values with visible room for improvement. Modify them and compare tracking and effort.</p>
           </div>
 
           <div class="forge-layout">
@@ -191,7 +191,7 @@
 
   <footer class="site-footer">
     <div class="container footer-wrap">
-      <p>© <span id="year"></span> David Bedolla. Built with HTML, CSS, and JavaScript.</p>
+      <p>© <span id="year"></span> David Bedolla.</p>
       <a href="./">Return to portfolio</a>
     </div>
   </footer>

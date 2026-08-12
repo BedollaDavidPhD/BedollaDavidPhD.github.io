@@ -209,7 +209,7 @@ const mountProjectVideo = (project) => {
 };
 
 if (document.querySelector('[data-project-id]')) {
-  fetch('assets/data/project-media.json?v=20260812-tactile1')
+  fetch('assets/data/project-media.json?v=20260812-tsf85-1')
     .then((response) => {
       if (!response.ok) throw new Error('Project media data could not be loaded.');
       return response.json();
