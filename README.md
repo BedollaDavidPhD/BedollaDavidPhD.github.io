@@ -4,7 +4,7 @@
 
 [Open the interactive simulator](https://bedolladavidphd.github.io/simulator/)
 
-A static, trilingual portfolio focused on robotics software engineering, real-time control, mobile manipulation, rehabilitation robotics, motion planning, and learning-based control.
+A static, trilingual portfolio focused on robotics engineering, robot manipulation, control, robot learning, real-time systems, rehabilitation robotics, and physical validation.
 
 ## Highlights
 
