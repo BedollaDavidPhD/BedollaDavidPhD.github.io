@@ -1,0 +1,33 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Local preview and generated files
+__pycache__/
+*.pyc
+portfolio_preview_*
+cv_render/
+tmp/
+dist/
+*.tar.gz
+*.zip
+
+# Private editable source material (not part of the public website)
+source-materials/
+
+# Local-only document generators, maintenance utilities, and review notes
+tools/
+docs/
+CHANGELOG.md
+README.txt
+UPLOAD_INSTRUCTIONS.txt
+FULL_PROJECT_MANIFEST.txt
+
+# Obsolete local examples that are not loaded by the website
+assets/data/videos.example.json
+assets/data/videos.json
