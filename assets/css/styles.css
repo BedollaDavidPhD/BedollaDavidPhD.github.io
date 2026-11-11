@@ -141,9 +141,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .language-control { display: inline-flex; }
 .language-select {
-  width: 84px;
+  width: 96px;
   min-height: 40px;
-  padding: 0 28px 0 10px;
+  padding: 0 8px 0 10px;
   color: var(--ink);
   background: var(--surface-2);
   border: 1px solid var(--line);
@@ -978,12 +978,17 @@ html[data-theme="dark"] .site-footer { border-top: 1px solid #1f2c3e; }
   .tactile-project > img { min-height: 220px; border-right: 0; border-bottom: 1px solid var(--line); }
 }
 
+@media (max-width: 360px) {
+  .theme-toggle .theme-label { display: none; }
+}
+
 /* LinkedIn-aligned hero update */
 .hero-copy { min-width: 0; }
 .hero .hero-name {
   display: flex;
   flex-wrap: nowrap;
   align-items: baseline;
+  column-gap: 0.14em;
   width: max-content;
   max-width: none;
   margin: 0;
