@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate">
-  <meta name="description" content="David Bedolla designs and tests robotics controls for mobile manipulators and rehabilitation robots, with work in trajectory planning, ROS 2, LabVIEW Real-Time and embedded HIL.">
+  <meta name="description" content="David Bedolla architects and tests robotics control systems for mobile manipulators and rehabilitation robots, with work in trajectory planning, ROS 2, LabVIEW Real-Time and embedded HIL.">
   <meta name="author" content="David Bedolla">
   <meta property="og:title" content="David Bedolla, PhD | Robotics Controls &amp; Mobile Manipulation">
-  <meta property="og:description" content="David Bedolla designs and tests robotics controls for mobile manipulators and rehabilitation robots, with work in trajectory planning, ROS 2, LabVIEW Real-Time and embedded HIL.">
+  <meta property="og:description" content="David Bedolla architects and tests robotics control systems for mobile manipulators and rehabilitation robots, with work in trajectory planning, ROS 2, LabVIEW Real-Time and embedded HIL.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://bedolladavidphd.github.io/">
   <meta property="og:image" content="https://bedolladavidphd.github.io/public/og.png">
@@ -17,7 +17,7 @@
   <meta property="og:image:alt" content="David Bedolla, PhD - Robotics Controls">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="David Bedolla, PhD | Robotics Controls &amp; Mobile Manipulation">
-  <meta name="twitter:description" content="David Bedolla designs and tests robotics controls for mobile manipulators and rehabilitation robots, with work in trajectory planning, ROS 2, LabVIEW Real-Time and embedded HIL.">
+  <meta name="twitter:description" content="David Bedolla architects and tests robotics control systems for mobile manipulators and rehabilitation robots, with work in trajectory planning, ROS 2, LabVIEW Real-Time and embedded HIL.">
   <meta name="twitter:image" content="https://bedolladavidphd.github.io/public/og.png">
   <link rel="canonical" href="https://bedolladavidphd.github.io/">
   <meta name="theme-color" content="#0b1220">
@@ -36,7 +36,7 @@
     }
   </script>
   <link rel="stylesheet" href="assets/css/styles.css?v=20261110-profile">
-  <script defer src="assets/js/i18n.js?v=20261110-profile"></script>
+  <script defer src="assets/js/i18n.js?v=20261110-architecture"></script>
   <script defer src="assets/js/main.js?v=20260812-tsf85-1"></script>
 </head>
 <body>
@@ -59,7 +59,7 @@
           <a href="simulator/">Simulator</a>
           <a href="#contact">Contact</a>
         </div>
-        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf?v=20261110" target="_blank" rel="noopener">
+        <a class="nav-cta" href="documents/David_Bedolla_CV.pdf?v=20261110-architecture" target="_blank" rel="noopener">
           <span>CV PDF</span><span class="nav-cta-arrow" aria-hidden="true">↗</span>
         </a>
       </nav>
@@ -92,11 +92,11 @@
           <h1 class="hero-name notranslate" translate="no">David Bedolla, <span>PhD</span></h1>
           <p class="hero-role">Motion Control, Trajectory Planning &amp; Mobile Manipulation</p>
           <p class="hero-summary">
-            I design motion controllers and test them on physical robots, from a mobile manipulator that tracks a target as its base turns to wearable robots that follow rehabilitation trajectories.
+            I architect motion-control systems and test them on physical robots, from a mobile manipulator that tracks a target as its base turns to wearable robots that follow rehabilitation trajectories.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#projects">Explore my work</a>
-            <a class="button secondary" href="documents/David_Bedolla_CV.pdf?v=20261110" target="_blank" rel="noopener">Download CV</a>
+            <a class="button secondary" href="documents/David_Bedolla_CV.pdf?v=20261110-architecture" target="_blank" rel="noopener">Download CV</a>
           </div>
           <div class="social-row" aria-label="Professional links">
             <a href="https://github.com/BedollaDavidPhD" target="_blank" rel="noopener">GitHub</a>
@@ -142,7 +142,7 @@
             My work connects kinematics and dynamics to what an operator needs the robot to do. I define the motion objective, fit it to the available command interfaces, and test the resulting behavior on the system.
           </p>
           <p>
-            At Lab INIT Robots, I adapted my earlier swivel-angle approach to joint-velocity control for an AgileX base and Kinova Gen3 arm. I specified the joystick workflow, reviewed AI-generated C++ and integrated and tested the ROS 2 system on the robot.
+            At Lab INIT Robots, I adapted my earlier swivel-angle approach to joint-velocity control for an AgileX base and Kinova Gen3 arm. I architected the joystick control workflow and directed ROS 2/C++ integration and testing on the robot.
           </p>
           <p>
             During my PhD, I implemented and tested predictive controllers on the 7-DoF ETS-MARSE exoskeleton. I used a Gaussian process to select an elbow posture and combined wearable EMG and IMU acquisition for mirror-rehabilitation experiments.
@@ -187,7 +187,7 @@
               <p class="project-summary">One joystick controls the base and arm. In world-frame mode, the arm compensates as the base turns.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Maintain a world-frame end-effector pose while the mobile base moves.</dd></div>
-                <div><dt>My contribution</dt><dd>Designed the joystick workflow and odometry-based target conversion, reviewed AI-generated C++, and integrated the ROS 2 system. I resolved a conflict between competing arm command publishers.</dd></div>
+                <div><dt>My contribution</dt><dd>Architected the joystick control workflow and odometry-based target conversion, integrated the ROS 2 system, and resolved a conflict between competing arm command publishers.</dd></div>
                 <div><dt>Hardware</dt><dd>Physical AgileX base with a Kinova Gen3 arm.</dd></div>
                 <div><dt>Stack</dt><dd>ROS 2, C++, and Pinocchio.</dd></div>
                 <div><dt>Validation</dt><dd>Observed target compensation during base rotation and residual offset after extended motion. The launch example sets three ROS 2 publishers to 400 Hz and the base-command publisher to 120 Hz.</dd></div>
@@ -238,7 +238,7 @@
               <p class="project-summary">A standalone position-level solver uses the swivel angle to select an elbow posture for a given end-effector pose.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Find a seven-joint configuration for a desired Cartesian position, orientation and elbow posture.</dd></div>
-                <div><dt>My contribution</dt><dd>Designed the analytical formulation and evaluated candidate joint configurations in a standalone experiment.</dd></div>
+                <div><dt>My contribution</dt><dd>Developed the analytical formulation and evaluated candidate joint configurations in a standalone experiment.</dd></div>
                 <div><dt>Simulation</dt><dd>Kinova Gen3 model in Isaac Sim.</dd></div>
                 <div><dt>Stack</dt><dd>C++, Pinocchio, and Isaac Sim.</dd></div>
                 <div><dt>Validation</dt><dd>Evaluated pose-to-joint solutions on the Kinova model.</dd></div>
@@ -294,7 +294,7 @@
               <p class="project-summary">A C++/Qt desktop tool plans and previews joint and Cartesian trajectories for a Kinova Gen3 model.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Generate joint trajectories from Cartesian waypoints and show where the inverse kinematics fails to converge.</dd></div>
-                <div><dt>My contribution</dt><dd>Designed the URDF-driven workflow, specified separate path and timing stages, and reviewed AI-generated C++. A run that showed 100% progress with failed samples led me to require separate convergence counts and warnings.</dd></div>
+                <div><dt>My contribution</dt><dd>Architected the URDF-driven planning workflow with separate path and timing stages. A run that showed 100% progress with failed samples led me to require separate convergence counts and warnings.</dd></div>
                 <div><dt>Simulation</dt><dd>Kinova Gen3 robot model in a desktop environment.</dd></div>
                 <div><dt>Stack</dt><dd>C++, Qt, URDF, OpenGL, and Ruckig.</dd></div>
                 <div><dt>Validation</dt><dd>In a logged desktop run, all 5,001 samples converged for a five-second path sampled offline at a requested 1 kHz. Trajectory generation took 84.93 ms.</dd></div>
@@ -309,7 +309,7 @@
               <p class="project-summary">Gazebo and MuJoCo publish simulated gripper contact maps through a shared ROS 2 interface.</p>
               <dl class="project-facts">
                 <div><dt>Technical problem</dt><dd>Expose gripper contact locations through the same interface in two simulators.</dd></div>
-                <div><dt>My contribution</dt><dd>Specified the shared contact-map interface, reviewed AI-generated adapters, and tested contacts at the tip, middle and lower part of the gripper.</dd></div>
+                <div><dt>My contribution</dt><dd>Defined the shared contact-map interface, directed the simulator adaptations, and tested contacts at the tip, middle and lower part of the gripper.</dd></div>
                 <div><dt>Simulation</dt><dd>Gazebo and MuJoCo, informed by Lab-CORO's Isaac Sim TSF-85 implementation.</dd></div>
                 <div><dt>Stack</dt><dd>ROS 2, Gazebo and MuJoCo.</dd></div>
                 <div><dt>Validation</dt><dd>The two simulations displayed contact maps during grasp tests alongside whole-body control.</dd></div>
@@ -348,7 +348,7 @@
             <article class="foundation-card">
               <span>Software design and testing</span>
               <h3>MineKIN companion behavior</h3>
-              <p>Designed and playtested a Minecraft companion system. I specified how companions retain their identity and inventory through upgrades, use supplies already on hand, and share duties at a home base.</p>
+              <p>Architected and playtested a Minecraft companion system. I specified how companions retain their identity and inventory through upgrades, use supplies already on hand, and share duties at a home base.</p>
               <strong>Confirmed in-game that the same Totem still controlled the companion after an iron-to-diamond upgrade.</strong>
             </article>
           </div>
@@ -380,10 +380,10 @@
               <h3>Associate Researcher</h3>
               <p class="timeline-place">Lab INIT Robots, Montréal</p>
               <ul class="timeline-bullets">
-                <li>Designed Cartesian and elbow-posture control for a physical AgileX/Kinova Gen3 mobile manipulator and adapted the control design to the arm's joint-velocity interface.</li>
-                <li>Defined single-joystick local and world-frame modes, reviewed AI-generated C++, and integrated and tested the ROS 2 nodes on hardware.</li>
+                <li>Architected Cartesian and elbow-posture control for a physical AgileX/Kinova Gen3 mobile manipulator and adapted it to the arm's joint-velocity interface.</li>
+                <li>Defined single-joystick local and world-frame modes and directed ROS 2/C++ integration and hardware testing.</li>
                 <li>Compared PID and super-twisting feedback during base rotation and observed improved tracking with super-twisting.</li>
-                <li>Reviewed and tested simulated tactile contact adapters for Gazebo and MuJoCo.</li>
+                <li>Directed simulator adaptations and tested tactile contact maps in Gazebo and MuJoCo.</li>
               </ul>
             </div>
           </article>
@@ -529,7 +529,7 @@
             </summary>
             <ol class="expanded-publications contribution-list">
               <li><strong>Bedolla-Martínez, D.</strong>, Kali, Y., Saad, M., Ochoa-Luna, C., &amp; Rahman, M. H. (2023). <em>Learning human inverse kinematics solutions for redundant robotic upper-limb rehabilitation.</em> Engineering Applications of Artificial Intelligence, 126, 106966. <a href="https://doi.org/10.1016/j.engappai.2023.106966" target="_blank" rel="noopener">DOI</a><span>Contribution: Led development and evaluation of the Gaussian-Process-based inverse-kinematics method for the 7-DoF exoskeleton, achieving approximately 43 μs execution.</span></li>
-              <li><strong>Bedolla-Martínez, D.</strong>, Kali, Y., Saad, M., Ochoa-Luna, C., &amp; Rahman, M. H. (2023). <em>Robust MPC with Integral Super-Twisting for Trajectory Tracking of an Exoskeleton Robot Arm.</em> IEEE PEDS. <a href="https://doi.org/10.1109/PEDS57185.2023.10246735" target="_blank" rel="noopener">DOI</a><span>Contribution: Designed and implemented robust MPC with integral super-twisting compensation, then evaluated trajectory tracking in simulation and on the physical ETS-MARSE exoskeleton.</span></li>
+              <li><strong>Bedolla-Martínez, D.</strong>, Kali, Y., Saad, M., Ochoa-Luna, C., &amp; Rahman, M. H. (2023). <em>Robust MPC with Integral Super-Twisting for Trajectory Tracking of an Exoskeleton Robot Arm.</em> IEEE PEDS. <a href="https://doi.org/10.1109/PEDS57185.2023.10246735" target="_blank" rel="noopener">DOI</a><span>Contribution: Developed and implemented robust MPC with integral super-twisting compensation, then evaluated trajectory tracking in simulation and on the physical ETS-MARSE exoskeleton.</span></li>
               <li><strong>Bedolla-Martínez, D.</strong> (2024). <em>Learning-based upper limb robotic rehabilitation.</em> Doctoral dissertation, ÉTS. <a href="https://espace.etsmtl.ca/id/eprint/3453/" target="_blank" rel="noopener">Read the dissertation</a><span>Contribution: Integrated intelligent motion control, human-oriented inverse kinematics, learning-based predictive control, and mirror-rehabilitation methods on the ETS-MARSE exoskeleton.</span></li>
               <li><strong>Bedolla-Martínez, D.</strong> (2017). <em>Emulador de un robot manipulador de 2 grados de libertad con base en un controlador digital de señales.</em> Master's dissertation, Universidad Tecnológica de la Mixteca.<span>Contribution: Led development of the digital-signal-controller hardware-in-the-loop emulator for a 2-DoF manipulator.</span></li>
               <li><strong>Bedolla-Martínez, D.</strong>, Lugo, E., &amp; Trujillo-Romero, F. (2019). <em>Artificial neural network topology to calculate the PUMA 560's inverse kinematics for real-time applications.</em> Research in Computing Science, 148(8), 397-405.<span>Contribution: Proposed and deployed the neural-network topology for real-time PUMA 560 inverse kinematics.</span></li>

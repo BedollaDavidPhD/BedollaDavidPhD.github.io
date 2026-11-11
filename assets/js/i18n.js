@@ -189,7 +189,7 @@
     document.dispatchEvent(new CustomEvent('portfolio-language-change', { detail: { language: currentLanguage } }));
   };
 
-  const ready = fetch('assets/data/i18n.json?v=20261110-profile')
+  const ready = fetch('assets/data/i18n.json?v=20261110-architecture')
     .then((response) => {
       if (!response.ok) throw new Error('Translation catalogue could not be loaded.');
       return response.json();
